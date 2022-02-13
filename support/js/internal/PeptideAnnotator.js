@@ -12,6 +12,7 @@ myApp.config(function(uiSelectConfig) {
 /* master controller to carry similar functionality to $rootScope */
 myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, $http, $element, $attrs, $transclude) {
 
+  console.log("PeptideAnnotator.js - MasterCtrl");
   $scope.getUrlVars = function() {
     var vars = {};
     var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
@@ -862,6 +863,7 @@ m1
       "C-terminus"
     ]
   };
+  console.log("PeptideAnnotator.js - MasterCtrl end");
 });
 
 myApp.controller('PeptideCtrl', function ($scope) {
@@ -929,7 +931,7 @@ myApp.directive("handsontabletest", function() {
 });
 
 myApp.controller('DataCtrl', ['$scope', function ($scope) {
-  $scope.selectedFormat = $scope.tableColumns[0];      
+  $scope.selectedFormat = $scope.tableColumns[0];
 }]);
 
 myApp.controller('ModCtrl', ['$scope', '$log', function ($scope, $log) {

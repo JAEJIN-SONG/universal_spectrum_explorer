@@ -21,7 +21,7 @@ Annotation = class Annotation {
 	};
 	this.N_TERMINUS = this.ChemistryConstants.H;
 	this.C_TERMINUS = this.ChemistryConstants.O + this.ChemistryConstants.H;
-this.B_ION_TERMINUS = this.ChemistryConstants.Proton; // wiki
+  this.B_ION_TERMINUS = this.ChemistryConstants.Proton; // wiki
 	this.A_ION_TERMINUS = this.B_ION_TERMINUS - this.ChemistryConstants.C - this.ChemistryConstants.O; // wiki
 	this.C_ION_TERMINUS = (2+1) * this.ChemistryConstants.H + this.ChemistryConstants.N - this.ChemistryConstants.Proton; 
 
@@ -76,7 +76,11 @@ this.B_ION_TERMINUS = this.ChemistryConstants.Proton; // wiki
 				"intensity": el["intensity"],
 			}
 		});
-		this.fragmentTypes = request.fragmentTypes;
+    this.fragmentTypes = request.fragmentTypes;
+
+    console.log("bundle.js");
+    console.log(this.fragmentTypes);
+
 		var max_peak = this.peakData.reduce((e,i)=>{ return e.intensity > i.intensity ? e : i});
 		let max_peak_intensity = max_peak.intensity;
 		this.base_peak = max_peak;
@@ -335,7 +339,7 @@ this.B_ION_TERMINUS = this.ChemistryConstants.Proton; // wiki
 				"type": "c",
 				"offset": this.N_TERMINUS + this.ChemistryConstants.N + 2*this.ChemistryConstants.H // [N]+[M]+NH2
 			});
-		};
+    };
 		return returnV;
 	}
 	calculateFragments(sequence, precursorCharge, mods, fragmentTypes) {

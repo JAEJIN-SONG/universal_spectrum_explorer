@@ -2,6 +2,8 @@
 <html ng-app="IPSA">
   <head>
     <meta charset="utf-8"/>
+    <script src="support/js/internal/bundle.js"></script>
+
     <script src="support/js/external/jquery.min.js"></script>
     <script src="support/js/external/angular.min.js"></script>
     <script src="support/js/external/angular-animate.min.js"></script>
@@ -22,7 +24,7 @@
     <script src="support/js/internal/PeptideAnnotator.js"></script>
     <script src="support/js/internal/controllers.js"></script>
     <script src="support/js/internal/USE.js"></script>
-    <script src="support/js/internal/bundle.js"></script>
+    <!-- <script src="support/js/internal/bundle.js"></script> -->
     <script src="support/js/internal/api.js"></script>
     <script src="support/js/external/d3-tip.js"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
@@ -447,7 +449,7 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-md-12">
-                                      <div class="btn-group">
+                                      <div class="btn-group Losses">
                                         <label class="btn btn-fragment" ng-model="checkModel.H2O.selected" uib-btn-checkbox>-H<sub>2</sub>O</label>
                                         <label class="btn btn-fragment" ng-model="checkModel.NH3.selected" uib-btn-checkbox>-NH<sub>3</sub></label>
                                         <label class="btn btn-fragment" ng-model="checkModel.CO2.selected" uib-btn-checkbox>-CO<sub>2</sub></label>
@@ -461,13 +463,13 @@
                                 <div class="col-md-6">
                                   <label>Fragment Annotation Tolerance (+/-)</label>
                                   <div class="input-group">
-                                    <input type="number" class="form-control" ng-model="cutoffs.tolerance" min="0" /> <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapToleranceType()">{{cutoffs.toleranceType}}</button> </span> 
+                                    <input id="tolerance" type="number" class="form-control" ng-model="cutoffs.tolerance" min="0" /> <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapToleranceType()">{{cutoffs.toleranceType}}</button> </span> 
                                   </div>
                                 </div>
                                 <div class="col-md-6">
                                   <label>Annotation Intensity Threshold</label>
                                   <div class="input-group">
-                                    <input type="number" class="form-control" ng-model="cutoffs.matchingCutoff" min="0" /> <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapMatchingType()">{{cutoffs.matchingType}}</button> </span> 
+                                    <input id="cutoff" type="number" class="form-control" ng-model="cutoffs.matchingCutoff" min="0" /> <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapMatchingType()">{{cutoffs.matchingType}}</button> </span> 
                                   </div>
                                 </div>
                               </div>
@@ -544,12 +546,20 @@
                               <button type="submit" class="btn btn-success" ng-disabled="ctrl.disableButton" ng-click="processData()">Generate Chart</button>
                               <button class="btn btn-primary" ng-click="downloadData()" ng-disabled="ctrl.disableButton">Export Data</button>
                               <button svg-download title="{{peptideBottom.sequence}}" class="btn btn-primary" ng-disabled="ctrl.disableButton">Download as SVG</button>
+                              <button type="submit" class="btn btn-primary" ng-disabled="ctrl.disableButton" ng-click="getCondition()">Add Condition</button>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
+
+                  <!-- <div class="panel panel-body">
+                    <div class="col-md-12 conditions">
+
+                    </div>
+                  </div> -->
+
                 </div>
                 <div class="col-md-7">
                   <div annotated-spectrum 

@@ -1,5 +1,6 @@
 angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$log", "$http", function($scope, $log, $http) {
 
+  console.log("controllers.js - top");
   var populateMods = function() {
     var returnArray = [];
     for (var i = 0; i < 13; i++) {
@@ -521,6 +522,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
     var sUsi = topSpectrum ? $scope.peptide.usi : $scope.peptideBottom.usi;
     var url = "https://www.proteomicsdb.org/proxy_ppc/availability?usi=" + sUsi;
    
+    console.log("controllers.js - processUSI");
     $scope.setOriginString(topSpectrum, sUsi);
     // var usi = new UsiResponse(topSpectrum ? $scope.peptide.usiOriginTop : $scope.peptideBottom.usibottom_origin);
 
@@ -743,7 +745,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
       urlObj["matching_tol_unit"] = $scope.cutoffs.compToleranceType;
       */
     };
-
+    console.log("prepare Data", url, data);
     return {url: url, data: data};
   }
 
@@ -801,6 +803,139 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
     return $http.post($scope.submittedDataTop.url, $scope.submittedDataTop.data)
   }
 
+  function addColor(labelData){
+    var col6 = document.createElement('div');
+    col6.className = "col-sm-6";
+
+    var row = document.createElement('div');
+    row.className = "row";
+
+    var col2 = document.createElement('div');
+    col2.className = "col-sm-1";
+    var label = document.createElement('label');
+    label.textContent = labelData.label;
+    col2.appendChild(label);
+
+    var col4 = document.createElement('div');
+    col4.className = "col-sm-5";
+    var minicolors = document.createElement('div');
+    minicolors.className = "minicolors minicolors-theme-bootstrap minicolors-position-bottom minicolors-position-left";
+    minicolors.style.minWidth = "120px";
+    var input = document.createElement('input');
+    input.className = "form-control minicolors-input";
+    input.value = labelData.color;
+    input.disabled = true;
+    input.style.backgroundColor = "#fff";
+    var span1 = document.createElement('span');
+    span1.className = "minicolors-swatch minicolors-sprite minicolors-input-swatch";
+    var span2 = document.createElement('span');
+    span2.className = "minicolors-swatch-color";
+    span2.style.backgroundColor = labelData.color;
+    span2.style.opacity = 1;
+    
+    span1.appendChild(span2);
+    minicolors.appendChild(input);
+    minicolors.appendChild(span1);
+    col4.appendChild(minicolors);
+
+    row.appendChild(col2);
+    row.appendChild(col4);
+
+    col6.appendChild(row);
+
+    return col6;
+  }
+
+  $scope.getCondition = function(){
+    $scope.submittedDataTop = $scope.prepareDataToProcess();
+    $scope.submittedDataBottom = $scope.prepareDataToProcess(false);
+
+    console.log("getCondition", $scope.submittedDataTop.data, $scope.submittedDataBottom.data);
+
+    var panel = document.createElement('div');
+    panel.className = "panel panel-body conditions";
+    
+    if($scope.submittedDataTop.data.fragmentTypes.a.selected){
+      panel.appendChild(addColor($scope.submittedDataTop.data.fragmentTypes.a));
+      $("label[ng-model *= 'checkModel.a.selected']").attr("disabled", true);
+      $("label[ng-model *= 'checkModel.a.selected']").removeClass('active');
+    }
+    if($scope.submittedDataTop.data.fragmentTypes.b.selected){
+      panel.appendChild(addColor($scope.submittedDataTop.data.fragmentTypes.b));
+      $("label[ng-model *= 'checkModel.b.selected']").attr("disabled", true);
+    }
+    if($scope.submittedDataTop.data.fragmentTypes.c.selected){
+      panel.appendChild(addColor($scope.submittedDataTop.data.fragmentTypes.c));
+      $("label[ng-model *= 'checkModel.c.selected']").attr("disabled", true);
+    }
+    if($scope.submittedDataTop.data.fragmentTypes.x.selected){
+      panel.appendChild(addColor($scope.submittedDataTop.data.fragmentTypes.x));
+      $("label[ng-model *= 'checkModel.x.selected']").attr("disabled", true);
+    }
+    if($scope.submittedDataTop.data.fragmentTypes.y.selected){
+      panel.appendChild(addColor($scope.submittedDataTop.data.fragmentTypes.y));
+      $("label[ng-model *= 'checkModel.y.selected']").attr("disabled", true);
+    }
+    if($scope.submittedDataTop.data.fragmentTypes.z.selected){
+      panel.appendChild(addColor($scope.submittedDataTop.data.fragmentTypes.z));
+      $("label[ng-model *= 'checkModel.z.selected']").attr("disabled", true);
+    }
+
+    if($('.Losses').find('label.active').length > 0){
+      // var losses = $('<div /', {
+      //   className: 'test', 
+      // }).appendTo(panel);
+      var losses = $('<div class="col-md-12"><label>Neutral Losses : </label></div>');
+      losses.appendTo(panel);
+
+      $('.Losses').find('label.active').each(function(i, e){
+        $(this).attr('disabled', true);
+
+        if($(this).attr('ng-model') == "checkModel.H2O.selected") var loss = "-H2O";
+        else if($(this).attr('ng-model') == "checkModel.NH3.selected") var loss = "-NH3";
+        else if($(this).attr('ng-model') == "checkModel.CO2.selected") var loss = "-CO2";
+        
+        var span = $('<label>', {text : loss});
+        span.css('margin-right', '10px');
+        span.css('margin-left', '10px');
+        span.appendTo(losses);
+      });
+
+    }
+    
+    // precursor, unassigned
+    if(!document.getElementById("wheel-demo7").disabled){
+      document.getElementById("wheel-demo7").disabled = true;
+    }
+    if(!document.getElementById("wheel-demo8").disabled){
+      document.getElementById("wheel-demo8").disabled = true;
+    }
+
+    // tolerance, threshold
+    if(!document.getElementById("tolerance").disabled){
+      document.getElementById("tolerance").disabled = true;
+    
+      var tolerance = $('<div class="col-md-12"><label>Fragment Annotation Tolerance (+/-) : </label></div>');
+      
+      var data_t = $('<label>', {text : $scope.submittedDataTop.data.tolerance + " " + $scope.submittedDataTop.data.toleranceType});
+      data_t.appendTo(tolerance);
+      data_t.css('margin-left', '10px');
+      tolerance.appendTo(panel);
+    }
+    if(!document.getElementById("cutoff").disabled){
+      document.getElementById("cutoff").disabled = true;
+      
+      var cutoff = $('<div class="col-md-12"><label>Annotation Intensity Threshold : </label></div>');
+      
+      var data_c = $('<label>', {text : $scope.submittedDataTop.data.cutoff + " " + $scope.submittedDataTop.data.matchingType});
+      data_c.appendTo(cutoff);
+      data_c.css('margin-left', '10px');
+      cutoff.appendTo(panel);
+    }
+
+    $('.col-md-5').append(panel);
+  };
+
   $scope.processData = function() {
     $scope.busy.isProcessing = true;
     if ($scope.invalidColors()) {
@@ -849,6 +984,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
             return;
           }
           const annotation1 = new Annotation($scope.submittedDataTop.data);
+          console.log("annotation1", annotation1);
           $scope.annotatedResults = annotation1.fakeAPI();
 
 
@@ -857,6 +993,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
                 return;
               }
               const annotation = new Annotation($scope.submittedDataBottom.data);
+              console.log("annotation", annotation);
               $scope.annotatedResultsBottom = annotation.fakeAPI();
 
               check = function(spectrum){
@@ -918,6 +1055,10 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
 
               $scope.getScores($scope.annotatedResults.peaks, $scope.annotatedResultsBottom.peaks);
               $scope.busy.isProcessing = false;
+              
+              console.log("controllers.js processData");
+              console.log($scope);
+              console.log($scope.getFragmentType);
     }
   };
 
@@ -1258,6 +1399,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
     .then( (values) => {
       if(values[0] !== undefined){
         $scope.processData();
+        console.log("controller.js - promise.all");
         $scope.busy.isProcessing = true;
         setTimeout(()=>{ $scope.processUSI(true, true, true)
         }, 300); // no good reason for it 
@@ -1265,4 +1407,5 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
     } , function(response2) {
     } 
     );
+  console.log("controller.js GraphCtrl - end")
 }]);

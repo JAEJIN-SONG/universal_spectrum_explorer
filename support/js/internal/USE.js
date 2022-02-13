@@ -6,6 +6,7 @@
  */
 angular.module("IPSA.directive", []).directive("annotatedSpectrum", function($log) {
 
+  console.log("USE.js");
   /**
    * @description The directive variable used to the initiate the 2-way binding between this template and the controller
    * @property {string} directive.restrict - Restricts the directive to attribute and elements only
