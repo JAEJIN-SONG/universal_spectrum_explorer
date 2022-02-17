@@ -1,6 +1,5 @@
 angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$log", "$http", function($scope, $log, $http) {
 
-  console.log("controllers.js - top");
   var populateMods = function() {
     var returnArray = [];
     for (var i = 0; i < 13; i++) {
@@ -522,7 +521,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
     var sUsi = topSpectrum ? $scope.peptide.usi : $scope.peptideBottom.usi;
     var url = "https://www.proteomicsdb.org/proxy_ppc/availability?usi=" + sUsi;
    
-    console.log("controllers.js - processUSI");
     $scope.setOriginString(topSpectrum, sUsi);
     // var usi = new UsiResponse(topSpectrum ? $scope.peptide.usiOriginTop : $scope.peptideBottom.usibottom_origin);
 
@@ -705,6 +703,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
     }
     submitData = newArray;
     //$log.log(newArray);
+    console.log(submitData);
 
     // make charge compatible with processing scripts
     var charge = 0;
@@ -723,28 +722,59 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
     }
 
     // bind all data in froms to data
-    var data = {
-      "sequence" : topSpectrum ? $scope.peptide.sequence : $scope.peptideBottom.sequence,
-      "precursorCharge": topSpectrum ? parseInt($scope.peptide.precursorCharge) : parseInt($scope.peptideBottom.precursorCharge),
-      "charge" : charge,
-      "fragmentTypes" : $scope.checkModel,
-      "peakData" : submitData,
-      "mods" : topSpectrum ? $scope.modObject.selectedMods : $scope.modObjectBottom.selectedMods,
-      "toleranceType" : $scope.cutoffs.toleranceType,
-      "tolerance" : $scope.cutoffs.tolerance,
-      "matchingType": $scope.cutoffs.matchingType,
-      "cutoff": $scope.cutoffs.matchingCutoff
-/*
-      urlObj["usi"] = $scope.peptide.usi;
-      urlObj["usi_origin"] = $scope.peptide.usi_origin;
-      urlObj["usibottom"] = $scope.peptideBottom.usi;
-      urlObj["usibottom_origin"] = $scope.peptideBottom.usibottom_origin;
-      urlObj["fragment_tol"] = $scope.cutoffs.tolerance;
-      urlObj["fragment_tol_unit"] = $scope.cutoffs.toleranceType;
-      urlObj["matching_tol"] = $scope.cutoffs.compTolerance;
-      urlObj["matching_tol_unit"] = $scope.cutoffs.compToleranceType;
-      */
-    };
+    if($('.col-md-5 .panel.panel-body').length == 0){
+      // conditon doesn't exist
+      console.log("바로 차트 만드는 경우");
+      var data = {
+        "sequence" : topSpectrum ? $scope.peptide.sequence : $scope.peptideBottom.sequence,
+        "precursorCharge": topSpectrum ? parseInt($scope.peptide.precursorCharge) : parseInt($scope.peptideBottom.precursorCharge),
+        "charge" : charge,
+        "fragmentTypes" : $scope.checkModel,
+        "peakData" : submitData,
+        "mods" : topSpectrum ? $scope.modObject.selectedMods : $scope.modObjectBottom.selectedMods,
+        "toleranceType" : $scope.cutoffs.toleranceType,
+        "tolerance" : $scope.cutoffs.tolerance,
+        "matchingType": $scope.cutoffs.matchingType,
+        "cutoff": $scope.cutoffs.matchingCutoff
+  /*
+        urlObj["usi"] = $scope.peptide.usi;
+        urlObj["usi_origin"] = $scope.peptide.usi_origin;
+        urlObj["usibottom"] = $scope.peptideBottom.usi;
+        urlObj["usibottom_origin"] = $scope.peptideBottom.usibottom_origin;
+        urlObj["fragment_tol"] = $scope.cutoffs.tolerance;
+        urlObj["fragment_tol_unit"] = $scope.cutoffs.toleranceType;
+        urlObj["matching_tol"] = $scope.cutoffs.compTolerance;
+        urlObj["matching_tol_unit"] = $scope.cutoffs.compToleranceType;
+        */
+      };
+    }else{
+      // conditon exists
+      console.log("getCondition 사용한 경우");
+      var data = {
+        "sequence" : topSpectrum ? $scope.peptide.sequence : $scope.peptideBottom.sequence,
+        "precursorCharge": topSpectrum ? parseInt($scope.peptide.precursorCharge) : parseInt($scope.peptideBottom.precursorCharge),
+        "charge" : charge,
+        "fragmentTypes" : $scope.conditions.fragmentTypes,
+        "peakData" : submitData,
+        "mods" : topSpectrum ? $scope.modObject.selectedMods : $scope.modObjectBottom.selectedMods,
+        "toleranceType" : $scope.conditions.cutoffs.toleranceType,
+        "tolerance" : $scope.conditions.cutoffs.tolerance,
+        "matchingType": $scope.conditions.cutoffs.matchingType,
+        "cutoff": $scope.conditions.cutoffs.matchingCutoff
+  /*
+        urlObj["usi"] = $scope.peptide.usi;
+        urlObj["usi_origin"] = $scope.peptide.usi_origin;
+        urlObj["usibottom"] = $scope.peptideBottom.usi;
+        urlObj["usibottom_origin"] = $scope.peptideBottom.usibottom_origin;
+        urlObj["fragment_tol"] = $scope.cutoffs.tolerance;
+        urlObj["fragment_tol_unit"] = $scope.cutoffs.toleranceType;
+        urlObj["matching_tol"] = $scope.cutoffs.compTolerance;
+        urlObj["matching_tol_unit"] = $scope.cutoffs.compToleranceType;
+        */
+      };
+    }
+
+    
     console.log("prepare Data", url, data);
     return {url: url, data: data};
   }
@@ -803,166 +833,344 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
     return $http.post($scope.submittedDataTop.url, $scope.submittedDataTop.data)
   }
 
-  function addColor(labelData){
-    var col6 = document.createElement('div');
-    col6.className = "col-sm-6";
-
-    var row = document.createElement('div');
-    row.className = "row";
-
-    var col2 = document.createElement('div');
-    col2.className = "col-sm-1";
-    var label = document.createElement('label');
-    label.textContent = labelData.label;
-    col2.appendChild(label);
-
-    var col4 = document.createElement('div');
-    col4.className = "col-sm-5";
-    var minicolors = document.createElement('div');
-    minicolors.className = "minicolors minicolors-theme-bootstrap minicolors-position-bottom minicolors-position-left";
-    minicolors.style.minWidth = "120px";
-    var input = document.createElement('input');
-    input.className = "form-control minicolors-input";
-    input.value = labelData.color;
-    input.disabled = true;
-    input.style.backgroundColor = "#fff";
-    var span1 = document.createElement('span');
-    span1.className = "minicolors-swatch minicolors-sprite minicolors-input-swatch";
-    var span2 = document.createElement('span');
-    span2.className = "minicolors-swatch-color";
-    span2.style.backgroundColor = labelData.color;
-    span2.style.opacity = 1;
+  function addColor(labelData){    
+    var col6 = $('<div />', { class : "col-sm-6"});
     
-    span1.appendChild(span2);
-    minicolors.appendChild(input);
-    minicolors.appendChild(span1);
-    col4.appendChild(minicolors);
+    var row = $('<div />', {class : "row"}).appendTo(col6);
 
-    row.appendChild(col2);
-    row.appendChild(col4);
+    var col2 = $('<div />', {class : "col-sm-1"}).appendTo(row);
+    $('<label />', {text : labelData.label}).appendTo(col2);
 
-    col6.appendChild(row);
+    var col4 = $('<div />', {class : "col-sm-5"}).appendTo(row);
+
+    var minicolors = $('<div />', { class : "minicolors minicolors-theme-bootstrap minicolors-position-bottom minicolors-position-left added-color"}).appendTo(col4);
+    
+    $('<input />', {
+      class : "form-control minicolors-input",
+      value : labelData.color,
+      disabled : true
+    }).appendTo(minicolors);
+
+    var span = $('<span />', { class : "minicolors-swatch minicolors-sprite minicolors-input-swatch"}).appendTo(minicolors);
+    $('<span />', { class : "minicolors-swatch-color", css : {backgroundColor : labelData.color}}).appendTo(span);
 
     return col6;
   }
 
   $scope.getCondition = function(){
-    $scope.submittedDataTop = $scope.prepareDataToProcess();
-    $scope.submittedDataBottom = $scope.prepareDataToProcess(false);
-
-    console.log("getCondition", $scope.submittedDataTop.data, $scope.submittedDataBottom.data);
-
-    var panel = document.createElement('div');
-    panel.className = "panel panel-body conditions";
+    if($('div.tab-content > div.tab-pane.ng-scope:eq(2) div.col-md-12:eq(0) > div.ng-scope > div.row:eq(0)').find('label.active').length > 0){
+      // $scope.submittedDataTop = $scope.prepareDataToProcess();
+      // $scope.submittedDataBottom = $scope.prepareDataToProcess(false);
+      
+      var panel = $('<div />', {class : "panel panel-body conditions"});
     
-    if($scope.submittedDataTop.data.fragmentTypes.a.selected){
-      panel.appendChild(addColor($scope.submittedDataTop.data.fragmentTypes.a));
-      $("label[ng-model *= 'checkModel.a.selected']").attr("disabled", true);
-      $("label[ng-model *= 'checkModel.a.selected']").removeClass('active');
-    }
-    if($scope.submittedDataTop.data.fragmentTypes.b.selected){
-      panel.appendChild(addColor($scope.submittedDataTop.data.fragmentTypes.b));
-      $("label[ng-model *= 'checkModel.b.selected']").attr("disabled", true);
-    }
-    if($scope.submittedDataTop.data.fragmentTypes.c.selected){
-      panel.appendChild(addColor($scope.submittedDataTop.data.fragmentTypes.c));
-      $("label[ng-model *= 'checkModel.c.selected']").attr("disabled", true);
-    }
-    if($scope.submittedDataTop.data.fragmentTypes.x.selected){
-      panel.appendChild(addColor($scope.submittedDataTop.data.fragmentTypes.x));
-      $("label[ng-model *= 'checkModel.x.selected']").attr("disabled", true);
-    }
-    if($scope.submittedDataTop.data.fragmentTypes.y.selected){
-      panel.appendChild(addColor($scope.submittedDataTop.data.fragmentTypes.y));
-      $("label[ng-model *= 'checkModel.y.selected']").attr("disabled", true);
-    }
-    if($scope.submittedDataTop.data.fragmentTypes.z.selected){
-      panel.appendChild(addColor($scope.submittedDataTop.data.fragmentTypes.z));
-      $("label[ng-model *= 'checkModel.z.selected']").attr("disabled", true);
-    }
+      if($scope.checkModel.a.selected && ($scope.conditions.fragmentTypes.a.selected == false)){
+        addColor($scope.checkModel.a).appendTo(panel);
+        $scope.conditions.fragmentTypes.a = $scope.checkModel.a;
+        $("label[ng-model *= 'checkModel.a.selected']").attr("disabled", 'disabled');
+        $("div[ng-hide *= '!checkModel.a.selected']").hide();
+        $("label[ng-model *= 'checkModel.a.selected']").removeClass("active");
+        $("label[ng-model *= 'checkModel.a.selected']").off('click');
+        $("label[ng-model *= 'checkModel.a.selected']").addClass("clicked-btn");
+      }
+      if($scope.checkModel.b.selected && ($scope.conditions.fragmentTypes.b.selected == false)){
+        addColor($scope.checkModel.b).appendTo(panel);
+        $scope.conditions.fragmentTypes.b = $scope.checkModel.b;
+        $("label[ng-model *= 'checkModel.b.selected']").attr("disabled", 'disabled');
+        $("div[ng-hide *= '!checkModel.b.selected']").hide();
+        $("label[ng-model *= 'checkModel.b.selected']").removeClass("active");
+        $("label[ng-model *= 'checkModel.b.selected']").off('click');
+        $("label[ng-model *= 'checkModel.b.selected']").addClass("clicked-btn");
+      }
+      if($scope.checkModel.c.selected && ($scope.conditions.fragmentTypes.c.selected == false)){
+        addColor($scope.checkModel.c).appendTo(panel);
+        $scope.conditions.fragmentTypes.c = $scope.checkModel.c;
+        $("label[ng-model *= 'checkModel.c.selected']").attr("disabled", 'disabled');
+        $("div[ng-hide *= '!checkModel.c.selected']").hide();
+        $("label[ng-model *= 'checkModel.c.selected']").removeClass("active");
+        $("label[ng-model *= 'checkModel.c.selected']").off('click');
+        $("label[ng-model *= 'checkModel.c.selected']").addClass("clicked-btn");
+      }
+      if($scope.checkModel.x.selected && ($scope.conditions.fragmentTypes.x.selected == false)){
+        addColor($scope.checkModel.x).appendTo(panel);
+        $scope.conditions.fragmentTypes.x = $scope.checkModel.x;
+        $("label[ng-model *= 'checkModel.x.selected']").attr("disabled", 'disabled');
+        $("div[ng-hide *= '!checkModel.x.selected']").hide();
+        $("label[ng-model *= 'checkModel.x.selected']").removeClass("active");
+        $("label[ng-model *= 'checkModel.x.selected']").off('click');
+        $("label[ng-model *= 'checkModel.x.selected']").addClass("clicked-btn");
+      }
+      if($scope.checkModel.y.selected && ($scope.conditions.fragmentTypes.y.selected == false)){
+        addColor($scope.checkModel.y).appendTo(panel);
+        $scope.conditions.fragmentTypes.y = $scope.checkModel.y;
+        $("label[ng-model *= 'checkModel.y.selected']").attr("disabled", 'disabled');
+        $("div[ng-hide *= '!checkModel.y.selected']").hide();
+        $("label[ng-model *= 'checkModel.y.selected']").removeClass("active");
+        $("label[ng-model *= 'checkModel.y.selected']").off('click');
+        $("label[ng-model *= 'checkModel.y.selected']").addClass("clicked-btn");
+      }
+      if($scope.checkModel.z.selected && ($scope.conditions.fragmentTypes.z.selected == false)){
+        addColor($scope.checkModel.z).appendTo(panel);
+        $scope.conditions.fragmentTypes.z = $scope.checkModel.z;
+        $("label[ng-model *= 'checkModel.z.selected']").attr("disabled", 'disabled');
+        $("div[ng-hide *= '!checkModel.z.selected']").hide();
+        $("label[ng-model *= 'checkModel.z.selected']").removeClass("active");
+        $("label[ng-model *= 'checkModel.z.selected']").off('click');
+        $("label[ng-model *= 'checkModel.z.selected']").addClass("clicked-btn");
+      }
 
-    if($('.Losses').find('label.active').length > 0){
-      // var losses = $('<div /', {
-      //   className: 'test', 
-      // }).appendTo(panel);
-      var losses = $('<div class="col-md-12"><label>Neutral Losses : </label></div>');
-      losses.appendTo(panel);
+      //H2O, NH3, CO2
+      if($('.Losses').find('label.active').length > 0){
+        var losses = $('<div class="col-md-12"><label>Neutral Losses : </label></div>').appendTo(panel);
 
-      $('.Losses').find('label.active').each(function(i, e){
-        $(this).attr('disabled', true);
+        if($scope.checkModel.H2O.selected && !($scope.conditions.fragmentTypes.H2O.selected)){
+          $scope.conditions.fragmentTypes.H2O = $scope.checkModel.H2O;
+          $("label[ng-model *= 'checkModel.H2O.selected']").attr("disabled", 'disabled');
+          $("label[ng-model *= 'checkModel.H2O.selected']").removeClass("active");
+          $("label[ng-model *= 'checkModel.H2O.selected']").off('click');
+          $("label[ng-model *= 'checkModel.H2O.selected']").addClass("clicked-btn");
 
-        if($(this).attr('ng-model') == "checkModel.H2O.selected") var loss = "-H2O";
-        else if($(this).attr('ng-model') == "checkModel.NH3.selected") var loss = "-NH3";
-        else if($(this).attr('ng-model') == "checkModel.CO2.selected") var loss = "-CO2";
+          var span = $('<label>', {text : "-H2O", class : "losses"}).appendTo(losses);
+        }
+        if($scope.checkModel.NH3.selected && !($scope.conditions.fragmentTypes.NH3.selected)){
+          $scope.conditions.fragmentTypes.NH3 = $scope.checkModel.NH3;
+          $("label[ng-model *= 'checkModel.NH3.selected']").attr("disabled", 'disabled');
+          $("label[ng-model *= 'checkModel.NH3.selected']").removeClass("active");
+          $("label[ng-model *= 'checkModel.NH3.selected']").off('click');
+          $("label[ng-model *= 'checkModel.NH3.selected']").addClass("clicked-btn");
+
+          var span = $('<label>', {text : "-NH3", class : "losses"}).appendTo(losses);
+        }
+        if($scope.checkModel.CO2.selected && !($scope.conditions.fragmentTypes.CO2.selected)){
+          $scope.conditions.fragmentTypes.CO2 = $scope.checkModel.CO2;
+          $("label[ng-model *= 'checkModel.CO2.selected']").attr("disabled", 'disabled');
+          $("label[ng-model *= 'checkModel.CO2.selected']").removeClass("active");
+          $("label[ng-model *= 'checkModel.CO2.selected']").off('click');
+          $("label[ng-model *= 'checkModel.CO2.selected']").addClass("clicked-btn");
+
+          var span = $('<label>', {text : "-CO2", class : "losses"}).appendTo(losses);
+        }
+      }
+      
+      // precursor, unassigned
+      if(!document.getElementById("wheel-demo7").disabled){
+        document.getElementById("wheel-demo7").disabled = true;
+        // $scope.conditions.fragmentTypes.precursor = $scope.submittedDataTop.data.fragmentTypes.precursor;
+        $scope.conditions.fragmentTypes.precursor = $scope.checkModel.precursor;
+      }
+      if(!document.getElementById("wheel-demo8").disabled){
+        document.getElementById("wheel-demo8").disabled = true;
+        // $scope.conditions.fragmentTypes.unassigned = $scope.submittedDataTop.data.fragmentTypes.unassigned;
+        $scope.conditions.fragmentTypes.unassigned = $scope.checkModel.unassigned;
+      }
+
+      // tolerance, threshold
+      var input_t = $('input[ng-model="cutoffs.tolerance"]');
+      if(!input_t.attr("disabled")){
+        input_t.attr("disabled", "disabled");
+        input_t.off('click');
+        $('button[ng-click="swapToleranceType()"]').off('click');
+        $('button[ng-click="swapToleranceType()"]').attr("disabled", "disabled");
+      
+        var tolerance = $('<div class="col-sm-12"><label>Fragment Annotation Tolerance (+/-) : </label></div>').appendTo(panel);
+        // var data_t = $('<label>', {text : $scope.submittedDataTop.data.tolerance + " " + $scope.submittedDataTop.data.toleranceType}).appendTo(tolerance);
+        var data_t = $('<label>', {text : $scope.cutoffs.tolerance + " " + $scope.cutoffs.toleranceType}).appendTo(tolerance);
+        data_t.css('margin-left', '10px');
+
+        // $scope.conditions.cutoffs.tolerance = $scope.submittedDataTop.data.tolerance;
+        $scope.conditions.cutoffs.tolerance = $scope.cutoffs.tolerance;
+        // $scope.conditions.cutoffs.toleranceType = $scope.submittedDataTop.data.toleranceType;
+        $scope.conditions.cutoffs.toleranceType = $scope.cutoffs.toleranceType;
+      }
+      var input_c = $('input[ng-model="cutoffs.matchingCutoff"]');
+      if(!input_c.attr("disabled")){
+        input_c.attr("disabled", "disabled");
+        input_c.off('click');
+        $('button[ng-click="swapMatchingType()"]').off('click');
+        $('button[ng-click="swapMatchingType()"]').attr("disabled", "disabled");
+
+        var cutoff = $('<div class="col-sm-12"><label>Annotation Intensity Threshold : </label></div>').appendTo(panel);
+        // var data_c = $('<label>', {text : $scope.submittedDataTop.data.cutoff + " " + $scope.submittedDataTop.data.matchingType}).appendTo(cutoff);
+        var data_c = $('<label>', {text : $scope.cutoffs.matchingCutoff + " " + $scope.cutoffs.matchingType}).appendTo(cutoff);
         
-        var span = $('<label>', {text : loss});
-        span.css('margin-right', '10px');
-        span.css('margin-left', '10px');
-        span.appendTo(losses);
-      });
+        data_c.css('margin-left', '10px');
 
-    }
-    
-    // precursor, unassigned
-    if(!document.getElementById("wheel-demo7").disabled){
-      document.getElementById("wheel-demo7").disabled = true;
-    }
-    if(!document.getElementById("wheel-demo8").disabled){
-      document.getElementById("wheel-demo8").disabled = true;
-    }
+        // $scope.conditions.cutoffs.matchingCutoff = $scope.submittedDataTop.data.cutoff;
+        $scope.conditions.cutoffs.matchingCutoff = $scope.cutoffs.matchingCutoff;
+        // $scope.conditions.cutoffs.matchingType = $scope.submittedDataTop.data.matchingType;
+        $scope.conditions.cutoffs.matchingType = $scope.cutoffs.matchingType;
+      }
+      var input_p = $('input[ng-model="cutoffs.compTolerance"]');
+      if(!input_p.attr("disabled")){
+        input_p.attr("disabled", "disabled");
+        input_p.off('click');
+        $('button[ng-click="swapCompToleranceType()"]').off('click');
+        $('button[ng-click="swapCompToleranceType()"]').attr("disabled", "disabled");
 
-    // tolerance, threshold
-    if(!document.getElementById("tolerance").disabled){
-      document.getElementById("tolerance").disabled = true;
-    
-      var tolerance = $('<div class="col-md-12"><label>Fragment Annotation Tolerance (+/-) : </label></div>');
-      
-      var data_t = $('<label>', {text : $scope.submittedDataTop.data.tolerance + " " + $scope.submittedDataTop.data.toleranceType});
-      data_t.appendTo(tolerance);
-      data_t.css('margin-left', '10px');
-      tolerance.appendTo(panel);
-    }
-    if(!document.getElementById("cutoff").disabled){
-      document.getElementById("cutoff").disabled = true;
-      
-      var cutoff = $('<div class="col-md-12"><label>Annotation Intensity Threshold : </label></div>');
-      
-      var data_c = $('<label>', {text : $scope.submittedDataTop.data.cutoff + " " + $scope.submittedDataTop.data.matchingType});
-      data_c.appendTo(cutoff);
-      data_c.css('margin-left', '10px');
-      cutoff.appendTo(panel);
+        $scope.conditions.cutoffs.compTolerance = $scope.cutoffs.compTolerance;
+        $scope.conditions.cutoffs.compToleranceType = $scope.cutoffs.compToleranceType;
+      }
+
+      $('.col-md-5').append(panel);
+      console.log("$scope.conditions", $scope.conditions);
+    } else{
+      return
     }
 
-    $('.col-md-5').append(panel);
   };
 
   $scope.processData = function() {
     $scope.busy.isProcessing = true;
-    if ($scope.invalidColors()) {
+    if($('.col-md-5 .panel.panel-body').length == 0){
+      if ($scope.invalidColors()) {
 
-    } else {
+      } else {
+        let ionColors = {
+          a: $scope.checkModel.a.color,
+          b: $scope.checkModel.b.color,
+          c: $scope.checkModel.c.color,
+          x: $scope.checkModel.x.color,
+          y: $scope.checkModel.y.color,
+          z: $scope.checkModel.z.color
+        };
+  
+        $scope.submittedDataTop = $scope.prepareDataToProcess();
+        console.log("processData - after top");
+        $scope.submittedDataBottom = $scope.prepareDataToProcess(false);
+  
+        urlObj = {};
+        urlObj["usi"] = $scope.peptide.usi;
+        urlObj["usi_origin"] = $scope.peptide.usi_origin;
+        urlObj["usibottom"] = $scope.peptideBottom.usi;
+        urlObj["usibottom_origin"] = $scope.peptideBottom.usibottom_origin;
+        urlObj["fragment_tol"] = $scope.cutoffs.tolerance;
+        urlObj["fragment_tol_unit"] = $scope.cutoffs.toleranceType;
+        urlObj["matching_tol"] = $scope.cutoffs.compTolerance;
+        urlObj["matching_tol_unit"] = $scope.cutoffs.compToleranceType;
+        if($scope.peptide.api !== ''){
+        urlObj["ce_top"] = $scope.peptide.ce;
+        }
+        if($scope.peptideBottom.api !== ''){
+        urlObj["ce_bottom"] = $scope.peptideBottom.ce;
+        }
+        if($scope.peptide.prositModel !== ''){
+        urlObj["prositModel_top"] = $scope.peptide.prositModel;
+        }
+        if($scope.peptideBottom.api !== ''){
+        urlObj["prositModel_bottom"] = $scope.peptideBottom.prositModel;
+        }
+  
+        $scope.setUrlVars(urlObj);
+        console.log(urlObj);
+  
+        // httpRequest to submit data to processing script.
+            if($scope.submittedDataTop.data.peakData.length ==0){
+              $scope.busy.isProcessing = false;
+              return;
+            }
+            const annotation1 = new Annotation($scope.submittedDataTop.data);
+            console.log("process data $scope.submittedDataTop.data - top", annotation1);
+            $scope.annotatedResults = annotation1.fakeAPI();
+  
+  
+                if($scope.submittedDataBottom.data.peakData.length ==0){
+                  $scope.busy.isProcessing = false;
+                  return;
+                }
+                const annotation = new Annotation($scope.submittedDataBottom.data);
+                console.log("process data $scope.submittedDataTop.data - bottom", annotation);
+                $scope.annotatedResultsBottom = annotation.fakeAPI();
+  
+                check = function(spectrum){
+                if (typeof spectrum == 'undefined') {
+                  return [{"mz":"", "intensity":"", "percentBasePeak": 0, "sn": null, "matchedFeatures": []}]
+                }else{
+                  return spectrum;
+                }
+                }
+                //responseBottom.data.peaks = check(responseBottom.data.peaks);
+                let top = check($scope.annotatedResults.peaks);
+                let bottom = check($scope.annotatedResultsBottom.peaks);
+                // linear regression
+                var mergedForRegression = $scope.mergeSpectra(top, bottom);
+                var originalData = $scope.mergeSpectra(top, bottom);
+  
+                // remove non matches for linear fit
+                mergedForRegression = mergedForRegression.filter((x) =>{return x.mz_1 !==-1 && x.mz_2!== -1});
+                var int1 = mergedForRegression.map((x) =>{return x.intensity_1});
+                var int2 = mergedForRegression.map((x) =>{return x.intensity_2});
+                if (int1.length ===0 && int2.length ===0){
+                  beta_hat = 1;
+                }else{
+                 beta_hat = regressionThroughZero(int1, int2);
+                }
+                
+  
+                // data is max scaled if no merged peaks are found
+                var int1Scaling = d3.max(mergedForRegression.map((x) => {return x.intensity_1}));
+                int1Scaling = isNaN(int1Scaling) ?  d3.max(originalData, (x) => {return x.intensity_1}) : int1Scaling;
+                var int2Scaling = d3.max(mergedForRegression.map((x) => {return x.intensity_2}));
+                int2Scaling = isNaN(int2Scaling) ?  d3.max(originalData, (x) => {return x.intensity_2}) : int2Scaling;
+  
+                var intensityerror = originalData.map((x) => {
+                  if(x.mz_1 === -1 || x.mz_2 === -1){
+                    return 0;
+                  }
+                  var delta = x.mz_1 - x.mz_2;
+                  var avg = (x.mz_1 + x.mz_2) / 2;
+                  return delta / avg * Math.pow(10, 6);
+                })
+                var intensityerrorx = originalData.map((x) =>{if(x.mz_1 <0){return x.mz_2}else if(x.mz_2 <0){return x.mz_1}return (x.mz_1 + x.mz_2) / 2});
+                // size of bubble
+                var intensityDifference = originalData.map((x) => {
+                  if(x.mz_1 === -1){
+                    return Math.abs(x.intensity_2 / int2Scaling);
+                  }
+                  if(x.mz_2 === -1){
+                    return Math.abs(beta_hat * (x.intensity_1 / int1Scaling));
+                  }
+                // return(Math.abs( beta_hat * (x.intensity_1/int1Scaling) - x.intensity_2/int2Scaling) *100)
+                return Math.abs(beta_hat * (x.intensity_1/int1Scaling) - (x.intensity_2/int2Scaling))
+                });
+                $scope.plotData($scope.annotatedResults, intensityerror, intensityerrorx, intensityDifference,
+                  originalData.map(x => {return x.id_1}),
+                  originalData.map(x => {return x.id_2})
+                  );
+                $scope.plotDataBottom($scope.annotatedResultsBottom);
+  
+                $scope.getScores($scope.annotatedResults.peaks, $scope.annotatedResultsBottom.peaks);
+                $scope.busy.isProcessing = false;
+                
+      }
+    }
+    else{
+      // Added condition exists
       let ionColors = {
-        a: $scope.checkModel.a.color,
-        b: $scope.checkModel.b.color,
-        c: $scope.checkModel.c.color,
-        x: $scope.checkModel.x.color,
-        y: $scope.checkModel.y.color,
-        z: $scope.checkModel.z.color
+        a: $scope.conditions.fragmentTypes.a.color,
+        b: $scope.conditions.fragmentTypes.b.color,
+        c: $scope.conditions.fragmentTypes.c.color,
+        x: $scope.conditions.fragmentTypes.x.color,
+        y: $scope.conditions.fragmentTypes.y.color,
+        z: $scope.conditions.fragmentTypes.z.color
       };
 
       $scope.submittedDataTop = $scope.prepareDataToProcess();
+      console.log("processData - after top");
       $scope.submittedDataBottom = $scope.prepareDataToProcess(false);
-
 
       urlObj = {};
       urlObj["usi"] = $scope.peptide.usi;
       urlObj["usi_origin"] = $scope.peptide.usi_origin;
       urlObj["usibottom"] = $scope.peptideBottom.usi;
       urlObj["usibottom_origin"] = $scope.peptideBottom.usibottom_origin;
-      urlObj["fragment_tol"] = $scope.cutoffs.tolerance;
-      urlObj["fragment_tol_unit"] = $scope.cutoffs.toleranceType;
-      urlObj["matching_tol"] = $scope.cutoffs.compTolerance;
-      urlObj["matching_tol_unit"] = $scope.cutoffs.compToleranceType;
+      // urlObj["fragment_tol"] = $scope.cutoffs.tolerance;
+      urlObj["fragment_tol"] = $scope.conditions.cutoffs.tolerance;
+      // urlObj["fragment_tol_unit"] = $scope.cutoffs.toleranceType;
+      urlObj["fragment_tol_unit"] = $scope.conditions.cutoffs.toleranceType;
+      // urlObj["matching_tol"] = $scope.cutoffs.compTolerance;
+      urlObj["matching_tol"] = $scope.conditions.cutoffs.compTolerance;
+      // urlObj["matching_tol_unit"] = $scope.cutoffs.compToleranceType;
+      urlObj["matching_tol_unit"] = $scope.conditions.cutoffs.compToleranceType;
       if($scope.peptide.api !== ''){
       urlObj["ce_top"] = $scope.peptide.ce;
       }
@@ -977,89 +1185,87 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
       }
 
       $scope.setUrlVars(urlObj);
+      console.log(urlObj);
 
       // httpRequest to submit data to processing script.
-          if($scope.submittedDataTop.data.peakData.length ==0){
+      if($scope.submittedDataTop.data.peakData.length ==0){
+        $scope.busy.isProcessing = false;
+        return;
+      }
+      const annotation1 = new Annotation($scope.submittedDataTop.data);
+      console.log("process data $scope.submittedDataTop.data - top", annotation1);
+      $scope.annotatedResults = annotation1.fakeAPI();
+
+
+          if($scope.submittedDataBottom.data.peakData.length ==0){
             $scope.busy.isProcessing = false;
             return;
           }
-          const annotation1 = new Annotation($scope.submittedDataTop.data);
-          console.log("annotation1", annotation1);
-          $scope.annotatedResults = annotation1.fakeAPI();
+          const annotation = new Annotation($scope.submittedDataBottom.data);
+          console.log("process data $scope.submittedDataTop.data - bottom", annotation);
+          $scope.annotatedResultsBottom = annotation.fakeAPI();
 
+          check = function(spectrum){
+          if (typeof spectrum == 'undefined') {
+            return [{"mz":"", "intensity":"", "percentBasePeak": 0, "sn": null, "matchedFeatures": []}]
+          }else{
+            return spectrum;
+          }
+          }
+          //responseBottom.data.peaks = check(responseBottom.data.peaks);
+          let top = check($scope.annotatedResults.peaks);
+          let bottom = check($scope.annotatedResultsBottom.peaks);
+          // linear regression
+          var mergedForRegression = $scope.mergeSpectra(top, bottom);
+          var originalData = $scope.mergeSpectra(top, bottom);
 
-              if($scope.submittedDataBottom.data.peakData.length ==0){
-                $scope.busy.isProcessing = false;
-                return;
-              }
-              const annotation = new Annotation($scope.submittedDataBottom.data);
-              console.log("annotation", annotation);
-              $scope.annotatedResultsBottom = annotation.fakeAPI();
+          // remove non matches for linear fit
+          mergedForRegression = mergedForRegression.filter((x) =>{return x.mz_1 !==-1 && x.mz_2!== -1});
+          var int1 = mergedForRegression.map((x) =>{return x.intensity_1});
+          var int2 = mergedForRegression.map((x) =>{return x.intensity_2});
+          if (int1.length ===0 && int2.length ===0){
+            beta_hat = 1;
+          }else{
+           beta_hat = regressionThroughZero(int1, int2);
+          }
+          
 
-              check = function(spectrum){
-              if (typeof spectrum == 'undefined') {
-                return [{"mz":"", "intensity":"", "percentBasePeak": 0, "sn": null, "matchedFeatures": []}]
-              }else{
-                return spectrum;
-              }
-              }
-              //responseBottom.data.peaks = check(responseBottom.data.peaks);
-              let top = check($scope.annotatedResults.peaks);
-              let bottom = check($scope.annotatedResultsBottom.peaks);
-              // linear regression
-              var mergedForRegression = $scope.mergeSpectra(top, bottom);
-              var originalData = $scope.mergeSpectra(top, bottom);
+          // data is max scaled if no merged peaks are found
+          var int1Scaling = d3.max(mergedForRegression.map((x) => {return x.intensity_1}));
+          int1Scaling = isNaN(int1Scaling) ?  d3.max(originalData, (x) => {return x.intensity_1}) : int1Scaling;
+          var int2Scaling = d3.max(mergedForRegression.map((x) => {return x.intensity_2}));
+          int2Scaling = isNaN(int2Scaling) ?  d3.max(originalData, (x) => {return x.intensity_2}) : int2Scaling;
 
-              // remove non matches for linear fit
-              mergedForRegression = mergedForRegression.filter((x) =>{return x.mz_1 !==-1 && x.mz_2!== -1});
-              var int1 = mergedForRegression.map((x) =>{return x.intensity_1});
-              var int2 = mergedForRegression.map((x) =>{return x.intensity_2});
-              if (int1.length ===0 && int2.length ===0){
-                beta_hat = 1;
-              }else{
-               beta_hat = regressionThroughZero(int1, int2);
-              }
-              
+          var intensityerror = originalData.map((x) => {
+            if(x.mz_1 === -1 || x.mz_2 === -1){
+              return 0;
+            }
+            var delta = x.mz_1 - x.mz_2;
+            var avg = (x.mz_1 + x.mz_2) / 2;
+            return delta / avg * Math.pow(10, 6);
+          })
+          var intensityerrorx = originalData.map((x) =>{if(x.mz_1 <0){return x.mz_2}else if(x.mz_2 <0){return x.mz_1}return (x.mz_1 + x.mz_2) / 2});
+          // size of bubble
+          var intensityDifference = originalData.map((x) => {
+            if(x.mz_1 === -1){
+              return Math.abs(x.intensity_2 / int2Scaling);
+            }
+            if(x.mz_2 === -1){
+              return Math.abs(beta_hat * (x.intensity_1 / int1Scaling));
+            }
+          // return(Math.abs( beta_hat * (x.intensity_1/int1Scaling) - x.intensity_2/int2Scaling) *100)
+          return Math.abs(beta_hat * (x.intensity_1/int1Scaling) - (x.intensity_2/int2Scaling))
+          });
+          $scope.plotData($scope.annotatedResults, intensityerror, intensityerrorx, intensityDifference,
+            originalData.map(x => {return x.id_1}),
+            originalData.map(x => {return x.id_2})
+            );
+          $scope.plotDataBottom($scope.annotatedResultsBottom);
 
-              // data is max scaled if no merged peaks are found
-              var int1Scaling = d3.max(mergedForRegression.map((x) => {return x.intensity_1}));
-              int1Scaling = isNaN(int1Scaling) ?  d3.max(originalData, (x) => {return x.intensity_1}) : int1Scaling;
-              var int2Scaling = d3.max(mergedForRegression.map((x) => {return x.intensity_2}));
-              int2Scaling = isNaN(int2Scaling) ?  d3.max(originalData, (x) => {return x.intensity_2}) : int2Scaling;
-
-              var intensityerror = originalData.map((x) => {
-                if(x.mz_1 === -1 || x.mz_2 === -1){
-                  return 0;
-                }
-                var delta = x.mz_1 - x.mz_2;
-                var avg = (x.mz_1 + x.mz_2) / 2;
-                return delta / avg * Math.pow(10, 6);
-              })
-              var intensityerrorx = originalData.map((x) =>{if(x.mz_1 <0){return x.mz_2}else if(x.mz_2 <0){return x.mz_1}return (x.mz_1 + x.mz_2) / 2});
-              // size of bubble
-              var intensityDifference = originalData.map((x) => {
-                if(x.mz_1 === -1){
-                  return Math.abs(x.intensity_2 / int2Scaling);
-                }
-                if(x.mz_2 === -1){
-                  return Math.abs(beta_hat * (x.intensity_1 / int1Scaling));
-                }
-              // return(Math.abs( beta_hat * (x.intensity_1/int1Scaling) - x.intensity_2/int2Scaling) *100)
-              return Math.abs(beta_hat * (x.intensity_1/int1Scaling) - (x.intensity_2/int2Scaling))
-              });
-              $scope.plotData($scope.annotatedResults, intensityerror, intensityerrorx, intensityDifference,
-                originalData.map(x => {return x.id_1}),
-                originalData.map(x => {return x.id_2})
-                );
-              $scope.plotDataBottom($scope.annotatedResultsBottom);
-
-              $scope.getScores($scope.annotatedResults.peaks, $scope.annotatedResultsBottom.peaks);
-              $scope.busy.isProcessing = false;
-              
-              console.log("controllers.js processData");
-              console.log($scope);
-              console.log($scope.getFragmentType);
+          $scope.getScores($scope.annotatedResults.peaks, $scope.annotatedResultsBottom.peaks);
+          $scope.busy.isProcessing = false;
     }
+    
   };
 
   $scope.invalidColors = function() {
@@ -1399,7 +1605,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
     .then( (values) => {
       if(values[0] !== undefined){
         $scope.processData();
-        console.log("controller.js - promise.all");
         $scope.busy.isProcessing = true;
         setTimeout(()=>{ $scope.processUSI(true, true, true)
         }, 300); // no good reason for it 
@@ -1407,5 +1612,4 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
     } , function(response2) {
     } 
     );
-  console.log("controller.js GraphCtrl - end")
 }]);

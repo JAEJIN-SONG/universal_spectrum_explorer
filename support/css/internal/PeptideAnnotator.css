@@ -430,3 +430,23 @@ div.tooltip {
   color: black;
 }
 
+/* $scope.getCondition() */
+.losses {
+  margin: 0 10px;
+}
+
+.added-color {
+  min-width: 120px;
+}
+.added-color input{
+  background-color: #fff!important;
+}
+.added-color .minicolors-swatch-color {
+  opacity: 1;
+}
+.clicked-btn {
+  color: #000000; 
+  background-color: rgba(51,122,183,0.4);
+  border-color: #555555; 
+}
+

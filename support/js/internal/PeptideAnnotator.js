@@ -12,7 +12,6 @@ myApp.config(function(uiSelectConfig) {
 /* master controller to carry similar functionality to $rootScope */
 myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, $http, $element, $attrs, $transclude) {
 
-  console.log("PeptideAnnotator.js - MasterCtrl");
   $scope.getUrlVars = function() {
     var vars = {};
     var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
@@ -36,16 +35,18 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
     for (let key in mappedProperties) {
       if (["usi", "usi_origin", "usibottom", "usibottom_origin", "fragment_tol", "fragment_tol_unit", "matching_tol", "matching_tol_unit", "ce_top", "ce_bottom", "prositModel_top", "prositModel_bottom"].includes(key)){
         if(typeof mappedProperties[key] != "undefined"){
-      if (!firstKey){
-        string+="&";
-      }
-      string+=key;
-      string+="=";
-      string+=mappedProperties[key];
-      firstKey = false;
+          if (!firstKey){
+            string+="&";
+          }
+          string+=key;
+          string+="=";
+          string+=mappedProperties[key];
+          firstKey = false;
       }}
     }
     window.history.replaceState(null, null, string);
+    console.log("setUrlVars");
+    console.log(string);
 
   };
 
@@ -93,8 +94,6 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
     prositModel: parseInt($scope.getUrlVars().ce_bottom) ?  $scope.getUrlVars().prositModel_bottom ? $scope.getUrlVars().prositModel_bottom : 'intensity_prosit_publication'  : ''
   };
 
-
-
   // stores the values for selected fragments and colors
   $scope.checkModel = {
     a: { selected: false, color: "#820CAD", label: "a" },
@@ -134,6 +133,33 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
   $scope.tableColumns = [
     {id: 1, name: 'M/Z, Intensity'}
   ];
+
+  //for getCondition
+  $scope.conditions = {};
+  $scope.conditions.fragmentTypes = {
+    a: { selected: false, color: "#820CAD", label: "a" },
+    b: { selected: false, color: "#0D75BC", label: "b" },
+    c: { selected: false, color: "#07A14A", label: "c" },
+    C: { selected: false, color: "#035729", label: "c-1" },
+    x: { selected: false, color: "#D1E02D", label: "x" },
+    y: { selected: false, color: "#BE202D", label: "y" },
+    z: { selected: false, color: "#F79420", label: "z\u2022" },
+    Z: { selected: false, color: "#A16016", label: "z+1" },
+    H2O: { selected: false },
+    NH3: { selected: false },
+    HPO3: { selected: false },
+    CO2: { selected: false },
+    precursor: { selected: true, color: "#666666"},
+    unassigned: { selected: true, color: "#A6A6A6"}
+  };
+  $scope.conditions.cutoffs = {
+    matchingCutoff: 0,
+    matchingType: "% Base Peak",
+    toleranceType: ["ppm", "Da"].includes($scope.getUrlVars().fragment_tol_unit) ? $scope.getUrlVars().fragment_tol_unit : "ppm",
+    tolerance: parseInt($scope.getUrlVars().fragment_tol) || 10,
+    compToleranceType:["ppm", "Da"].includes($scope.getUrlVars().matching_tol_unit) ? $scope.getUrlVars().matching_tol_unit : "ppm",
+    compTolerance: parseInt($scope.getUrlVars().matching_tol) || 10
+  };
 
   $scope.db = {};
   $scope.dbBottom = {};
@@ -863,7 +889,6 @@ m1
       "C-terminus"
     ]
   };
-  console.log("PeptideAnnotator.js - MasterCtrl end");
 });
 
 myApp.controller('PeptideCtrl', function ($scope) {

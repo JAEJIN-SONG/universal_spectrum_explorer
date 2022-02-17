@@ -77,9 +77,7 @@ Annotation = class Annotation {
 			}
 		});
     this.fragmentTypes = request.fragmentTypes;
-
-    console.log("bundle.js");
-    console.log(this.fragmentTypes);
+    console.log("request", request);
 
 		var max_peak = this.peakData.reduce((e,i)=>{ return e.intensity > i.intensity ? e : i});
 		let max_peak_intensity = max_peak.intensity;
