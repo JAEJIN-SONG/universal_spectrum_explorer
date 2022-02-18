@@ -108,8 +108,9 @@ Annotation = class Annotation {
 		this.allMassOffset = this.calculateAllMassOffset(
 			this.mods);
 		this.response["modifications"] =this.mods;
-		this.sequence = request["sequence"];
-		this.peaks = this.annotatePeaks();
+    this.sequence = request["sequence"];
+    this.peaks = this.annotatePeaks();
+    console.log("peaks", this.peaks);
 		this.modifications = [];// this.generateModifications();
 		this.modifications = new Array(this.sequence.length + 2).fill(undefined).map((e, i) =>{
 			return {
@@ -164,21 +165,25 @@ Annotation = class Annotation {
 
 
 		var bla = this.response["fragments"].map((el) =>{ // el are calculated frags
-			var a = binary.getClosestValues_spec2(spectrum_1, el.mz); //peak in exp // is a reference
+      var a = binary.getClosestValues_spec2(spectrum_1, el.mz); //peak in exp // is a reference
+      console.log("--------------------------");
+      console.log("a", a);
 
-
-			var is_inside = compare_F(a, el); // TODO correct here?
+      var is_inside = compare_F(a, el); // TODO correct here?
+      console.log("is_inside", is_inside);
 			if(is_inside){
 				a["matchedFeatures"].push({
 					"feature": el,
 					"massError": (a["mz"] -el["mz"]) / el["mz"] * Math.pow(10, 6) // https://github.com/coongroup/IPSA/blob/0b5125a8923d1a1897b61c53390164e7e7c5d356/support/php/NegativeModeAnnotateEntireFile.php#L898
 
-				});
+        });
+        console.log("if문 실행");
 				return(a)
 			}
 
 
-		}).filter((el) =>{return el !== undefined});
+    }).filter((el) =>{return el !== undefined});
+    
 		spectrum_1 = spectrum_1.map((el) => {
 			if (el["percentBasePeak"] <= this.cutoff){
 				el["matchedFeatures"] = [];

@@ -45,8 +45,6 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
       }}
     }
     window.history.replaceState(null, null, string);
-    console.log("setUrlVars");
-    console.log(string);
 
   };
 
