@@ -77,7 +77,6 @@ Annotation = class Annotation {
 			}
 		});
     this.fragmentTypes = request.fragmentTypes;
-    console.log("request", request);
 
 		var max_peak = this.peakData.reduce((e,i)=>{ return e.intensity > i.intensity ? e : i});
 		let max_peak_intensity = max_peak.intensity;
@@ -110,7 +109,6 @@ Annotation = class Annotation {
 		this.response["modifications"] =this.mods;
     this.sequence = request["sequence"];
     this.peaks = this.annotatePeaks();
-    console.log("peaks", this.peaks);
 		this.modifications = [];// this.generateModifications();
 		this.modifications = new Array(this.sequence.length + 2).fill(undefined).map((e, i) =>{
 			return {
@@ -166,18 +164,18 @@ Annotation = class Annotation {
 
 		var bla = this.response["fragments"].map((el) =>{ // el are calculated frags
       var a = binary.getClosestValues_spec2(spectrum_1, el.mz); //peak in exp // is a reference
-      console.log("--------------------------");
-      console.log("a", a);
+      // console.log("--------------------------");
+      // console.log("a", a);
 
       var is_inside = compare_F(a, el); // TODO correct here?
-      console.log("is_inside", is_inside);
+      // console.log("is_inside", is_inside);
 			if(is_inside){
 				a["matchedFeatures"].push({
 					"feature": el,
 					"massError": (a["mz"] -el["mz"]) / el["mz"] * Math.pow(10, 6) // https://github.com/coongroup/IPSA/blob/0b5125a8923d1a1897b61c53390164e7e7c5d356/support/php/NegativeModeAnnotateEntireFile.php#L898
 
         });
-        console.log("if문 실행");
+        // console.log("if문 실행");
 				return(a)
 			}
 
