@@ -831,7 +831,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
     return $http.post($scope.submittedDataTop.url, $scope.submittedDataTop.data)
   }
 
-  function addColor(labelData){    
+  function addColor(labelData){
     var col6 = $('<div />', { class : "col-sm-6"});
     
     var row = $('<div />', {class : "row"}).appendTo(col6);
@@ -860,7 +860,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
       
       var panel = $('<div />', {class : "panel panel-body conditions"});
       var fragmentTypes = angular.copy($scope.checkModel);
-      console.log("fragmentTypes", fragmentTypes);
       var cutoffs = angular.copy($scope.cutoffs);
       $scope.conditions.push({
         "fragmentTypes" : fragmentTypes,
@@ -1130,7 +1129,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
           }
           const annotation = new Annotation($scope.submittedDataBottom.data);
           $scope.annotatedResultsBottom = annotation.fakeAPI();
-          console.log("process data $scope.annotatedResultsBottom", $scope.annotatedResultsBottom);
+          console.log("process data1 $scope.annotatedResultsBottom", $scope.annotatedResultsBottom);
 
           check = function(spectrum){
           if (typeof spectrum == 'undefined') {
@@ -1139,60 +1138,148 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
             return spectrum;
           }
           }
-          //responseBottom.data.peaks = check(responseBottom.data.peaks);
-          let top = check($scope.annotatedResults.peaks);
-          let bottom = check($scope.annotatedResultsBottom.peaks);
-          // linear regression
-          var mergedForRegression = $scope.mergeSpectra(top, bottom);
-          var originalData = $scope.mergeSpectra(top, bottom);
+          // //responseBottom.data.peaks = check(responseBottom.data.peaks);
+          // let top = check($scope.annotatedResults.peaks);
+          // let bottom = check($scope.annotatedResultsBottom.peaks);
+          // // linear regression
+          // var mergedForRegression = $scope.mergeSpectra(top, bottom);
+          // var originalData = $scope.mergeSpectra(top, bottom);
 
-          // remove non matches for linear fit
-          mergedForRegression = mergedForRegression.filter((x) =>{return x.mz_1 !==-1 && x.mz_2!== -1});
-          var int1 = mergedForRegression.map((x) =>{return x.intensity_1});
-          var int2 = mergedForRegression.map((x) =>{return x.intensity_2});
-          if (int1.length ===0 && int2.length ===0){
-            beta_hat = 1;
-          }else{
-            beta_hat = regressionThroughZero(int1, int2);
-          }
+          // // remove non matches for linear fit
+          // mergedForRegression = mergedForRegression.filter((x) =>{return x.mz_1 !==-1 && x.mz_2!== -1});
+          // var int1 = mergedForRegression.map((x) =>{return x.intensity_1});
+          // var int2 = mergedForRegression.map((x) =>{return x.intensity_2});
+          // if (int1.length ===0 && int2.length ===0){
+          //   beta_hat = 1;
+          // }else{
+          //   beta_hat = regressionThroughZero(int1, int2);
+          // }
           
 
-          // data is max scaled if no merged peaks are found
-          var int1Scaling = d3.max(mergedForRegression.map((x) => {return x.intensity_1}));
-          int1Scaling = isNaN(int1Scaling) ?  d3.max(originalData, (x) => {return x.intensity_1}) : int1Scaling;
-          var int2Scaling = d3.max(mergedForRegression.map((x) => {return x.intensity_2}));
-          int2Scaling = isNaN(int2Scaling) ?  d3.max(originalData, (x) => {return x.intensity_2}) : int2Scaling;
+          // // data is max scaled if no merged peaks are found
+          // var int1Scaling = d3.max(mergedForRegression.map((x) => {return x.intensity_1}));
+          // int1Scaling = isNaN(int1Scaling) ?  d3.max(originalData, (x) => {return x.intensity_1}) : int1Scaling;
+          // var int2Scaling = d3.max(mergedForRegression.map((x) => {return x.intensity_2}));
+          // int2Scaling = isNaN(int2Scaling) ?  d3.max(originalData, (x) => {return x.intensity_2}) : int2Scaling;
 
-          var intensityerror = originalData.map((x) => {
-            if(x.mz_1 === -1 || x.mz_2 === -1){
-              return 0;
-            }
-            var delta = x.mz_1 - x.mz_2;
-            var avg = (x.mz_1 + x.mz_2) / 2;
-            return delta / avg * Math.pow(10, 6);
-          })
-          var intensityerrorx = originalData.map((x) =>{if(x.mz_1 <0){return x.mz_2}else if(x.mz_2 <0){return x.mz_1}return (x.mz_1 + x.mz_2) / 2});
-          // size of bubble
-          var intensityDifference = originalData.map((x) => {
-            if(x.mz_1 === -1){
-              return Math.abs(x.intensity_2 / int2Scaling);
-            }
-            if(x.mz_2 === -1){
-              return Math.abs(beta_hat * (x.intensity_1 / int1Scaling));
-            }
-          // return(Math.abs( beta_hat * (x.intensity_1/int1Scaling) - x.intensity_2/int2Scaling) *100)
-          return Math.abs(beta_hat * (x.intensity_1/int1Scaling) - (x.intensity_2/int2Scaling))
-          });
-          $scope.plotData($scope.annotatedResults, intensityerror, intensityerrorx, intensityDifference,
-            originalData.map(x => {return x.id_1}),
-            originalData.map(x => {return x.id_2})
-            );
-          $scope.plotDataBottom($scope.annotatedResultsBottom);
+          // var intensityerror = originalData.map((x) => {
+          //   if(x.mz_1 === -1 || x.mz_2 === -1){
+          //     return 0;
+          //   }
+          //   var delta = x.mz_1 - x.mz_2;
+          //   var avg = (x.mz_1 + x.mz_2) / 2;
+          //   return delta / avg * Math.pow(10, 6);
+          // })
+          // var intensityerrorx = originalData.map((x) =>{if(x.mz_1 <0){return x.mz_2}else if(x.mz_2 <0){return x.mz_1}return (x.mz_1 + x.mz_2) / 2});
+          // // size of bubble
+          // var intensityDifference = originalData.map((x) => {
+          //   if(x.mz_1 === -1){
+          //     return Math.abs(x.intensity_2 / int2Scaling);
+          //   }
+          //   if(x.mz_2 === -1){
+          //     return Math.abs(beta_hat * (x.intensity_1 / int1Scaling));
+          //   }
+          // // return(Math.abs( beta_hat * (x.intensity_1/int1Scaling) - x.intensity_2/int2Scaling) *100)
+          // return Math.abs(beta_hat * (x.intensity_1/int1Scaling) - (x.intensity_2/int2Scaling))
+          // });
 
-          $scope.getScores($scope.annotatedResults.peaks, $scope.annotatedResultsBottom.peaks);
-          $scope.busy.isProcessing = false;
+          $scope.peakTop.push(angular.copy($scope.annotatedResults.peaks));
+          $scope.peakBottom.push(angular.copy($scope.annotatedResultsBottom.peaks));
+
+          // $scope.plotData($scope.annotatedResults, intensityerror, intensityerrorx, intensityDifference,
+          //   originalData.map(x => {return x.id_1}),
+          //   originalData.map(x => {return x.id_2})
+          //   );
+          // $scope.plotDataBottom($scope.annotatedResultsBottom);
+
+          // $scope.getScores($scope.annotatedResults.peaks, $scope.annotatedResultsBottom.peaks);
+          // $scope.busy.isProcessing = false;
           } 
       })
+
+      angular.forEach($scope.conditions, function(el){
+        if(el.fragmentTypes.a.selected) $scope.checkModel.a = el.fragmentTypes.a;
+        if(el.fragmentTypes.b.selected) $scope.checkModel.b = el.fragmentTypes.b;
+        if(el.fragmentTypes.c.selected) $scope.checkModel.c = el.fragmentTypes.c;
+        if(el.fragmentTypes.x.selected) $scope.checkModel.x = el.fragmentTypes.x;
+        if(el.fragmentTypes.y.selected) $scope.checkModel.y = el.fragmentTypes.y;
+        if(el.fragmentTypes.z.selected) $scope.checkModel.z = el.fragmentTypes.z;
+      })
+      $scope.invalidColors();
+
+      for (var i=0; i < $scope.annotatedResults.peaks.length; i++){
+        if($scope.annotatedResults.peaks[i].matchedFeatures.length == 0){
+          for(var j=0; j < $scope.peakTop.length; j++){
+            if($scope.peakTop[j][i].matchedFeatures.length != 0){
+              $scope.annotatedResults.peaks[i] = $scope.peakTop[j][i];
+            }
+          }
+        }
+      }
+      for (var i=0; i < $scope.annotatedResultsBottom.peaks.length; i++){
+        if($scope.annotatedResultsBottom.peaks[i].matchedFeatures.length == 0){
+          for(var j=0; j < $scope.peakBottom.length; j++){
+            if($scope.peakBottom[j][i].matchedFeatures.length != 0){
+              $scope.annotatedResultsBottom.peaks[i] = $scope.peakBottom[j][i];
+            }
+          }
+        }
+      }
+      console.log("peakBottom", $scope.peakBottom[0][0]);
+      console.log("testing", $scope.annotatedResultsBottom.peaks);
+      //responseBottom.data.peaks = check(responseBottom.data.peaks);
+      let top = check($scope.annotatedResults.peaks);
+      let bottom = check($scope.annotatedResultsBottom.peaks);
+      // linear regression
+      var mergedForRegression = $scope.mergeSpectra(top, bottom);
+      var originalData = $scope.mergeSpectra(top, bottom);
+
+      // remove non matches for linear fit
+      mergedForRegression = mergedForRegression.filter((x) =>{return x.mz_1 !==-1 && x.mz_2!== -1});
+      var int1 = mergedForRegression.map((x) =>{return x.intensity_1});
+      var int2 = mergedForRegression.map((x) =>{return x.intensity_2});
+      if (int1.length ===0 && int2.length ===0){
+        beta_hat = 1;
+      }else{
+        beta_hat = regressionThroughZero(int1, int2);
+      }
+      
+
+      // data is max scaled if no merged peaks are found
+      var int1Scaling = d3.max(mergedForRegression.map((x) => {return x.intensity_1}));
+      int1Scaling = isNaN(int1Scaling) ?  d3.max(originalData, (x) => {return x.intensity_1}) : int1Scaling;
+      var int2Scaling = d3.max(mergedForRegression.map((x) => {return x.intensity_2}));
+      int2Scaling = isNaN(int2Scaling) ?  d3.max(originalData, (x) => {return x.intensity_2}) : int2Scaling;
+
+      var intensityerror = originalData.map((x) => {
+        if(x.mz_1 === -1 || x.mz_2 === -1){
+          return 0;
+        }
+        var delta = x.mz_1 - x.mz_2;
+        var avg = (x.mz_1 + x.mz_2) / 2;
+        return delta / avg * Math.pow(10, 6);
+      })
+      var intensityerrorx = originalData.map((x) =>{if(x.mz_1 <0){return x.mz_2}else if(x.mz_2 <0){return x.mz_1}return (x.mz_1 + x.mz_2) / 2});
+      // size of bubble
+      var intensityDifference = originalData.map((x) => {
+        if(x.mz_1 === -1){
+          return Math.abs(x.intensity_2 / int2Scaling);
+        }
+        if(x.mz_2 === -1){
+          return Math.abs(beta_hat * (x.intensity_1 / int1Scaling));
+        }
+      // return(Math.abs( beta_hat * (x.intensity_1/int1Scaling) - x.intensity_2/int2Scaling) *100)
+      return Math.abs(beta_hat * (x.intensity_1/int1Scaling) - (x.intensity_2/int2Scaling))
+      });
+      $scope.plotData($scope.annotatedResults, intensityerror, intensityerrorx, intensityDifference,
+        originalData.map(x => {return x.id_1}),
+        originalData.map(x => {return x.id_2})
+        );
+      $scope.plotDataBottom($scope.annotatedResultsBottom);
+
+      $scope.getScores($scope.annotatedResults.peaks, $scope.annotatedResultsBottom.peaks);
+      $scope.busy.isProcessing = false;
+
 
       // Added condition exists
       // if ($scope.invalidColors()) {

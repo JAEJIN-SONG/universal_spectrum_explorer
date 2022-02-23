@@ -135,6 +135,9 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
   //for getCondition
   $scope.conditions = [];
 
+  $scope.peakTop = [];
+  $scope.peakBottom = [];
+
   $scope.db = {};
   $scope.dbBottom = {};
 

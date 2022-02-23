@@ -155,7 +155,9 @@ Annotation = class Annotation {
 			el["percentBasePeak"] = el["intensity"] ;
 			el["sn"] = null;
 			return(el);
-		})
+    })
+    console.log("spectrum_1", spectrum_1);
+    console.log("this.response['fragments']", this.response["fragments"]);
 		// var spectrum_1 = answer; // we search in the calculated values
 		var sorter_asc_mz = binary.my_sorter('mz', 'asc');
 		var compare_F = binary.compare_FACTORY('mz', this.isPPM? "ppm" : "Da", this.tolerance);
@@ -164,18 +166,13 @@ Annotation = class Annotation {
 
 		var bla = this.response["fragments"].map((el) =>{ // el are calculated frags
       var a = binary.getClosestValues_spec2(spectrum_1, el.mz); //peak in exp // is a reference
-      // console.log("--------------------------");
-      // console.log("a", a);
 
       var is_inside = compare_F(a, el); // TODO correct here?
-      // console.log("is_inside", is_inside);
 			if(is_inside){
 				a["matchedFeatures"].push({
 					"feature": el,
 					"massError": (a["mz"] -el["mz"]) / el["mz"] * Math.pow(10, 6) // https://github.com/coongroup/IPSA/blob/0b5125a8923d1a1897b61c53390164e7e7c5d356/support/php/NegativeModeAnnotateEntireFile.php#L898
-
         });
-        // console.log("if문 실행");
 				return(a)
 			}
 
