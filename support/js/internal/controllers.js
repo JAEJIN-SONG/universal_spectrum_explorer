@@ -733,7 +733,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
         "toleranceType" : $scope.cutoffs.toleranceType,
         "tolerance" : $scope.cutoffs.tolerance,
         "matchingType": $scope.cutoffs.matchingType,
-        "cutoff": $scope.cutoffs.matchingCutoff
+        "cutoff": $scope.cutoffs.matchingCutoff,
+        "cutoffMax": $scope.cutoffs.matchingCutoffMax,
   /*
         urlObj["usi"] = $scope.peptide.usi;
         urlObj["usi_origin"] = $scope.peptide.usi_origin;
@@ -758,7 +759,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
         "toleranceType" : condition.cutoffs.toleranceType,
         "tolerance" : condition.cutoffs.tolerance,
         "matchingType": condition.cutoffs.matchingType,
-        "cutoff": condition.cutoffs.matchingCutoff
+        "cutoff": condition.cutoffs.matchingCutoff,
+        "cutoffMax": $scope.cutoffs.matchingCutoffMax,
   /*
         urlObj["usi"] = $scope.peptide.usi;
         urlObj["usi_origin"] = $scope.peptide.usi_origin;
@@ -855,15 +857,23 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
     return col6;
   }
 
+  $scope.deleteAll = function(){
+    console.log('clear')
+    $scope.conditions.length = 0;
+  }
+
   $scope.getCondition = function(){
+
     if($('div.tab-content > div.tab-pane.ng-scope:eq(2) div.col-md-12:eq(0) > div.ng-scope > div.row:eq(0)').find('label.active').length > 0){
       
       var panel = $('<div />', {class : "panel panel-body conditions"});
       var fragmentTypes = angular.copy($scope.checkModel);
       var cutoffs = angular.copy($scope.cutoffs);
+      var conditionsLength = $scope.conditions.length;
       $scope.conditions.push({
         "fragmentTypes" : fragmentTypes,
-        "cutoffs" : cutoffs
+        "cutoffs" : cutoffs,
+        "conditionOrder": conditionsLength,
       });
     
       fragmentTypes = angular.copy($scope.checkModel);
@@ -930,9 +940,15 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
       var data_c = $('<label>', {text : $scope.cutoffs.matchingCutoff + " " + $scope.cutoffs.matchingType}).appendTo(cutoff);
       data_c.css('margin-left', '10px');
 
+      var cutoffMax = $('<div class="col-sm-12"><label>Annotation Intensity Threshold Max : </label></div>').appendTo(panel);
+      var data_c = $('<label>', {text : $scope.cutoffs.matchingCutoffMax + " " + $scope.cutoffs.matchingMaxType}).appendTo(cutoffMax);
+      data_c.css('margin-left', '10px');
+
       var mathcing = $('<div class="col-sm-12"><label>Peak Matching Tolerance (+/-) : </label></div>').appendTo(panel);
       var data_m = $('<label>', {text : $scope.cutoffs.compTolerance + " " + $scope.cutoffs.compToleranceType}).appendTo(mathcing);
       data_c.css('margin-left', '10px');
+
+      var deleteButton = $('<button class="btn btn-primary pull-right" type="button" ng-click="deleteAll()">Delete</button>').appendTo(panel);
 
       $('.col-md-5').append(panel);
       console.log("in getCondition : $scope.conditions", $scope.conditions);

@@ -135,6 +135,11 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
   //for getCondition
   $scope.conditions = [];
 
+  $scope.deleteAll = function() {
+    console.log('deleteAll')
+    $scope.conditions.clear();
+  };
+
   $scope.peakTop = [];
   $scope.peakBottom = [];
 
@@ -601,7 +606,9 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
 
   $scope.cutoffs = {
     matchingCutoff: 0,
+    matchingCutoffMax: 100,
     matchingType: "% Base Peak",
+    matchingMaxType: "% Max Peak",
     toleranceType: ["ppm", "Da"].includes($scope.getUrlVars().fragment_tol_unit) ? $scope.getUrlVars().fragment_tol_unit : "ppm",
     tolerance: parseInt($scope.getUrlVars().fragment_tol) || 10,
     compToleranceType:["ppm", "Da"].includes($scope.getUrlVars().matching_tol_unit) ? $scope.getUrlVars().matching_tol_unit : "ppm",
