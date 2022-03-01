@@ -181,6 +181,7 @@ Annotation = class Annotation {
 
     }).filter((el) =>{return el !== undefined});
     
+    // cutoff min / max limit
 		spectrum_1 = spectrum_1.map((el) => {
 			if (el["percentBasePeak"] <= this.cutoff || el["percentBasePeak"] >= this.cutoffMax){
 				el["matchedFeatures"] = [];

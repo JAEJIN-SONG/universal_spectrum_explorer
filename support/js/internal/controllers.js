@@ -760,7 +760,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
         "tolerance" : condition.cutoffs.tolerance,
         "matchingType": condition.cutoffs.matchingType,
         "cutoff": condition.cutoffs.matchingCutoff,
-        "cutoffMax": $scope.cutoffs.matchingCutoffMax,
+        "cutoffMax": condition.cutoffs.matchingCutoffMax,
   /*
         urlObj["usi"] = $scope.peptide.usi;
         urlObj["usi_origin"] = $scope.peptide.usi_origin;
