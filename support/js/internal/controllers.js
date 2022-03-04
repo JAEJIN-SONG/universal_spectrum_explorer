@@ -880,6 +880,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           tolerance: condition.cutoffs.tolerance,
           matchingType: condition.cutoffs.matchingType,
           cutoff: condition.cutoffs.matchingCutoff,
+          cutoffMax: condition.cutoffs.matchingCutoffMax,
           /*
         urlObj["usi"] = $scope.peptide.usi;
         urlObj["usi_origin"] = $scope.peptide.usi_origin;
@@ -1107,12 +1108,21 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         data_t.css("margin-left", "10px");
 
         let cutoff = $(
-          '<div class="col-sm-12"><label>Annotation Intensity Threshold : </label></div>'
+          '<div class="col-sm-12"><label>Annotation Intensity Threshold Min : </label></div>'
         ).appendTo(panel);
         let data_c = $("<label>", {
           text:
             $scope.cutoffs.matchingCutoff + " " + $scope.cutoffs.matchingType,
         }).appendTo(cutoff);
+        data_c.css("margin-left", "10px");
+
+        let cutoffMax = $(
+          '<div class="col-sm-12"><label>Annotation Intensity Threshold Max : </label></div>'
+        ).appendTo(panel);
+        let data_c = $("<label>", {
+          text:
+            $scope.cutoffs.matchingCutoffMax + " " + $scope.cutoffs.matchingType,
+        }).appendTo(cutoffMax);
         data_c.css("margin-left", "10px");
 
         let mathcing = $(
@@ -1132,6 +1142,13 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         return;
       }
     };
+
+    $scope.deleteAll = function(){
+      console.log('clear')
+      $scope.conditions.length = 0;
+      console.log($('.col-md-5 .panel.panel-body'))
+      $('.col-md-5 .panel.panel-body').remove()
+    }
 
     $scope.processData = function () {
       $scope.busy.isProcessing = true;
