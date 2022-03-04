@@ -1119,11 +1119,11 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         let cutoffMax = $(
           '<div class="col-sm-12"><label>Annotation Intensity Threshold Max : </label></div>'
         ).appendTo(panel);
-        let data_c = $("<label>", {
+        let data_cm = $("<label>", {
           text:
             $scope.cutoffs.matchingCutoffMax + " " + $scope.cutoffs.matchingType,
         }).appendTo(cutoffMax);
-        data_c.css("margin-left", "10px");
+        data_cm.css("margin-left", "10px");
 
         let mathcing = $(
           '<div class="col-sm-12"><label>Peak Matching Tolerance (+/-) : </label></div>'
