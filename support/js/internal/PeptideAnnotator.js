@@ -135,8 +135,9 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
   //for getCondition
   $scope.conditions = [];
 
-  $scope.deleteAll = function() {
+  $scope.deleteAll2 = function() {
     console.log('deleteAll')
+    $('.col-md-5 .panel.panel-body') = $('<div />')
     $scope.conditions.clear();
   };
 

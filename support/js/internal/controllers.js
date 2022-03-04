@@ -720,7 +720,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
     }
 
     // bind all data in froms to data
-    if($('.col-md-5 .panel.panel-body').length == 0){
+    // if($('.col-md-5 .panel.panel-body').length == 0){
+    if($scope.conditions.length == 0){
       // conditon doesn't exist
       console.log("in prepare : 바로 차트 만드는 경우");
       var data = {
@@ -860,6 +861,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
   $scope.deleteAll = function(){
     console.log('clear')
     $scope.conditions.length = 0;
+    console.log($('.col-md-5 .panel.panel-body'))
+    $('.col-md-5 .panel.panel-body').remove()
   }
 
   $scope.getCondition = function(){
@@ -948,7 +951,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
       var data_m = $('<label>', {text : $scope.cutoffs.compTolerance + " " + $scope.cutoffs.compToleranceType}).appendTo(mathcing);
       data_c.css('margin-left', '10px');
 
-      var deleteButton = $('<button class="btn btn-primary pull-right" type="button" ng-click="deleteAll()">Delete</button>').appendTo(panel);
+      // var deleteButton = $('<button class="btn btn-primary pull-right" type="button" ng-click="deleteAll()">Delete</button>').appendTo(panel);
 
       $('.col-md-5').append(panel);
       console.log("in getCondition : $scope.conditions", $scope.conditions);
@@ -960,7 +963,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", ["$scope", "$
 
   $scope.processData = function() {
     $scope.busy.isProcessing = true;
-    if($('.col-md-5 .panel.panel-body').length == 0){
+    // if($('.col-md-5 .panel.panel-body').length == 0){
+    if($scope.conditions.length == 0){
       if ($scope.invalidColors()) {
 
       } else {
