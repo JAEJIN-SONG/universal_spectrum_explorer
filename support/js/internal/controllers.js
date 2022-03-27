@@ -865,6 +865,19 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
 
       } */
 
+
+
+
+      if($scope.peptide.sequence.includes('+')){
+        $scope.modObject.selectedMods = $scope.modObject.selectedMods.concat($scope.getModsFromSequence($scope.peptide.sequence))
+        const regExp = /[0-9.+]/gi;
+        let newSequence = JSON.parse(JSON.stringify($scope.peptide.sequence))
+        if(regExp.test(newSequence)){
+          newSequence = newSequence.replace(regExp, "");
+        }
+        $scope.peptide.sequence = newSequence
+      }
+
       // bind all data in froms to data
       if ($(".col-md-5 .panel.panel-body").length == 0) {
         // conditon doesn't exist
@@ -939,6 +952,36 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         data: data,
       };
     };
+
+    $scope.getModsFromSequence = function(sequence) {
+      const modsFromSequence = [];
+      for(let i = 0; i < sequence.length; i++){
+        if(sequence[i] === '+'){
+          console.log('+ found!', sequence[i-1])
+          let tempNumString = ""
+          for(let j = i+1; j < sequence.length; j++){
+            if(!isNaN(sequence[j]) || sequence[j] === '.'){
+              tempNumString = tempNumString.concat(sequence[j])
+            }else{
+              modsFromSequence.push({
+                name: `MFS_${sequence[i-1]}${i}`,
+                site: sequence[i-1],
+                index: i-1,
+                deltaMass: Number(tempNumString),
+                unimod: undefined,
+                mfs: true,
+              })
+              sequence = sequence.replace(`+${tempNumString}`, '')
+              i = 0
+              break
+            }
+          }
+
+        }
+      }
+
+      return modsFromSequence
+    }
 
     $scope.mergeSpectra = function (sp1, sp2) {
       var binarySpectrum_1 = binary_search_spectrum(
@@ -1194,6 +1237,11 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
     $scope.processData = function () {
       $scope.busy.isProcessing = true;
 
+      $scope.modObject.selectedMods.forEach((mod, index) => {
+        if(Object.keys(mod).includes('mfs')){
+          $scope.modObject.selectedMods.splice(index, 1)
+        }
+      })
 
       if ($(".col-md-5 .panel.panel-body").length == 0) {
         if ($scope.invalidColors()) {
