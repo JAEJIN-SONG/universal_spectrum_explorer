@@ -866,17 +866,29 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       } */
 
 
-
-
-      if($scope.peptide.sequence.includes('+')){
-        $scope.modObject.selectedMods = $scope.modObject.selectedMods.concat($scope.getModsFromSequence($scope.peptide.sequence))
-        const regExp = /[0-9.+]/gi;
-        let newSequence = JSON.parse(JSON.stringify($scope.peptide.sequence))
-        if(regExp.test(newSequence)){
-          newSequence = newSequence.replace(regExp, "");
+      if(topSpectrum){
+        if($scope.peptide.sequence.includes('+')){
+          $scope.modObject.selectedMods = $scope.modObject.selectedMods.concat($scope.getModsFromSequence($scope.peptide.sequence))
+          const regExp = /[0-9.+]/gi;
+          let newSequence = JSON.parse(JSON.stringify($scope.peptide.sequence))
+          if(regExp.test(newSequence)){
+            newSequence = newSequence.replace(regExp, "");
+          }
+          $scope.peptide.sequence = newSequence
         }
-        $scope.peptide.sequence = newSequence
+      }else{
+        if($scope.peptideBottom.sequence.includes('+')){
+          $scope.modObjectBottom.selectedMods = $scope.modObjectBottom.selectedMods.concat($scope.getModsFromSequence($scope.peptideBottom.sequence))
+          const regExp = /[0-9.+]/gi;
+          let newSequence = JSON.parse(JSON.stringify($scope.peptideBottom.sequence))
+          if(regExp.test(newSequence)){
+            newSequence = newSequence.replace(regExp, "");
+          }
+          $scope.peptideBottom.sequence = newSequence
+        }
       }
+
+
 
       // bind all data in froms to data
       if ($(".col-md-5 .panel.panel-body").length == 0) {
@@ -1240,6 +1252,12 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       $scope.modObject.selectedMods.forEach((mod, index) => {
         if(Object.keys(mod).includes('mfs')){
           $scope.modObject.selectedMods.splice(index, 1)
+        }
+      })
+
+      $scope.modObjectBottom.selectedMods.forEach((mod, index) => {
+        if(Object.keys(mod).includes('mfs')){
+          $scope.modObjectBottom.selectedMods.splice(index, 1)
         }
       })
 
