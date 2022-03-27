@@ -182,7 +182,7 @@ Annotation = class Annotation {
     }).filter((el) =>{return el !== undefined});
     
 		spectrum_1 = spectrum_1.map((el) => {
-			if (el["percentBasePeak"] <= this.cutoff || el["percentBasePeak"] >= this.cutoffMax){
+			if (el["percentBasePeak"] <= this.cutoff){
 				el["matchedFeatures"] = [];
 			}
 			return el;
@@ -633,6 +633,7 @@ ProForma = class ProForma {
       modString = modString.slice(0, positionBracketOpen)
           + modString.slice(positionBracketClose + skip);
     }
+	console.log('parseModification: ', modifications)
     return modifications;
   }
 
