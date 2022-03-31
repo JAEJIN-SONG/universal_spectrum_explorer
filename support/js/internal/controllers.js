@@ -1180,6 +1180,13 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
               class: "losses",
             }).appendTo(losses);
           }
+          if ($scope.checkModel.CustomLoss.selected) {
+            $scope.checkModel.CustomLoss.selected = false;
+            let span = $("<label>", {
+              text: "-Custom",
+              class: "losses",
+            }).appendTo(losses);
+          }
         }
 
         // precursor, unassigned
@@ -1841,7 +1848,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       // Add colors to array if selected and valid
       // angular.forEach($scope.checkModel, function (value, key) {
       angular.forEach(checkModel, function (value, key) {
-        if (key !== "H2O" && key !== "NH3" && key !== "HPO3" && key !== "CO2") {
+        if (key !== "H2O" && key !== "NH3" && key !== "HPO3" && key !== "CO2" && key !== "CustomLoss") {
           if (!$scope.checkHex(value.color)) {
             alert("Invalid color HEX code for selected fragment: " + key);
             return true;

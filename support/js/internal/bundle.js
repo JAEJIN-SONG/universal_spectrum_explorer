@@ -31,6 +31,9 @@ Annotation = class Annotation {
 	this.NH3 = this.ChemistryConstants.H * 3 + this.ChemistryConstants.N;
 	this.H2O = this.ChemistryConstants.H * 2 + this.ChemistryConstants.O;
 	this.CO2 = this.ChemistryConstants.O * 2 + this.ChemistryConstants.C;
+	this.CustomLoss = this.ChemistryConstants.H * 3 + this.ChemistryConstants.N;
+
+		console.log('NH3Mass: ', this.NH3)
 
 	this.AminoAcids = {
 		A: 71.037114,
@@ -292,6 +295,12 @@ Annotation = class Annotation {
 				"name": "-CO2"
 			});
 		};
+		if(this.fragmentTypes.CustomLoss.selected){
+			returnV.push({
+				"mass": this.NH3,
+				"name": "-Custom"
+			});
+		};
 		return returnV;
 	}
 	get_fragmentTypes(){
@@ -400,6 +409,12 @@ Annotation = class Annotation {
 						more["mz"] -= loss.mass / c;
 						more["neutralLoss"] = loss.name;
 						fragments.push(more);
+						}
+						else if(loss.name =="-Custom" && this.countNH3(subPeptideSub) > 0){ // custom
+							let more = {...element};
+							more["mz"] -= loss.mass / c;
+							more["neutralLoss"] = loss.name;
+							fragments.push(more);
 						}
 					}
 

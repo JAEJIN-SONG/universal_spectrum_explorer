@@ -109,6 +109,7 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
     NH3: { selected: false },
     HPO3: { selected: false },
     CO2: { selected: false },
+    CustomLoss: { selected: false },
     precursor: { selected: true, color: "#666666"},
     unassigned: { selected: true, color: "#A6A6A6"}
   };
