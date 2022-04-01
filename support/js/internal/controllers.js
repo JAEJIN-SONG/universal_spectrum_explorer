@@ -975,14 +975,27 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             if(!isNaN(sequence[j]) || sequence[j] === '.'){
               tempNumString = tempNumString.concat(sequence[j])
             }else{
-              modsFromSequence.push({
-                name: `MFS_${sequence[i-1]}${i}`,
-                site: sequence[i-1],
-                index: i-1,
-                deltaMass: Number(tempNumString),
-                unimod: undefined,
-                mfs: true,
-              })
+              if(i === 0){
+                //N-terminus
+                modsFromSequence.push({
+                  name: `MFS_N-terminus`,
+                  site: 'N-terminus',
+                  index: i-1,
+                  deltaMass: Number(tempNumString),
+                  unimod: undefined,
+                  mfs: true,
+                })
+              }else{
+                modsFromSequence.push({
+                  name: `MFS_${sequence[i-1]}${i}`,
+                  site: sequence[i-1],
+                  index: i-1,
+                  deltaMass: Number(tempNumString),
+                  unimod: undefined,
+                  mfs: true,
+                })
+              }
+
               sequence = sequence.replace(`+${tempNumString}`, '')
               i = 0
               break
