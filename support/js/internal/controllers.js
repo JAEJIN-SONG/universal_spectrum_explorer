@@ -1181,7 +1181,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         }
 
         //H2O, NH3, CO2
-        if ($(".Losses").find("label.active").length > 0) {
+        if ($(".Losses").find("label.active").length > 0 || $scope.checkModel.CustomLoss.selected) {
           let losses = $(
             '<div class="col-md-12"><label>Neutral Losses : </label></div>'
           ).appendTo(panel);
@@ -1210,7 +1210,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           if ($scope.checkModel.CustomLoss.selected) {
             $scope.checkModel.CustomLoss.selected = false;
             let span = $("<label>", {
-              text: "-Custom",
+              text: "-Custom("+$scope.checkModel.CustomLoss.mass.toString()+")",
               class: "losses",
             }).appendTo(losses);
           }

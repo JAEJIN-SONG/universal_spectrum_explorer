@@ -450,3 +450,10 @@ div.tooltip {
   border-color: #555555; 
 }
 
+.custom_loss_container{
+  margin-top: 10px;
+  display: flex;
+  width: 200px;
+  flex-direction: row;
+}
+
