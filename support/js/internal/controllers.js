@@ -1144,13 +1144,16 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         ).find("label.active").length > 0
       ) {
         let panel = $("<div />", {
-          class: "panel panel-body conditions",
+          class: "panel panel-body conditions"+$scope.conditions.length,
+          // panelNumber: $scope.conditions[$scope.conditions.length-1].order ? $scope.conditions[$scope.conditions.length-1].order+1 : 0,
         });
+        panel.panelNumber = $scope.conditions.length > 0 ? $scope.conditions[$scope.conditions.length-1].order+1 : 0;
         let fragmentTypes = angular.copy($scope.checkModel);
         let cutoffs = angular.copy($scope.cutoffs);
         $scope.conditions.push({
           fragmentTypes: fragmentTypes,
           cutoffs: cutoffs,
+          order: $scope.conditions.length > 0 ? $scope.conditions[$scope.conditions.length-1].order+1 : 0,
         });
 
         fragmentTypes = angular.copy($scope.checkModel);
@@ -1264,9 +1267,23 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         }).appendTo(mathcing);
         data_c.css("margin-left", "10px");
 
+        let button = panel.append('<button class="condition_delete_button">Remove Condition</button>');
+        panel.on('click', '.condition_delete_button', function () {
+          console.log('working!')
+          console.log($(".col-md-5").find(panel), 'no: ', panel.panelNumber)
+          let indexToRemove = $scope.conditions.findIndex((condition) => condition.order === panel.panelNumber)
+          $scope.conditions.splice(indexToRemove, 1)
+          // $scope.conditions.remove((condition) => condition.order === panel.panelNumber)
+          $(".col-md-5").find(panel).remove()
+
+          console.log("$scope.conditions after deletion", $scope.conditions);
+        })
+
 
 
         $(".col-md-5").append(panel);
+
+        console.log('panel', panel)
         console.log("in getCondition : $scope.conditions", $scope.conditions);
       } else {
         return;
