@@ -158,8 +158,6 @@ Annotation = class Annotation {
 			el["sn"] = null;
 			return(el);
     })
-    console.log("spectrum_1", spectrum_1);
-    console.log("this.response['fragments']", this.response["fragments"]);
 		// var spectrum_1 = answer; // we search in the calculated values
 		var sorter_asc_mz = binary.my_sorter('mz', 'asc');
 		var compare_F = binary.compare_FACTORY('mz', this.isPPM? "ppm" : "Da", this.tolerance);
@@ -453,6 +451,7 @@ Comparator = class Comparator {
 
   calculate_scores() {
     const result = {};
+    
     result.full = this.calculate_scores1(this.merged_spectrum);
     let sided_merge = this.merged_spectrum.filter((e) => e.id_1 !== -1);
     result.spec1 = this.calculate_scores1(sided_merge);

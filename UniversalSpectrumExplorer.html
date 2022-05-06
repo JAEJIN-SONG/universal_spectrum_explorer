@@ -119,6 +119,10 @@
                                     <div class="row">
                                       <div class="col-md-12">
                                         <label for="handsonTable">Enter Spectral Data Here</label>
+                                        <div class="inputFile">
+                                          <input type="file" id="input_file"/>
+                                          <button type="button" class="btn btn-primary btn-sm" ng-click="fileUpload()">Upload</button>
+                                        </div>
                                         <div handsontabletest id="topTable"></div>
                                       </div>
                                       <div class="col-md-12">
@@ -272,6 +276,10 @@
                                     <div class="row">
                                       <div class="col-md-12">
                                         <label>Enter Spectral Data Here</label>
+                                        <div class="inputFile">
+                                          <input type="file" id="input_fileBottom"/>
+                                          <button type="button" class="btn btn-primary btn-sm" ng-click="fileUpload(false)">Upload</button>
+                                        </div>
                                         <hot-table
                                            settings="{colHeaders: true, contextMenu: false, afterInit: afterInitBottom}"
                                            stretch-h="'all'"
@@ -579,7 +587,9 @@
                      scorebottom="set.scoreBottom" 
                      score="set.score" 
                      height="550"
-                     class="content"></div>
+                     class="content"
+                     fileData="set.fileData"
+                     fileDataBottom="set.fileDataBottom"></div>
                   <form role="form" ng-init="randomize()"></form>
                 </div> 
               </div>

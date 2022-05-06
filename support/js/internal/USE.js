@@ -13,6 +13,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function($lo
    * @property {object} directive.scope.plotdata - Contains the numerical, ordinal, and categorical data required to generate the visualization
    * @property {object} directive.scope.peptide - Contains ms2 scan number, peptide sequence, precursor mz, charge, and modifications
    * @property {object} directive.scope.settings - Contains tolerance type (ppm/Da), tolerance threshold, and ionization mode
+   * @property {object} directive.scope.fileData - Contains data parsed from input file
    */
   var directive = {
     restrict: 'AE',
@@ -25,7 +26,9 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function($lo
       score: '=?',
       scoretop: '=?',
       scorebottom: '=?',
-      height: '=?'
+      height: '=?',
+      fileData: '=filedata',
+      fileDataBottom: '=filedatabottom'
     }
   };
 
@@ -871,6 +874,11 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function($lo
       return uniqueBondsBroken + "/" + numBonds;
     };
 
+    scope.getFileData = function(topSpectrum = true){
+      if(topSpectrum) return scope.fileData;
+      else return scope.fileDataBottom;
+    };
+
     /**
      * @description This function initializes the visualization elements. First an svg element is appended to the web page. Then container, or <g>, elements are appended inside the svg. 
      *			Invisible rectangles are placed where the X- and Y-axes are to catch future zooming events. X- and Y-axis labels are placed, and the containers which will hold the svg elements
@@ -880,7 +888,8 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function($lo
       // get svg dimensions and settings
       var options = scope.getOptions();
       // create svg element to hold charts
-      scope.svg = d3.select(elements[0]).append("svg").attr("class", "chart");
+      scope.svg = d3.select(elements[0]).append("svg").attr("class", "chart")
+        .attr("style", "overflow:initial");
       //.attr("width", options.renderSize.width)
       //.attr("height", options.renderSize.height);
 
@@ -906,6 +915,8 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function($lo
       // main svg container to hold spectrum annotations
       scope.container2 = scope.svg.append("g").attr("id", "bottomSpectrumContainer");
 
+      scope.fileDataContainerWrap = scope.svg.append("g").attr("id", "fileDataContainerWrap");
+      scope.fileDataContainerBottomWrap = scope.svg.append("g").attr("id", "fileDataContainerBottomWrap");
 
       // invisible rectangle on Y axis used to catch zoom events
       scope.zoomY = scope.container.append("rect")
@@ -1072,6 +1083,9 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function($lo
       scope.statisticsContainer.attr("transform", "translate(" + (options.statistics.margin.left + options.statistics.width / 2) + ", " + options.statistics.margin.top + ")");
       scope.statisticsContainerBottom.attr("transform", "translate(" + (options.statisticsBottom.margin.left + options.statisticsBottom.width / 2) + ", " + options.statisticsBottom.margin.top + ")");
 
+      scope.fileDataContainerWrap.attr("transform", "translate(" + (options.statistics.margin.left + options.statistics.width / 2) + ", " + options.statistics.margin.top + ")");
+      scope.fileDataContainerBottomWrap.attr("transform", "translate(" + (options.statisticsBottom.margin.left + options.statisticsBottom.width / 2) + ", " + options.statisticsBottom.margin.top + ")");
+
       scope.originContainer.attr("transform", "translate(" + (options.statistics.margin.left + options.statistics.width / 2) + ", " + options.statistics.margin.top + ")");
       scope.originContainerBottom.attr("transform", "translate(" + (options.statisticsBottom.margin.left + options.statisticsBottom.width / 2) + ", " + options.statisticsBottom.margin.top + ")");
 
@@ -1120,6 +1134,8 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function($lo
       if (intensityError !== undefined){
         scope.drawMassError();
       }
+      scope.drawFileData();
+      scope.drawFileData(false);
     };
 
     /**
@@ -1349,7 +1365,6 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function($lo
     scope.drawInteractiveTitle = function() {
       var x, y, xAxis, yAxis, dataset, options = scope.getOptions(), sequence = scope.getSequence(), aminoAcidTicks = scope.getTickData(), mods = scope.getModifications();
       // set variables to plot interactive title
-
       // the min and max units defined here are somewhat arbitrary. Since the scaling is meant to evenly distribute one letter abbreviations, the actual units aren't important, 
       // just the proportions. I chose a scale of [0,1] as it made sense to represent the placement as 
       var xMin = 0;
@@ -1624,6 +1639,71 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function($lo
       dataset.exit().remove();
     }
 
+    scope.drawFileData = function(topSpectrum = true){
+      var options = scope.getOptions();
+      const fileData = scope.getFileData(topSpectrum);
+      var extraFileData = [];
+      
+      for (const key in fileData){
+        if (key != "CHARGE" && key != "PEPMASS" && key != "SEQ" && key != "data"){
+          extraFileData.push({ title: key + ": " + fileData[key], data: fileData[key]});
+        }
+      }
+
+      if(extraFileData.length == 0) return;
+      
+      if(topSpectrum){
+        dataset = scope.fileDataContainerWrap.selectAll(".fileDataContainer").data(extraFileData);
+        dataset.enter().append("text").attr("class", "fileDataContainer");
+      } 
+      else{
+        dataset = scope.fileDataContainerBottomWrap.selectAll(".fileDataContainerBottom").data(extraFileData);
+        dataset.enter().append("text").attr("class", "fileDataContainerBottom");
+      }
+      
+      dataset.text(function(d) { return (d.title); })
+          .attr("display", "block")
+          .attr("opacity", 0)
+          .attr("transform", function(d, i) {
+              if(topSpectrum) height = 50 + i*20;
+              else height = i*20;
+              return "translate(0," + height + ")";
+          }).attr("text-anchor", "middle").transition().delay(function(d, i) {
+            return i * 450;
+          }).duration(1500).attr("opacity", 1);
+      dataset.exit().remove();
+
+      if(topSpectrum){
+        add_height = 20 * (extraFileData.length);
+
+        scope.container.attr("transform", "translate(" + options.annotation.margin.left + ", " + (options.annotation.margin.top + add_height) +  ")");
+
+        scope.fragmentContainer.attr("transform", "translate(" + options.fragments.margin.left + "," + (options.offsets.middleOffset + add_height) + ")");
+        scope.container2.attr("transform", "translate(" + options.annotation.margin.left + ", " + (options.annotation.margin.top + options.offsets.bottomOffset + add_height) +  ")");
+
+        scope.titleContainerBottom.attr("transform", "translate(" + options.interactiveTitleBottom.margin.left + ", " + (options.interactiveTitleBottom.margin.top + add_height) + ")");
+
+        scope.peptideContainerBottom.attr("transform", "translate(" + (options.statisticsBottom.margin.left + options.statisticsBottom.width / 2) + ", " + (options.statisticsBottom.margin.top + add_height) + ")");
+        scope.statisticsContainerBottom.attr("transform", "translate(" + (options.statisticsBottom.margin.left + options.statisticsBottom.width / 2) + ", " + (options.statisticsBottom.margin.top + add_height) + ")");      
+        scope.fileDataContainerBottomWrap.attr("transform", "translate(" + (options.statisticsBottom.margin.left + options.statisticsBottom.width / 2) + ", " + (options.statisticsBottom.margin.top + add_height) + ")");
+
+        scope.originContainer.attr("transform", "translate(" + (options.statistics.margin.left + options.statistics.width / 2) + ", " + (options.statistics.margin.top + add_height) + ")");
+        scope.originContainerBottom.attr("transform", "translate(" + (options.statisticsBottom.margin.left + options.statisticsBottom.width / 2) + ", " + (options.statisticsBottom.margin.top + add_height) + ")");
+      }else{
+        add_height = 25 + 20 * (extraFileData.length-1);
+        trans_title = d3.transform(scope.titleContainerBottom.attr("transform")).translate[1];
+        trans_stats = d3.transform(scope.statisticsContainerBottom.attr("transform")).translate[1];
+        trans_peptide = d3.transform(scope.peptideContainerBottom.attr("transform")).translate[1];
+        
+        scope.titleContainerBottom.attr("transform", "translate(" + options.interactiveTitleBottom.margin.left + ", " + (trans_title + add_height) + ")");
+        scope.statisticsContainerBottom.attr("transform", "translate(" + (options.statisticsBottom.margin.left + options.statisticsBottom.width / 2) + ", " + (trans_stats + add_height) + ")");      
+        scope.peptideContainerBottom.attr("transform", "translate(" + (options.statisticsBottom.margin.left + options.statisticsBottom.width / 2) + ", " + (trans_peptide + add_height) + ")");
+      }
+      
+      scroll_height = d3.select(".content")[0][0].scrollHeight;
+      document.querySelector('.content').style.cssText = "height: " + (scroll_height + 20 * extraFileData.length/4) + "px;";
+    }
+
     scope.drawOriginSummary = function (topSpectrum = true) {
       var options = scope.getOptions(),
         scoreGeneral = scope.score.sa,
@@ -1704,8 +1784,6 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function($lo
      * @description Draws the text and statistics below the peptide sequence. Retrieves precursor mz, charge, and # fragmented bonds and displays it.
      */
     scope.drawPrecursorSummary = function() {
-
-
       var options = scope.getOptions(),
         sequence = scope.getSequence(),
         charge = scope.getPrecursorCharge(),
@@ -2482,7 +2560,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function($lo
           // reset annotated peptide sequence back to normal
           scope.titleContainerBottom.selectAll("text").data(sequenceBottom).style("fill", "black").style("stroke", "none");
           d3.select(this).style("font-size", 12).style("font-weight", "normal");
-
+          
           // set all mass error circles back to normal
           var massErrorCircles = scope.massErrorContainer.selectAll(".masserror");
           massErrorCircles.style("r", function(d){

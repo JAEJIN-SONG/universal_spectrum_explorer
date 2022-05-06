@@ -227,7 +227,8 @@ body {
 
 .precursorstatscategory,
 .origincategory,
-.origincategoryBottom {
+.origincategoryBottom
+{
   font-family: Montserrat, sans-serif;
   font-weight: 500;
   font-size: 12px;
@@ -235,7 +236,9 @@ body {
 
 .precursorstatsdata,
 .origindata.origin,
-.origindataBottom.origin
+.origindataBottom.origin,
+.fileDataContainer,
+.fileDataContainerBottom
 {
   font-family: Montserrat, sans-serif;
   font-weight: 400;
@@ -450,3 +453,7 @@ div.tooltip {
   border-color: #555555; 
 }
 
+/* InputFileCtrl */
+.inputFile input#input_file, .inputFile input#input_fileBottom{
+  display: inline;
+}
