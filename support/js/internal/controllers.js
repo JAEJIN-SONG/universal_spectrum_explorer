@@ -1281,7 +1281,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         }).appendTo(mathcing);
         data_c.css("margin-left", "10px");
 
-        let button = panel.append('<button class="condition_delete_button">Remove Condition</button>');
+        let button = panel.append('<button class="btn btn-primary btn-sm condition_delete_button">Remove Condition</button>');
         panel.on('click', '.condition_delete_button', function () {
           console.log('working!')
           console.log($(".col-md-5").find(panel), 'no: ', panel.panelNumber)
@@ -1289,13 +1289,16 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           $scope.conditions.splice(indexToRemove, 1)
           // $scope.conditions.remove((condition) => condition.order === panel.panelNumber)
           $(".col-md-5").find(panel).remove()
-
+          if($scope.conditions.length < 1){
+            $scope.deleteConditionChecker()
+          }
           console.log("$scope.conditions after deletion", $scope.conditions);
         })
 
 
 
         $(".col-md-5").append(panel);
+        $scope.ctrl.disableRemoveConditionsButton = false;
       } else {
         return;
       }
@@ -1304,8 +1307,13 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
     $scope.deleteAll = function(){
       console.log('clear')
       $scope.conditions.length = 0;
+      $scope.ctrl.disableRemoveConditionsButton = true;
       console.log($('.col-md-5 .panel.panel-body'))
       $('.col-md-5 .panel.panel-body').remove()
+    }
+
+    $scope.deleteConditionChecker = function(){
+      $scope.ctrl.disableRemoveConditionsButton = true;
     }
 
     $scope.processData = function () {

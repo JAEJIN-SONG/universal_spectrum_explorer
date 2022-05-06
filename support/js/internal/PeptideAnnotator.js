@@ -73,6 +73,7 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
 
   $scope.ctrl = {
     disableButton: true,
+    disableRemoveConditionsButton: true,
     topReferenceButton: false,
     bottomReferenceButton: false
   };
@@ -918,6 +919,7 @@ myApp.controller('HotCtrlTop', function ($scope) {
       $scope.reset = function() {
         $scope.db.items = [];
         $scope.ctrl.disableButton = true;
+        $scope.ctrl.disableRemoveConditionsButton = true;
       };
 });
 
@@ -934,6 +936,7 @@ myApp.controller('HotCtrlBottom', function ($scope) {
       $scope.resetBottom = function() {
         $scope.dbBottom.items = [];
         $scope.ctrl.disableButton = true;
+        $scope.ctrl.disableRemoveConditionsButton = true;
       };
 });
 
