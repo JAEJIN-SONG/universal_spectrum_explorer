@@ -92,6 +92,9 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
     prositModel: parseInt($scope.getUrlVars().ce_bottom) ?  $scope.getUrlVars().prositModel_bottom ? $scope.getUrlVars().prositModel_bottom : 'intensity_prosit_publication'  : ''
   };
 
+  // Custom Mod example
+  $scope.customModsFromSequence = []
+
   // stores the values for selected fragments and colors
   $scope.checkModel = {
     a: { selected: false, color: "#820CAD", label: "a" },
@@ -106,6 +109,7 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
     NH3: { selected: false },
     HPO3: { selected: false },
     CO2: { selected: false },
+    CustomLoss: { selected: false, mass: 0.0 },
     precursor: { selected: true, color: "#666666"},
     unassigned: { selected: true, color: "#A6A6A6"}
   };
@@ -571,7 +575,7 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
                     site: site,
                     deltaMass: $scope.potentialUserMod.deltaMass
                   });
-                });
+                }) ;
 
                 $localStorage.userMods = $scope.userMods;
                 $uibModalInstance.close();
@@ -672,7 +676,7 @@ m1
   }
   
   $scope.validateSequence = function(topSpectrum = true) {
-    var regex = new RegExp("[AC-IK-NP-TVWY]", "i");
+    var regex = new RegExp("[AC-IK-NP-TVWY+1234567890.]", "i");
     var sSequence = topSpectrum ? $scope.peptide.sequence : $scope.peptideBottom.sequence;
     for (var i = 0; i < sSequence.length; i++) {
 

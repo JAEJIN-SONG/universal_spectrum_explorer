@@ -462,6 +462,10 @@
                                         <label class="btn btn-fragment" ng-model="checkModel.NH3.selected" uib-btn-checkbox>-NH<sub>3</sub></label>
                                         <label class="btn btn-fragment" ng-model="checkModel.CO2.selected" uib-btn-checkbox>-CO<sub>2</sub></label>
                                       </div>
+                                      <div class="custom_loss_container">
+                                        <label class="btn btn-fragment" ng-model="checkModel.CustomLoss.selected" uib-btn-checkbox>Custom</label>
+                                        <input type="number" class="form-control" ng-model="checkModel.CustomLoss.mass" min="0.0"/>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -475,7 +479,7 @@
                                   </div>
                                 </div>
                                 <div class="col-md-6">
-                                  <label>Annotation Intensity Threshold Min</label>
+                                  <label>Annotation Intensity Threshold</label>
                                   <div class="input-group">
                                     <input type="number" class="form-control" ng-model="cutoffs.matchingCutoff" min="0" /> <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapMatchingType()">{{cutoffs.matchingType}}</button> </span> 
                                   </div>
@@ -487,12 +491,6 @@
                                   <label>Peak Matching Tolerance (+/-)</label>
                                   <div class="input-group">
                                     <input type="number" class="form-control" ng-model="cutoffs.compTolerance" min="0" /> <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapCompToleranceType()">{{cutoffs.compToleranceType}}</button> </span> 
-                                  </div>
-                                </div>
-                                <div class="col-md-6">
-                                  <label>Annotation Intensity Threshold Max</label>
-                                  <div class="input-group">
-                                    <input type="number" class="form-control" ng-model="cutoffs.matchingCutoffMax" min="0" /> <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapMatchingType()">{{cutoffs.matchingType}}</button> </span> 
                                   </div>
                                 </div>
                               </div>

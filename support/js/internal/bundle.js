@@ -3,7 +3,7 @@ const binary = require('./binary');
 
 Annotation = class Annotation {
 
-	constructor(request){
+	constructor(request, customLossValue){
 
 	this.ChemistryConstants = {
 		Proton: 1.007276466879,
@@ -31,6 +31,9 @@ Annotation = class Annotation {
 	this.NH3 = this.ChemistryConstants.H * 3 + this.ChemistryConstants.N;
 	this.H2O = this.ChemistryConstants.H * 2 + this.ChemistryConstants.O;
 	this.CO2 = this.ChemistryConstants.O * 2 + this.ChemistryConstants.C;
+	this.CustomLoss = customLossValue ?? 0;
+
+		console.log('NH3Mass: ', this.NH3)
 
 	this.AminoAcids = {
 		A: 71.037114,
@@ -180,7 +183,7 @@ Annotation = class Annotation {
     }).filter((el) =>{return el !== undefined});
     
 		spectrum_1 = spectrum_1.map((el) => {
-			if (el["percentBasePeak"] <= this.cutoff || el["percentBasePeak"] >= this.cutoffMax){
+			if (el["percentBasePeak"] <= this.cutoff){
 				el["matchedFeatures"] = [];
 			}
 			return el;
@@ -288,6 +291,12 @@ Annotation = class Annotation {
 			returnV.push({
 				"mass": this.CO2,
 				"name": "-CO2"
+			});
+		};
+		if(this.fragmentTypes.CustomLoss.selected){
+			returnV.push({
+				"mass": this.CustomLoss,
+				"name": "-Custom"
 			});
 		};
 		return returnV;
@@ -398,6 +407,12 @@ Annotation = class Annotation {
 						more["mz"] -= loss.mass / c;
 						more["neutralLoss"] = loss.name;
 						fragments.push(more);
+						}
+						else if(loss.name =="-Custom"){ // custom
+							let more = {...element};
+							more["mz"] -= loss.mass / c;
+							more["neutralLoss"] = loss.name;
+							fragments.push(more);
 						}
 					}
 
@@ -632,6 +647,7 @@ ProForma = class ProForma {
       modString = modString.slice(0, positionBracketOpen)
           + modString.slice(positionBracketClose + skip);
     }
+	console.log('parseModification: ', modifications)
     return modifications;
   }
 

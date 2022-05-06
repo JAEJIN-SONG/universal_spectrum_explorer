@@ -457,3 +457,10 @@ div.tooltip {
 .inputFile input#input_file, .inputFile input#input_fileBottom{
   display: inline;
 }
+.custom_loss_container{
+  margin-top: 10px;
+  display: flex;
+  width: 200px;
+  flex-direction: row;
+}
+
