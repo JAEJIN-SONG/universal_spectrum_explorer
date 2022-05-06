@@ -31,9 +31,7 @@ Annotation = class Annotation {
 	this.NH3 = this.ChemistryConstants.H * 3 + this.ChemistryConstants.N;
 	this.H2O = this.ChemistryConstants.H * 2 + this.ChemistryConstants.O;
 	this.CO2 = this.ChemistryConstants.O * 2 + this.ChemistryConstants.C;
-	this.CustomLoss = customLossValue ?? 0;
-
-		console.log('NH3Mass: ', this.NH3)
+	this.CustomLoss = customLossValue ?? 0.0;
 
 	this.AminoAcids = {
 		A: 71.037114,
@@ -295,7 +293,7 @@ Annotation = class Annotation {
 		};
 		if(this.fragmentTypes.CustomLoss.selected){
 			returnV.push({
-				"mass": this.CustomLoss,
+				"mass": this.fragmentTypes.CustomLoss.mass,
 				"name": "-Custom"
 			});
 		};
