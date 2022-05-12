@@ -1157,17 +1157,18 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           "div.tab-content > div.tab-pane.ng-scope:eq(2) div.col-md-12:eq(0) > div.ng-scope > div.row:eq(0)"
         ).find("label.active").length > 0
       ) {
+        let orderNumber = $scope.conditions.length > 0 ? $scope.conditions[$scope.conditions.length-1].order+1 : 0;
         let panel = $("<div />", {
           class: "panel panel-body conditions"+$scope.conditions.length,
           // panelNumber: $scope.conditions[$scope.conditions.length-1].order ? $scope.conditions[$scope.conditions.length-1].order+1 : 0,
         });
-        panel.panelNumber = $scope.conditions.length > 0 ? $scope.conditions[$scope.conditions.length-1].order+1 : 0;
+        panel.panelNumber = orderNumber
         let fragmentTypes = angular.copy($scope.checkModel);
         let cutoffs = angular.copy($scope.cutoffs);
         $scope.conditions.push({
-          fragmentTypes: fragmentTypes,
+          fragmentTypes: {...fragmentTypes, CustomLoss: {...fragmentTypes.CustomLoss, orderNumber: orderNumber}},
           cutoffs: cutoffs,
-          order: $scope.conditions.length > 0 ? $scope.conditions[$scope.conditions.length-1].order+1 : 0,
+          order: orderNumber,
         });
 
         fragmentTypes = angular.copy($scope.checkModel);
@@ -1227,7 +1228,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           if ($scope.checkModel.CustomLoss.selected) {
             $scope.checkModel.CustomLoss.selected = false;
             let span = $("<label>", {
-              text: "-Custom("+$scope.checkModel.CustomLoss.mass.toString()+")",
+              text: "-Custom Loss "+orderNumber.toString()+" ("+$scope.checkModel.CustomLoss.mass.toString()+")",
               class: "losses",
             }).appendTo(losses);
           }
@@ -1314,6 +1315,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
 
     $scope.deleteConditionChecker = function(){
       $scope.ctrl.disableRemoveConditionsButton = true;
+      console.log('theres no condition')
     }
 
     $scope.processData = function () {

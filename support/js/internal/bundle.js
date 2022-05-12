@@ -3,7 +3,9 @@ const binary = require('./binary');
 
 Annotation = class Annotation {
 
-	constructor(request, customLossValue){
+	constructor(request){
+
+		console.log('request: ', request)
 
 	this.ChemistryConstants = {
 		Proton: 1.007276466879,
@@ -31,7 +33,6 @@ Annotation = class Annotation {
 	this.NH3 = this.ChemistryConstants.H * 3 + this.ChemistryConstants.N;
 	this.H2O = this.ChemistryConstants.H * 2 + this.ChemistryConstants.O;
 	this.CO2 = this.ChemistryConstants.O * 2 + this.ChemistryConstants.C;
-	this.CustomLoss = customLossValue ?? 0.0;
 
 	this.AminoAcids = {
 		A: 71.037114,
@@ -294,7 +295,7 @@ Annotation = class Annotation {
 		if(this.fragmentTypes.CustomLoss.selected){
 			returnV.push({
 				"mass": this.fragmentTypes.CustomLoss.mass,
-				"name": "-Custom"
+				"name": "-CL"+this.fragmentTypes.CustomLoss.orderNumber.toString(),
 			});
 		};
 		return returnV;
@@ -406,7 +407,8 @@ Annotation = class Annotation {
 						more["neutralLoss"] = loss.name;
 						fragments.push(more);
 						}
-						else if(loss.name =="-Custom"){ // custom
+						// else if(loss.name =="-Custom"){ // custom
+						else if(loss.name.includes('-CL')){
 							let more = {...element};
 							more["mz"] -= loss.mass / c;
 							more["neutralLoss"] = loss.name;
