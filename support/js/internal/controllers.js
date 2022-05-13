@@ -1228,7 +1228,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           if ($scope.checkModel.CustomLoss.selected) {
             $scope.checkModel.CustomLoss.selected = false;
             let span = $("<label>", {
-              text: "-Custom Loss "+orderNumber.toString()+" ("+$scope.checkModel.CustomLoss.mass.toString()+")",
+              text: "Custom"+"(-CL"+orderNumber.toString()+", "+$scope.checkModel.CustomLoss.mass.toString()+")",
               class: "losses",
             }).appendTo(losses);
           }
@@ -1284,8 +1284,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
 
         let button = panel.append('<button class="btn btn-primary btn-sm condition_delete_button">Remove Condition</button>');
         panel.on('click', '.condition_delete_button', function () {
-          console.log('working!')
-          console.log($(".col-md-5").find(panel), 'no: ', panel.panelNumber)
+
+          // console.log($(".col-md-5").find(panel), 'no: ', panel.panelNumber)
           let indexToRemove = $scope.conditions.findIndex((condition) => condition.order === panel.panelNumber)
           $scope.conditions.splice(indexToRemove, 1)
           // $scope.conditions.remove((condition) => condition.order === panel.panelNumber)
@@ -1306,10 +1306,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
     };
 
     $scope.deleteAll = function(){
-      console.log('clear')
       $scope.conditions.length = 0;
       $scope.ctrl.disableRemoveConditionsButton = true;
-      console.log($('.col-md-5 .panel.panel-body'))
       $('.col-md-5 .panel.panel-body').remove()
     }
 

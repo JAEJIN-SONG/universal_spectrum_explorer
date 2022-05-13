@@ -5,8 +5,6 @@ Annotation = class Annotation {
 
 	constructor(request){
 
-		console.log('request: ', request)
-
 	this.ChemistryConstants = {
 		Proton: 1.007276466879,
 		H: 1.00782503223,
@@ -295,7 +293,7 @@ Annotation = class Annotation {
 		if(this.fragmentTypes.CustomLoss.selected){
 			returnV.push({
 				"mass": this.fragmentTypes.CustomLoss.mass,
-				"name": "-CL"+this.fragmentTypes.CustomLoss.orderNumber.toString(),
+				"name": this.fragmentTypes.CustomLoss.orderNumber ? "-CL"+this.fragmentTypes.CustomLoss.orderNumber.toString() : "-CL"
 			});
 		};
 		return returnV;
@@ -408,7 +406,7 @@ Annotation = class Annotation {
 						fragments.push(more);
 						}
 						// else if(loss.name =="-Custom"){ // custom
-						else if(loss.name.includes('-CL')){
+						else if(loss.name.includes('-CL') || loss.name === "-Custom"){
 							let more = {...element};
 							more["mz"] -= loss.mass / c;
 							more["neutralLoss"] = loss.name;
