@@ -1292,6 +1292,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           $(".col-md-5").find(panel).remove()
           if($scope.conditions.length < 1){
             $scope.deleteConditionChecker()
+            $scope.checkModel = $scope.checkModelInit
+            $scope.cutoffs = $scope.cutoffsInit
           }
           console.log("$scope.conditions after deletion", $scope.conditions);
         })
@@ -1309,6 +1311,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       $scope.conditions.length = 0;
       $scope.ctrl.disableRemoveConditionsButton = true;
       $('.col-md-5 .panel.panel-body').remove()
+      $scope.checkModel = $scope.checkModelInit
+      $scope.cutoffs = $scope.cutoffsInit
     }
 
     $scope.deleteConditionChecker = function(){
@@ -1330,8 +1334,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           $scope.modObjectBottom.selectedMods.splice(index, 1)
         }
       })
-
-      if ($(".col-md-5 .panel.panel-body").length == 0) {
+      
+      if ($scope.conditions.length == 0) {
         if ($scope.invalidColors()) {
         } else {
           let ionColors = {
@@ -1582,7 +1586,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
 
           }
         });
-
+        
         angular.forEach($scope.conditions, function (el) {
           if (el.fragmentTypes.a.selected)
             $scope.checkModel.a = el.fragmentTypes.a;
@@ -1615,8 +1619,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           ) {
             for (let j = 0; j < $scope.peakBottom.length; j++) {
               if ($scope.peakBottom[j][i].matchedFeatures.length != 0) {
-                $scope.annotatedResultsBottom.peaks[i] =
-                  $scope.peakBottom[j][i];
+                $scope.annotatedResultsBottom.peaks[i] = $scope.peakBottom[j][i];
               }
             }
           }

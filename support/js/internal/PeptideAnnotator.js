@@ -115,6 +115,24 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
     unassigned: { selected: true, color: "#A6A6A6"}
   };
 
+  $scope.checkModelInit = {
+    a: { selected: false, color: "#820CAD", label: "a" },
+    b: { selected: true, color: "#0D75BC", label: "b" },
+    c: { selected: false, color: "#07A14A", label: "c" },
+    C: { selected: false, color: "#035729", label: "c-1" },
+    x: { selected: false, color: "#D1E02D", label: "x" },
+    y: { selected: true, color: "#BE202D", label: "y" },
+    z: { selected: false, color: "#F79420", label: "z\u2022" },
+    Z: { selected: false, color: "#A16016", label: "z+1" },
+    H2O: { selected: false },
+    NH3: { selected: false },
+    HPO3: { selected: false },
+    CO2: { selected: false },
+    CustomLoss: { selected: false, mass: 0.0 },
+    precursor: { selected: true, color: "#666666"},
+    unassigned: { selected: true, color: "#A6A6A6"}
+  };
+
   $scope.accordionTop = {
     manual : true,
     usi : false,
@@ -625,6 +643,17 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
     }
 
   $scope.cutoffs = {
+    matchingCutoff: 0,
+    matchingCutoffMax: 100,
+    matchingType: "% Base Peak",
+    matchingMaxType: "% Max Peak",
+    toleranceType: ["ppm", "Da"].includes($scope.getUrlVars().fragment_tol_unit) ? $scope.getUrlVars().fragment_tol_unit : "ppm",
+    tolerance: parseInt($scope.getUrlVars().fragment_tol) || 10,
+    compToleranceType:["ppm", "Da"].includes($scope.getUrlVars().matching_tol_unit) ? $scope.getUrlVars().matching_tol_unit : "ppm",
+    compTolerance: parseInt($scope.getUrlVars().matching_tol) || 10
+  };
+
+  $scope.cutoffsInit = {
     matchingCutoff: 0,
     matchingCutoffMax: 100,
     matchingType: "% Base Peak",
