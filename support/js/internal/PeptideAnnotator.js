@@ -162,23 +162,18 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
   $scope.peakBottom = [];
 
   //for fileUpload
-  $scope.fileData = {
+  $scope.fileData = []
+  $scope.fileDataBottom = []
+  
+  $scope.fileInit = {
     SEQ : "TESTPEPTIDE",
     PEPMASS : 0,
     CHARGE : 0,
     data : {
       mzs: [],
       intensities: []
-    }
-  };
-  $scope.fileDataBottom = {
-    SEQ : "TESTPEPTIDE",
-    PEPMASS : 0,
-    CHARGE : 0,
-    data : {
-      mzs: [],
-      intensities: []
-    }
+    },
+    isValid : true
   };
 
   $scope.db = {};

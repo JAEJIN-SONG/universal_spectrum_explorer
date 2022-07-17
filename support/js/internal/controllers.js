@@ -70,8 +70,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       },
       peptide: {
         sequence: "TESTPEPTIDE",
-        usi:
-          "mzspec:PXD015890:20190213_Rucks_atm6.raw (F002091).mzid_20190213_Rucks_atm6.raw_(F002091).MGF:index:914:YLDGLTAER/2",
+        usi: "mzspec:PXD015890:20190213_Rucks_atm6.raw (F002091).mzid_20190213_Rucks_atm6.raw_(F002091).MGF:index:914:YLDGLTAER/2",
         precursorMz: 609.77229,
         precursorCharge: $scope.peptide.precursorCharge,
         mods: populateMods(),
@@ -89,22 +88,22 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         ionizationMode: "",
       },
       fileData: {
-        SEQ : "TESTPEPTIDE",
-        PEPMASS : 0,
-        CHARGE : 0,
-        data : {
+        SEQ: "TESTPEPTIDE",
+        PEPMASS: 0,
+        CHARGE: 0,
+        data: {
           mzs: [],
-          intensities: []
-        }
+          intensities: [],
+        },
       },
       fileDataBottom: {
-        SEQ : "TESTPEPTIDE",
-        PEPMASS : 0,
-        CHARGE : 0,
-        data : {
+        SEQ: "TESTPEPTIDE",
+        PEPMASS: 0,
+        CHARGE: 0,
+        data: {
           mzs: [],
-          intensities: []
-        }
+          intensities: [],
+        },
       },
     };
 
@@ -303,7 +302,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       $scope.set.plotData.theoMz = [];
       $scope.set.plotData.percentBasePeak = [];
       $scope.set.plotData.TIC = 0;
-      
+
       returnedData.peaks.forEach(function (data, i) {
         $scope.set.plotData.x.push(data.mz);
         $scope.set.plotData.y.push(data.intensity);
@@ -400,7 +399,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             }
             modString += mod.name + "@" + mod.site + (mod.index + 1);
           });
-          console.log('pp: ', $scope.modObject.selectedMods)
+          console.log("pp: ", $scope.modObject.selectedMods);
         }
       } else {
         if ($scope.modObjectBottom.selectedMods != undefined) {
@@ -415,7 +414,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           });
         }
       }
-      console.log('modString: ', modString)
+      console.log("modString: ", modString);
 
       let ionColors = {
         a: $scope.checkModel.a.color,
@@ -614,7 +613,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           //
           let mzs = response.data[0].mzs.map((el) => parseFloat(el));
           let ints = response.data[0].intensities.map((el) => parseFloat(el));
-          
+
           usi = new USI(sUsi);
           usi.parse();
           proForma = new ProForma(usi.proForma);
@@ -694,7 +693,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       modifications,
       fillBothSequences = false
     ) {
-      console.log('preselectMods called!')
+      console.log("preselectMods called!");
       let aModsRest = [];
       //
       // take care of mass modifications
@@ -710,7 +709,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
               unimod: mod.name,
             };
             $scope.mods.push(addMod);
-            console.log('addMod: ', addMod)
+            console.log("addMod: ", addMod);
           }
         });
       } else {
@@ -725,13 +724,13 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
               unimod: mod.name,
             };
             $scope.modsBottom.push(addMod);
-            console.log('bottomAddMod: ', addMod)
+            console.log("bottomAddMod: ", addMod);
           }
         });
       }
       if (topSpectrum) {
         $scope.modObject.selectedMods = [];
-        console.log('modifications: ', modifications)
+        console.log("modifications: ", modifications);
         modifications.forEach((mod) => {
           let o = $scope.mods.filter((m) => {
             return (
@@ -882,30 +881,34 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
 
       } */
 
-
-      if(topSpectrum){
-        if($scope.peptide.sequence.includes('+')){
-          $scope.modObject.selectedMods = $scope.modObject.selectedMods.concat($scope.getModsFromSequence($scope.peptide.sequence))
+      if (topSpectrum) {
+        if ($scope.peptide.sequence.includes("+")) {
+          $scope.modObject.selectedMods = $scope.modObject.selectedMods.concat(
+            $scope.getModsFromSequence($scope.peptide.sequence)
+          );
           const regExp = /[0-9.+]/gi;
-          let newSequence = JSON.parse(JSON.stringify($scope.peptide.sequence))
-          if(regExp.test(newSequence)){
+          let newSequence = JSON.parse(JSON.stringify($scope.peptide.sequence));
+          if (regExp.test(newSequence)) {
             newSequence = newSequence.replace(regExp, "");
           }
-          $scope.peptide.sequence = newSequence
+          $scope.peptide.sequence = newSequence;
         }
-      }else{
-        if($scope.peptideBottom.sequence.includes('+')){
-          $scope.modObjectBottom.selectedMods = $scope.modObjectBottom.selectedMods.concat($scope.getModsFromSequence($scope.peptideBottom.sequence))
+      } else {
+        if ($scope.peptideBottom.sequence.includes("+")) {
+          $scope.modObjectBottom.selectedMods =
+            $scope.modObjectBottom.selectedMods.concat(
+              $scope.getModsFromSequence($scope.peptideBottom.sequence)
+            );
           const regExp = /[0-9.+]/gi;
-          let newSequence = JSON.parse(JSON.stringify($scope.peptideBottom.sequence))
-          if(regExp.test(newSequence)){
+          let newSequence = JSON.parse(
+            JSON.stringify($scope.peptideBottom.sequence)
+          );
+          if (regExp.test(newSequence)) {
             newSequence = newSequence.replace(regExp, "");
           }
-          $scope.peptideBottom.sequence = newSequence
+          $scope.peptideBottom.sequence = newSequence;
         }
       }
-
-
 
       // bind all data in froms to data
       if ($(".col-md-5 .panel.panel-body").length == 0) {
@@ -979,62 +982,60 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       };
     };
 
-    $scope.getModsFromSequence = function(sequence) {
+    $scope.getModsFromSequence = function (sequence) {
       const modsFromSequence = [];
-      for(let i = 0; i < sequence.length; i++){
-        if(sequence[i] === '+'){
-          console.log('+ found!', sequence[i-1])
-          let tempNumString = ""
-          for(let j = i+1; j < sequence.length; j++){
-            if(!isNaN(sequence[j]) || sequence[j] === '.'){
-              tempNumString = tempNumString.concat(sequence[j])
-              console.log(j, tempNumString)
+      for (let i = 0; i < sequence.length; i++) {
+        if (sequence[i] === "+") {
+          console.log("+ found!", sequence[i - 1]);
+          let tempNumString = "";
+          for (let j = i + 1; j < sequence.length; j++) {
+            if (!isNaN(sequence[j]) || sequence[j] === ".") {
+              tempNumString = tempNumString.concat(sequence[j]);
+              console.log(j, tempNumString);
 
               //temp
-              if(j === sequence.length-1){
+              if (j === sequence.length - 1) {
                 modsFromSequence.push({
-                  name: `MFS_${sequence[i-1]}${i}`,
-                  site: sequence[i-1],
-                  index: i-1,
+                  name: `MFS_${sequence[i - 1]}${i}`,
+                  site: sequence[i - 1],
+                  index: i - 1,
                   deltaMass: Number(tempNumString),
                   unimod: undefined,
                   mfs: true,
-                })
+                });
               }
-
-            }else{
-              if(i === 0){
+            } else {
+              if (i === 0) {
                 //N-terminus
                 modsFromSequence.push({
                   name: `MFS_N-terminus`,
-                  site: 'N-terminus',
-                  index: i-1,
+                  site: "N-terminus",
+                  index: i - 1,
                   deltaMass: Number(tempNumString),
                   unimod: undefined,
                   mfs: true,
-                })
-              }else{
+                });
+              } else {
                 modsFromSequence.push({
-                  name: `MFS_${sequence[i-1]}${i}`,
-                  site: sequence[i-1],
-                  index: i-1,
+                  name: `MFS_${sequence[i - 1]}${i}`,
+                  site: sequence[i - 1],
+                  index: i - 1,
                   deltaMass: Number(tempNumString),
                   unimod: undefined,
                   mfs: true,
-                })
+                });
               }
 
-              sequence = sequence.replace(`+${tempNumString}`, '')
-              i = 0
-              break
+              sequence = sequence.replace(`+${tempNumString}`, "");
+              i = 0;
+              break;
             }
           }
-
         }
       }
 
-      return modsFromSequence
-    }
+      return modsFromSequence;
+    };
 
     $scope.mergeSpectra = function (sp1, sp2) {
       var binarySpectrum_1 = binary_search_spectrum(
@@ -1087,7 +1088,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         $scope.cutoffs.compTolerance
       );
       scoresO = comparator.calculate_scores();
-      
+
       $scope.scoreBottom(scoresO.spec2);
       $scope.scoreTop(scoresO.spec1);
 
@@ -1157,16 +1158,25 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           "div.tab-content > div.tab-pane.ng-scope:eq(2) div.col-md-12:eq(0) > div.ng-scope > div.row:eq(0)"
         ).find("label.active").length > 0
       ) {
-        let orderNumber = $scope.conditions.length > 0 ? $scope.conditions[$scope.conditions.length-1].order+1 : 0;
+        let orderNumber =
+          $scope.conditions.length > 0
+            ? $scope.conditions[$scope.conditions.length - 1].order + 1
+            : 0;
         let panel = $("<div />", {
-          class: "panel panel-body conditions"+$scope.conditions.length,
+          class: "panel panel-body conditions" + $scope.conditions.length,
           // panelNumber: $scope.conditions[$scope.conditions.length-1].order ? $scope.conditions[$scope.conditions.length-1].order+1 : 0,
         });
-        panel.panelNumber = orderNumber
+        panel.panelNumber = orderNumber;
         let fragmentTypes = angular.copy($scope.checkModel);
         let cutoffs = angular.copy($scope.cutoffs);
         $scope.conditions.push({
-          fragmentTypes: {...fragmentTypes, CustomLoss: {...fragmentTypes.CustomLoss, orderNumber: orderNumber}},
+          fragmentTypes: {
+            ...fragmentTypes,
+            CustomLoss: {
+              ...fragmentTypes.CustomLoss,
+              orderNumber: orderNumber,
+            },
+          },
           cutoffs: cutoffs,
           order: orderNumber,
         });
@@ -1199,7 +1209,10 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         }
 
         //H2O, NH3, CO2
-        if ($(".Losses").find("label.active").length > 0 || $scope.checkModel.CustomLoss.selected) {
+        if (
+          $(".Losses").find("label.active").length > 0 ||
+          $scope.checkModel.CustomLoss.selected
+        ) {
           let losses = $(
             '<div class="col-md-12"><label>Neutral Losses : </label></div>'
           ).appendTo(panel);
@@ -1228,7 +1241,13 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           if ($scope.checkModel.CustomLoss.selected) {
             $scope.checkModel.CustomLoss.selected = false;
             let span = $("<label>", {
-              text: "Custom"+"(-CL"+orderNumber.toString()+", "+$scope.checkModel.CustomLoss.mass.toString()+")",
+              text:
+                "Custom" +
+                "(-CL" +
+                orderNumber.toString() +
+                ", " +
+                $scope.checkModel.CustomLoss.mass.toString() +
+                ")",
               class: "losses",
             }).appendTo(losses);
           }
@@ -1282,23 +1301,24 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         }).appendTo(mathcing);
         data_c.css("margin-left", "10px");
 
-        let button = panel.append('<button class="btn btn-primary btn-sm condition_delete_button">Remove Condition</button>');
-        panel.on('click', '.condition_delete_button', function () {
-
+        let button = panel.append(
+          '<button class="btn btn-primary btn-sm condition_delete_button">Remove Condition</button>'
+        );
+        panel.on("click", ".condition_delete_button", function () {
           // console.log($(".col-md-5").find(panel), 'no: ', panel.panelNumber)
-          let indexToRemove = $scope.conditions.findIndex((condition) => condition.order === panel.panelNumber)
-          $scope.conditions.splice(indexToRemove, 1)
+          let indexToRemove = $scope.conditions.findIndex(
+            (condition) => condition.order === panel.panelNumber
+          );
+          $scope.conditions.splice(indexToRemove, 1);
           // $scope.conditions.remove((condition) => condition.order === panel.panelNumber)
-          $(".col-md-5").find(panel).remove()
-          if($scope.conditions.length < 1){
-            $scope.deleteConditionChecker()
-            $scope.checkModel = $scope.checkModelInit
-            $scope.cutoffs = $scope.cutoffsInit
+          $(".col-md-5").find(panel).remove();
+          if ($scope.conditions.length < 1) {
+            $scope.deleteConditionChecker();
+            $scope.checkModel = $scope.checkModelInit;
+            $scope.cutoffs = $scope.cutoffsInit;
           }
           console.log("$scope.conditions after deletion", $scope.conditions);
-        })
-
-
+        });
 
         $(".col-md-5").append(panel);
         $scope.ctrl.disableRemoveConditionsButton = false;
@@ -1307,34 +1327,34 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       }
     };
 
-    $scope.deleteAll = function(){
+    $scope.deleteAll = function () {
       $scope.conditions.length = 0;
       $scope.ctrl.disableRemoveConditionsButton = true;
-      $('.col-md-5 .panel.panel-body').remove()
-      $scope.checkModel = $scope.checkModelInit
-      $scope.cutoffs = $scope.cutoffsInit
-    }
+      $(".col-md-5 .panel.panel-body").remove();
+      $scope.checkModel = $scope.checkModelInit;
+      $scope.cutoffs = $scope.cutoffsInit;
+    };
 
-    $scope.deleteConditionChecker = function(){
+    $scope.deleteConditionChecker = function () {
       $scope.ctrl.disableRemoveConditionsButton = true;
-      console.log('theres no condition')
-    }
+      console.log("theres no condition");
+    };
 
     $scope.processData = function () {
       $scope.busy.isProcessing = true;
 
       $scope.modObject.selectedMods.forEach((mod, index) => {
-        if(Object.keys(mod).includes('mfs')){
-          $scope.modObject.selectedMods.splice(index, 1)
+        if (Object.keys(mod).includes("mfs")) {
+          $scope.modObject.selectedMods.splice(index, 1);
         }
-      })
+      });
 
       $scope.modObjectBottom.selectedMods.forEach((mod, index) => {
-        if(Object.keys(mod).includes('mfs')){
-          $scope.modObjectBottom.selectedMods.splice(index, 1)
+        if (Object.keys(mod).includes("mfs")) {
+          $scope.modObjectBottom.selectedMods.splice(index, 1);
         }
-      })
-      
+      });
+
       if ($scope.conditions.length == 0) {
         if ($scope.invalidColors()) {
         } else {
@@ -1379,7 +1399,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             $scope.busy.isProcessing = false;
             return;
           }
-          
+
           const annotation1 = new Annotation($scope.submittedDataTop.data);
           $scope.annotatedResults = annotation1.fakeAPI();
 
@@ -1583,10 +1603,9 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             $scope.peakBottom.push(
               angular.copy($scope.annotatedResultsBottom.peaks)
             );
-
           }
         });
-        
+
         angular.forEach($scope.conditions, function (el) {
           if (el.fragmentTypes.a.selected)
             $scope.checkModel.a = el.fragmentTypes.a;
@@ -1619,7 +1638,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           ) {
             for (let j = 0; j < $scope.peakBottom.length; j++) {
               if ($scope.peakBottom[j][i].matchedFeatures.length != 0) {
-                $scope.annotatedResultsBottom.peaks[i] = $scope.peakBottom[j][i];
+                $scope.annotatedResultsBottom.peaks[i] =
+                  $scope.peakBottom[j][i];
               }
             }
           }
@@ -1718,7 +1738,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           $scope.annotatedResultsBottom.peaks
         );
         $scope.busy.isProcessing = false;
-
       }
     };
 
@@ -1728,7 +1747,13 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       // Add colors to array if selected and valid
       // angular.forEach($scope.checkModel, function (value, key) {
       angular.forEach(checkModel, function (value, key) {
-        if (key !== "H2O" && key !== "NH3" && key !== "HPO3" && key !== "CO2" && key !== "CustomLoss") {
+        if (
+          key !== "H2O" &&
+          key !== "NH3" &&
+          key !== "HPO3" &&
+          key !== "CO2" &&
+          key !== "CustomLoss"
+        ) {
           if (!$scope.checkHex(value.color)) {
             alert("Invalid color HEX code for selected fragment: " + key);
             return true;
@@ -2113,132 +2138,159 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       }
     };
 
-    $scope.fileUpload = function (topSpectrum = true){
-      const file = topSpectrum? document.querySelector('#input_file').files[0] : document.querySelector('#input_fileBottom').files[0];
+    $scope.fileUpload = function (topSpectrum = true) {
+      const file = topSpectrum
+        ? document.querySelector("#input_file").files[0]
+        : document.querySelector("#input_fileBottom").files[0];
 
       let reader = new FileReader();
-      reader.onload = function(){
+      reader.onload = function () {
         var text = reader.result;
-        if (!$scope.parseInputFile(topSpectrum, text)){
+        if (!$scope.parseInputFile(topSpectrum, text)) {
           alert("Invalid file format");
         }
       };
       reader.readAsText(file, "UTF-8");
     };
 
-    $scope.fileInit = function(topSpectrum = true){
-      if(topSpectrum){
-        $scope.fileData = {
-          SEQ : "TESTPEPTIDE",
-          PEPMASS : 0,
-          CHARGE : 0,
-          data : {
-            mzs: [],
-            intensities: []
-          }
-        }
-      }else{
-        $scope.fileDataBottom = {
-          SEQ : "TESTPEPTIDE",
-          PEPMASS : 0,
-          CHARGE : 0,
-          data : {
-            mzs: [],
-            intensities: []
-          }
-        }
-      }
-    }
+    // $scope.fileInit = function(topSpectrum = true){
+    //   if(topSpectrum){
+    //     $scope.fileData = {
+    //       SEQ : "TESTPEPTIDE",
+    //       PEPMASS : 0,
+    //       CHARGE : 0,
+    //       data : {
+    //         mzs: [],
+    //         intensities: []
+    //       }
+    //     }
+    //   }else{
+    //     $scope.fileDataBottom = {
+    //       SEQ : "TESTPEPTIDE",
+    //       PEPMASS : 0,
+    //       CHARGE : 0,
+    //       data : {
+    //         mzs: [],
+    //         intensities: []
+    //       }
+    //     }
+    //   }
+    // }
 
-    $scope.fileFormatCheck = function(lines){
-      if(lines[0].split('\r')[0] != 'BEGIN IONS') return false;
+    $scope.fileFormatCheck = function (lines) {
+      if (lines.at(-1) == "") lines.pop();
+
+      lines = lines.map((el) => el.split("\r")[0]);
+
+      let parsedLines = [];
+      const spliter = [];
+      lines.forEach((el, index) => {
+        if (el == "") spliter.push(index);
+      });
+
+      spliter.forEach((el, index, arr) => {
+        if (index == 0) parsedLines.push(lines.slice(0, el));
+        else parsedLines.push(lines.slice(arr[index - 1] + 1, el));
+      });
       
-      for(let i=1; i<lines.length; i++){
-        if(lines[i].split('\r')[0] == 'END IONS'){
-          if(lines[i+1].split() != '') return false;
-          break;
-        }
-      }
-
-      return true
-    };
-
-    $scope.fileHeaderCheck = function(topSpectrum = true){
-      const fileData = topSpectrum? $scope.fileData : $scope.fileDataBottom;
-
-      if(fileData["PEPMASS"] == 0) return false;
-      if(fileData["CHARGE"] == 0) return false;
-      if(fileData["SEQ"] == "TESTPEPTIDE") return false;
-
-      return true
-    };
-
-    $scope.parseInputFile = function(topSpectrum = true, text) {
-      const lines = text.split('\n');
+      let parsedData = Array.from(
+        { length: parsedLines.length },
+        () => Object.assign({}, $scope.fileInit)
+      );
       
-      if(!$scope.fileFormatCheck(lines)) return false;
-      
-      $scope.fileInit(topSpectrum);
-      const fileData = topSpectrum? $scope.fileData : $scope.fileDataBottom;
+      parsedLines.forEach((spectrumData, spectrumIndex) => {
+        if (
+          spectrumData.at(0) != "BEGIN IONS" ||
+          spectrumData.at(-1) != "END IONS"
+        )
+          parsedData[spectrumIndex].isValid = false;
+        else {
+          spectrumData.forEach((line, lineIndex) => {
+            if (lineIndex != 0 && lineIndex != (spectrumData.length - 1)) {
+              if (line.includes("=")) {
+                let key = line.split("=")[0];
+                let value = line.split("=")[1];
 
-      const parse = lines.map((line, index) => {
-        line = line.split('\r')[0];
-        if(index != 0){
-          if(line.includes('=')){
-            let key = line.split('=')[0];
-            let value = line.split('=')[1];
+                if (key == "CHARGE") {
+                  let charge = Number(value[0]);
+                  if (value[1] == "-") charge = -charge;
+                  value = charge;
+                }
 
-            if(key == "CHARGE"){
-              let charge = Number(value[0]);
-              if(value[1] == '-') charge = -charge;
-              value = charge;
+                if (key == "PEPMASS") {
+                  value = Number(value);
+                }
+
+                parsedData[spectrumIndex][key] = value;
+              } else if (/[0-9]/.test(line)) {
+                if (line.includes("\t")) {
+                  parsedData[spectrumIndex].data.mzs.push(line.split("\t")[0]);
+                  parsedData[spectrumIndex].data.intensities.push(
+                    line.split("\t")[1]
+                  );
+                } else {
+                  parsedData[spectrumIndex].data.mzs.push(line.split(" ")[0]);
+                  parsedData[spectrumIndex].data.intensities.push(
+                    line.split(" ")[1]
+                  );
+                }
+              }
             }
-
-            if(key == "PEPMASS"){
-              value = Number(value);
-            }
-
-            fileData[key] = value;
-          }else if(/[0-9]/.test(line)){
-            if(line.includes('\t')){
-              fileData.data.mzs.push(line.split('\t')[0]);
-              fileData.data.intensities.push(line.split('\t')[1]);
-            }else{
-              fileData.data.mzs.push(line.split(' ')[0]);
-              fileData.data.intensities.push(line.split(' ')[1]);
-            }
-          }
+          });
         }
       });
 
-      if(!$scope.fileHeaderCheck(topSpectrum)) return false;
+      return parsedData;
+    };
+
+    $scope.fileHeaderCheck = function (parsedData) {
+      parsedData.map((fileData) => {
+        if (fileData["PEPMASS"] == 0) fileData['isValid'] == false;
+        if (fileData["CHARGE"] == 0) fileData['isValid'] == false;
+        if (fileData["SEQ"] == "TESTPEPTIDE") fileData['isValid'] == false;
+      })
+    };
+
+    $scope.parseInputFile = function (topSpectrum = true, text) {
+      const lines = text.split("\n");
+
+      // if(!$scope.fileFormatCheck(lines)) return false;
+      const parsedData = $scope.fileFormatCheck(lines);
+
+      // $scope.fileInit(topSpectrum);
+      const fileData = topSpectrum ? $scope.fileData : $scope.fileDataBottom;
+      
+      $scope.fileHeaderCheck(parsedData);
+      if(parsedData.filter(el => {el.isValid == true}).length == 0) return
+      // if (!$scope.fileHeaderCheck(topSpectrum)) return false;
+      
 
       let mzs = fileData.data.mzs.map((el) => parseFloat(el));
       let ints = fileData.data.intensities.map((el) => parseFloat(el));
 
-      if(/[0-9]/.test(fileData.SEQ)){
+      if (/[0-9]/.test(fileData.SEQ)) {
         let modMass = fileData.SEQ.split(/[A-Z]/);
         let seqArray = fileData.SEQ.match(/[A-Z]/g);
 
-        let j=1;
-        modMass.forEach((mod, i)=>{
-          if(mod != ''){
+        let j = 1;
+        modMass.forEach((mod, i) => {
+          if (mod != "") {
             let addMod = {
               name: "Mod" + j,
-              site: i == 0 ? "N-terminus" : seqArray[i-1],
-              index: i-1,
+              site: i == 0 ? "N-terminus" : seqArray[i - 1],
+              index: i - 1,
               deltaMass: parseFloat(mod),
               // unimod: mod.name,
             };
-            if(topSpectrum) $scope.modObject.selectedMods.push(addMod);
+            if (topSpectrum) $scope.modObject.selectedMods.push(addMod);
             else $scope.modObjectBottom.selectedMods.push(addMod);
             j++;
           }
         });
-        fileData.SEQ = seqArray.join('');
+        fileData.SEQ = seqArray.join("");
       }
 
-      if(topSpectrum) $scope.set.fileData = fileData;
+      if (topSpectrum) $scope.set.fileData = fileData;
       else $scope.set.fileDataBottom = fileData;
       $scope.fileData = fileData;
 
