@@ -1036,6 +1036,17 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       return modsFromSequence
     }
 
+    $scope.getCustomLossAndGainFromString = function(customString){
+      const customLossAndGainArray = [];
+      const customLossAndGainFromString = customString.split(',');
+      console.log("clg1: ", customLossAndGainFromString)
+      customLossAndGainFromString.forEach(item => {
+        customLossAndGainArray.push(Number(item))
+      })
+      console.log("clg2: ", customLossAndGainArray)
+      return customLossAndGainArray
+    }
+
     $scope.mergeSpectra = function (sp1, sp2) {
       var binarySpectrum_1 = binary_search_spectrum(
         sp1,
@@ -1165,11 +1176,16 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         panel.panelNumber = orderNumber
         let fragmentTypes = angular.copy($scope.checkModel);
         let cutoffs = angular.copy($scope.cutoffs);
+        const lossAndGainArray = $scope.getCustomLossAndGainFromString(fragmentTypes.CustomLossAndGain.lossesAndGains.toString())
         $scope.conditions.push({
-          fragmentTypes: {...fragmentTypes, CustomLoss: {...fragmentTypes.CustomLoss, orderNumber: orderNumber}},
+          fragmentTypes:
+              {...fragmentTypes,
+                CustomLoss: {...fragmentTypes.CustomLoss, orderNumber: orderNumber},
+                CustomLossAndGain: {...fragmentTypes.CustomLossAndGain, lossesAndGains: lossAndGainArray}
+              },
           cutoffs: cutoffs,
           order: orderNumber,
-        });
+        })
 
         fragmentTypes = angular.copy($scope.checkModel);
 
@@ -1199,7 +1215,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         }
 
         //H2O, NH3, CO2
-        if ($(".Losses").find("label.active").length > 0 || $scope.checkModel.CustomLoss.selected) {
+        if ($(".Losses").find("label.active").length > 0 || $scope.checkModel.CustomLoss.selected || $scope.checkModel.CustomLossAndGain.selected) {
           let losses = $(
             '<div class="col-md-12"><label>Neutral Losses : </label></div>'
           ).appendTo(panel);
@@ -1229,6 +1245,13 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             $scope.checkModel.CustomLoss.selected = false;
             let span = $("<label>", {
               text: "Custom"+"(-CL"+orderNumber.toString()+", "+$scope.checkModel.CustomLoss.mass.toString()+")",
+              class: "losses",
+            }).appendTo(losses);
+          }
+          if ($scope.checkModel.CustomLossAndGain.selected) {
+            $scope.checkModel.CustomLossAndGain.selected = false;
+            let span = $("<label>", {
+              text: $scope.checkModel.CustomLossAndGain.lossesAndGains,
               class: "losses",
             }).appendTo(losses);
           }
@@ -1728,7 +1751,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       // Add colors to array if selected and valid
       // angular.forEach($scope.checkModel, function (value, key) {
       angular.forEach(checkModel, function (value, key) {
-        if (key !== "H2O" && key !== "NH3" && key !== "HPO3" && key !== "CO2" && key !== "CustomLoss") {
+        if (key !== "H2O" && key !== "NH3" && key !== "HPO3" && key !== "CO2" && key !== "CustomLoss" && key !== "CustomLossAndGain") {
           if (!$scope.checkHex(value.color)) {
             alert("Invalid color HEX code for selected fragment: " + key);
             return true;
