@@ -301,8 +301,8 @@ Annotation = class Annotation {
 			angular.forEach(this.fragmentTypes.CustomLossAndGain.lossesAndGains, function(item){
 				console.log("item: ", item)
 				returnV.push({
-					"mass": item,
-					"name": item < 0 ? "+"+item.toString() : "-"+item.toString()
+					"mass": -item,
+					"name": item > 0 ? "+"+ -item.toString() : item.toString()
 				});
 			})
 			// returnV.push({
