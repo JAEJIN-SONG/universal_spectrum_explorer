@@ -484,12 +484,32 @@
                                       </div>
                                       <div class="custom_loss_container">
                                         <label class="btn btn-fragment" ng-model="checkModel.CustomLoss.selected" uib-btn-checkbox>Custom</label>
-                                        <input type="number" class="form-control" ng-model="checkModel.CustomLoss.mass" min="0.0"/>
+                                        <input type="number" class="form-control" ng-model="checkModel.CustomLoss.mass"/>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
+
+<!--                              Custom Loss and Gain-->
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <label>Custom Neutral Loss(-) / Gain(+)</label>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="custom_loss_container">
+                                        <label class="btn btn-fragment" ng-model="checkModel.CustomLossAndGain.selected" uib-btn-checkbox>Custom2</label>
+                                        <input type="text" placeholder="Enter loss and gain here...." ng-model="checkModel.CustomLossAndGain.lossesAndGains"/>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
                               <br/>
                               <div class="row">
                                 <div class="col-md-6">

@@ -296,6 +296,20 @@ Annotation = class Annotation {
 				"name": this.fragmentTypes.CustomLoss.orderNumber ? "-CL"+this.fragmentTypes.CustomLoss.orderNumber.toString() : "-CL"
 			});
 		};
+		if(this.fragmentTypes.CustomLossAndGain.selected){
+			console.log("clg found")
+			angular.forEach(this.fragmentTypes.CustomLossAndGain.lossesAndGains, function(item){
+				console.log("item: ", item)
+				returnV.push({
+					"mass": -item,
+					"name": item > 0 ? "+"+ -item.toString() : item.toString()
+				});
+			})
+			// returnV.push({
+			// 	"mass": this.fragmentTypes.CustomLoss.mass,
+			// 	"name": this.fragmentTypes.CustomLoss.orderNumber ? "-CL"+this.fragmentTypes.CustomLoss.orderNumber.toString() : "-CL"
+			// });
+		};
 		return returnV;
 	}
 	get_fragmentTypes(){
@@ -407,6 +421,12 @@ Annotation = class Annotation {
 						}
 						// else if(loss.name =="-Custom"){ // custom
 						else if(loss.name.includes('-CL') || loss.name === "-Custom"){
+							let more = {...element};
+							more["mz"] -= loss.mass / c;
+							more["neutralLoss"] = loss.name;
+							fragments.push(more);
+						}
+						else if(loss.name.includes('-') || loss.name.includes('+')){
 							let more = {...element};
 							more["mz"] -= loss.mass / c;
 							more["neutralLoss"] = loss.name;
