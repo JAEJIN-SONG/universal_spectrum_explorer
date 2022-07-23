@@ -173,6 +173,7 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
       mzs: [],
       intensities: []
     },
+    selectedMods : [],
     isValid : true
   };
 
@@ -917,6 +918,8 @@ m1
       "C-terminus"
     ]
   };
+
+  $scope.disabled = true;
 });
 
 myApp.controller('PeptideCtrl', function ($scope) {
