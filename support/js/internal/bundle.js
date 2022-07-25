@@ -297,12 +297,10 @@ Annotation = class Annotation {
 			});
 		};
 		if(this.fragmentTypes.CustomLossAndGain.selected){
-			console.log("clg found")
 			angular.forEach(this.fragmentTypes.CustomLossAndGain.lossesAndGains, function(item){
-				console.log("item: ", item)
 				returnV.push({
 					"mass": -item,
-					"name": item > 0 ? "+"+ -item.toString() : item.toString()
+					"name": item > 0 ? "+"+ item.toString() : item.toString()
 				});
 			})
 			// returnV.push({
