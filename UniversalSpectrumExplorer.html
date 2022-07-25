@@ -101,13 +101,13 @@
                                 <br/>
                                 <div ng-controller="DataCtrl">
                                   <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                       <label for="charge">Max Fragment Charge</label>
                                       <div class="input-group-md">
                                         <input type="number" class="form-control" id="charge" placeholder=1 min="{{peptide.fragmentMin}}" max="{{peptide.fragmentMax}}" ng-model="peptide.charge" ng-blur="validateFragmentCharge()"> 
                                       </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                       <label for="sequence">Precursor Charge</label>
                                       <div class="input-group-md">
                                         <input type="number" class="form-control" placeholder="2" ng-model="peptide.precursorCharge" ng-blur="validateCharge()"> 
@@ -122,6 +122,16 @@
                                         <div class="inputFile">
                                           <input type="file" id="input_file"/>
                                           <button type="button" class="btn btn-primary btn-sm" ng-click="fileUpload()">Upload</button>
+                                          <div class="btn-group spectralDataDropdown" uib-dropdown is-open="status.isopen">
+                                            <button id="single-button" type="button" class="btn btn-primary btn-sm" uib-dropdown-toggle ng-disabled="disabled">
+                                              Spectral Data <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu list-group" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                                              <div class="list-group">
+                                                <a href="#" ng-repeat="filedata in fileData" ng-click="filedata.isValid ? setSpectralData(true, filedata) : ''" class="list-group-item list-group-item-action" ng-class="{'disabled' : !filedata.isValid}">{{ $index+1 }}. {{ filedata.SEQ == 'TESTPEPTIDE' ? 'Invalid Data' : filedata.SEQ }}  ({{ filedata.PEPMASS }})</a>
+                                              </div>
+                                            </ul>
+                                          </div>
                                         </div>
                                         <div handsontabletest id="topTable"></div>
                                       </div>
@@ -258,13 +268,13 @@
                                 <br/>
                                 <div ng-controller="DataCtrl">
                                   <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                       <label for="charge">Max Fragment Charge</label>
                                       <div class="input-group-md">
                                         <input type="number" class="form-control" id="charge" placeholder=1 min="{{peptideBottom.fragmentMin}}" max="{{peptideBottom.fragmentMax}}" ng-model="peptideBottom.charge" ng-blur="validateFragmentCharge(false)"> 
                                       </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                       <label for="sequence">Precursor Charge</label>
                                       <div class="input-group-md">
                                         <input type="number" class="form-control" placeholder="2" ng-model="peptideBottom.precursorCharge" ng-blur="validateCharge(false)"> 
@@ -279,6 +289,16 @@
                                         <div class="inputFile">
                                           <input type="file" id="input_fileBottom"/>
                                           <button type="button" class="btn btn-primary btn-sm" ng-click="fileUpload(false)">Upload</button>
+                                          <div class="btn-group spectralDataDropdown" uib-dropdown is-open="status.isopen">
+                                            <button id="single-button" type="button" class="btn btn-primary btn-sm" uib-dropdown-toggle ng-disabled="disabled">
+                                              Spectral Data <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu list-group" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                                              <div class="list-group">
+                                                <a href="#" ng-repeat="filedata in fileDataBottom" ng-click="filedata.isValid ? setSpectralData(false, filedata) : ''" class="list-group-item list-group-item-action" ng-class="{'disabled' : !filedata.isValid}">{{ $index+1 }}. {{ filedata.SEQ == 'TESTPEPTIDE' ? 'Invalid Data' : filedata.SEQ }}  ({{ filedata.PEPMASS }})</a>
+                                              </div>
+                                            </ul>
+                                          </div>
                                         </div>
                                         <hot-table
                                            settings="{colHeaders: true, contextMenu: false, afterInit: afterInitBottom}"
