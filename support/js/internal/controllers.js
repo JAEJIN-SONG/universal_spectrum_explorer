@@ -1039,11 +1039,9 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
     $scope.getCustomLossAndGainFromString = function(customString){
       const customLossAndGainArray = [];
       const customLossAndGainFromString = customString.split(',');
-      console.log("clg1: ", customLossAndGainFromString)
       customLossAndGainFromString.forEach(item => {
         customLossAndGainArray.push(Number(item))
       })
-      console.log("clg2: ", customLossAndGainArray)
       return customLossAndGainArray
     }
 
@@ -1250,10 +1248,12 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           }
           if ($scope.checkModel.CustomLossAndGain.selected) {
             $scope.checkModel.CustomLossAndGain.selected = false;
-            let span = $("<label>", {
-              text: $scope.checkModel.CustomLossAndGain.lossesAndGains,
-              class: "losses",
-            }).appendTo(losses);
+            lossAndGainArray.forEach(item => {
+              let span = $("<label>", {
+                text: item >= 0 ? "+"+item.toString() : item.toString(),
+                class: "losses",
+              }).appendTo(losses);
+            })
           }
         }
 
