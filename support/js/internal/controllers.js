@@ -239,6 +239,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             $scope.set.plotDataBottom.neutralLosses.push("");
           } else {
             $scope.set.plotDataBottom.neutralLosses.push(fragment.neutralLoss);
+            console.log("fragneul: ", fragment)
           }
 
           $scope.set.plotDataBottom.labelCharge.push(fragment.charge);
@@ -296,6 +297,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       $scope.set.plotData.theoMz = [];
       $scope.set.plotData.percentBasePeak = [];
       $scope.set.plotData.TIC = 0;
+      console.log("colorArray: ", $scope.colorArray)
 
       returnedData.peaks.forEach(function (data, i) {
         $scope.set.plotData.x.push(data.mz);
@@ -314,7 +316,9 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         } else {
           var peakData = data.matchedFeatures[0];
           var fragment = peakData.feature;
-          if (fragment.type == "a") {
+          if (fragment.neutralLoss !== null){
+            $scope.set.plotData.color.push($scope.checkModel.CustomLossAndGain.color);
+          } else if (fragment.type == "a") {
             $scope.set.plotData.color.push($scope.colorArray[0]);
           } else if (fragment.type == "b") {
             $scope.set.plotData.color.push($scope.colorArray[1]);
@@ -338,6 +342,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             $scope.set.plotData.neutralLosses.push("");
           } else {
             $scope.set.plotData.neutralLosses.push(fragment.neutralLoss);
+            console.log("fragNTS: ", fragment)
+            console.log("plotDataColor: ", $scope.set.plotData.color)
           }
 
           $scope.set.plotData.labelCharge.push(fragment.charge);
@@ -1581,7 +1587,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
 
     $scope.invalidColors = function (checkModel = $scope.checkModel) {
       $scope.colorArray = [];
-
       // Add colors to array if selected and valid
       // angular.forEach($scope.checkModel, function (value, key) {
       angular.forEach(checkModel, function (value, key) {
@@ -1592,6 +1597,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           } else {
             if (value.selected) {
               $scope.colorArray.push(value.color);
+              console.log("value: ", value)
             } else {
               $scope.colorArray.push("");
             }

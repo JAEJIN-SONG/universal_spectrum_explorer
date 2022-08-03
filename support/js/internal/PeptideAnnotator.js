@@ -111,7 +111,7 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
     HPO3: { selected: false },
     CO2: { selected: false },
     CustomLoss: { selected: false, mass: 0.0 },
-    CustomLossAndGain: {selected: false, lossesAndGains: ""},
+    CustomLossAndGain: {selected: false, lossesAndGains: "", color: "#8cff42"},
     precursor: { selected: true, color: "#666666"},
     unassigned: { selected: true, color: "#A6A6A6"}
   };
@@ -130,7 +130,7 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
     HPO3: { selected: false },
     CO2: { selected: false },
     CustomLoss: { selected: false, mass: 0.0 },
-    CustomLossAndGain: {selected: false, lossesAndGains: ""},
+    CustomLossAndGain: {selected: false, lossesAndGains: "", color: "#8cff42"},
     precursor: { selected: true, color: "#666666"},
     unassigned: { selected: true, color: "#A6A6A6"}
   };
