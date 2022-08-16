@@ -498,8 +498,8 @@ div.inputFile {
   border-left: 0;
 }
 
-.custom_loss_container {
-  margin-top: 10px;
+.custom_loss_and_gain_container {
+  margin-top: 2px;
   display: flex;
   width: 100%;
   flex-direction: row;

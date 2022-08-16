@@ -482,16 +482,13 @@
                                         <label class="btn btn-fragment" ng-model="checkModel.NH3.selected" uib-btn-checkbox>-NH<sub>3</sub></label>
                                         <label class="btn btn-fragment" ng-model="checkModel.CO2.selected" uib-btn-checkbox>-CO<sub>2</sub></label>
                                       </div>
-                                      <div class="custom_loss_container">
-                                        <label class="btn btn-fragment" ng-model="checkModel.CustomLoss.selected" uib-btn-checkbox>Custom</label>
-                                        <input type="number" class="form-control" ng-model="checkModel.CustomLoss.mass"/>
-                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
 
 <!--                              Custom Loss and Gain-->
+                              <br/>
                               <div class="row">
                                 <div class="col-md-12">
                                   <div class="row">
@@ -501,7 +498,7 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-md-12">
-                                      <div class="custom_loss_container">
+                                      <div class="custom_loss_and_gain_container">
                                         <label class="btn btn-fragment" ng-model="checkModel.CustomLossAndGain.selected" uib-btn-checkbox>Custom Neutral Loss / Gain</label>
                                         <input type="text" class="form-control" placeholder="Enter loss and gain here...." ng-model="checkModel.CustomLossAndGain.lossesAndGains"/>
                                       </div>
@@ -582,7 +579,7 @@
                                     <input minicolors="wheelsettings" id="wheel-demo8" class="form-control" type="text" ng-model="checkModel.unassigned.color"> 
                                   </div>
                                   <div class="col-md-3">
-                                    <label for="wheel-demo9">Ion with Custom L/G</label>
+                                    <label for="wheel-demo9">Loss / Gain</label>
                                     <input minicolors="wheelsettings" id="wheel-demo9" class="form-control" type="text" ng-model="checkModel.CustomLossAndGain.color">
                                   </div>
                                 </div>
