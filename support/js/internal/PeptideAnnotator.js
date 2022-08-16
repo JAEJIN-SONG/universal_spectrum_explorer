@@ -642,7 +642,7 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
 
   $scope.cutoffs = {
     matchingCutoff: 0,
-    matchingCutoffMax: 100,
+    matchingCutoffMax: 999,
     matchingType: "% Base Peak",
     matchingMaxType: "% Max Peak",
     toleranceType: ["ppm", "Da"].includes($scope.getUrlVars().fragment_tol_unit) ? $scope.getUrlVars().fragment_tol_unit : "ppm",
@@ -653,7 +653,7 @@ myApp.controller('MasterCtrl', function($scope, $uibModal, $log, $localStorage, 
 
   $scope.cutoffsInit = {
     matchingCutoff: 0,
-    matchingCutoffMax: 100,
+    matchingCutoffMax: 999,
     matchingType: "% Base Peak",
     matchingMaxType: "% Max Peak",
     toleranceType: ["ppm", "Da"].includes($scope.getUrlVars().fragment_tol_unit) ? $scope.getUrlVars().fragment_tol_unit : "ppm",

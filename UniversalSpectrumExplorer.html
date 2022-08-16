@@ -518,7 +518,12 @@
                                 <div class="col-md-6">
                                   <label>Annotation Intensity Threshold</label>
                                   <div class="input-group">
-                                    <input type="number" class="form-control" ng-model="cutoffs.matchingCutoff" min="0" /> <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapMatchingType()">{{cutoffs.matchingType}}</button> </span> 
+                                    <div class="cutoff_min_max_container">
+                                      <input type="number" class="form-control" ng-model="cutoffs.matchingCutoff" min="0" />
+                                      <div>~</div>
+                                      <input type="number" class="form-control" ng-model="cutoffs.matchingCutoffMax" />
+                                    </div>
+                                    <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapMatchingType()">{{cutoffs.matchingType}}</button> </span>
                                   </div>
                                 </div>
                               </div>
