@@ -4,6 +4,19 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
   "$http",
   "$localStorage",
   function ($scope, $log, $http, $localStorage) {
+
+    //test
+    let timerId = setInterval(() => {
+
+      if($scope.conditions.length > 0) {
+        if($scope.conditions[0].fragmentTypes.b === $scope.checkModel.b){
+          console.log("ye")
+        }else{
+          console.log("na")
+        }
+      }
+    }, 10000);
+
     var populateMods = function () {
       var returnArray = [];
       for (var i = 0; i < 13; i++) {
@@ -17,6 +30,98 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
     };
 
     $scope.set = {
+      saDist: {
+        data: [],
+      },
+      plotData: {
+        x: [],
+        y: [],
+        id: [],
+        color: [],
+        label: [],
+        labelCharge: [],
+        neutralLosses: [],
+        barwidth: [],
+        massError: [],
+        theoMz: [],
+        percentBasePeak: [],
+        TIC: 0,
+      },
+      score: {
+        sa: 0.0,
+        corr: 0.0,
+      },
+      scoreTop: {
+        sa: 0.0,
+        corr: 0.0,
+      },
+      scoreBottom: {
+        sa: 0.0,
+        corr: 0.0,
+      },
+      plotDataBottom: {
+        x: [],
+        y: [],
+        id: [],
+        color: [],
+        label: [],
+        labelCharge: [],
+        neutralLosses: [],
+        barwidth: [],
+        massError: [],
+        theoMz: [],
+        percentBasePeak: [],
+        TIC: 0,
+      },
+      peptideBottom: {
+        sequence: "TESTPEPTIDE",
+        usi: "",
+        precursorMz: 609.77229,
+        precursorCharge: $scope.peptideBottom.precursorCharge,
+        mods: populateMods(),
+        origin: "manual input",
+      },
+      peptide: {
+        sequence: "TESTPEPTIDE",
+        usi: "mzspec:PXD015890:20190213_Rucks_atm6.raw (F002091).mzid_20190213_Rucks_atm6.raw_(F002091).MGF:index:914:YLDGLTAER/2",
+        precursorMz: 609.77229,
+        precursorCharge: $scope.peptide.precursorCharge,
+        mods: populateMods(),
+        usiOriginTop: "pride",
+        origin: "manual input",
+      },
+      settingsBottom: {
+        toleranceThreshold: 0,
+        toleranceType: "",
+        ionizationMode: "",
+      },
+      settings: {
+        toleranceThreshold: 0,
+        toleranceType: "",
+        ionizationMode: "",
+      },
+      fileData: {
+        SEQ: "TESTPEPTIDE",
+        PEPMASS: 0,
+        CHARGE: 0,
+        data: {
+          mzs: [],
+          intensities: [],
+        },
+      },
+      fileDataBottom: {
+        SEQ: "TESTPEPTIDE",
+        PEPMASS: 0,
+        CHARGE: 0,
+        data: {
+          mzs: [],
+          intensities: [],
+        },
+      },
+    };
+
+    //setInit
+    $scope.setInit = {
       saDist: {
         data: [],
       },
@@ -736,6 +841,9 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
     };
 
     $scope.prepareDataToProcess = function (topSpectrum = true, condition = $scope.conditions[0]) {
+
+      console.log("set: ", $scope.set)
+
       var url = "https://www.proteomicsdb.org/logic/api/getIPSAannotations.xsjs";
       if ((topSpectrum && $scope.peptide.precursorCharge <= 0) || (!topSpectrum && $scope.peptideBottom.precursorCharge <= 0)) {
         url = "support/php/NegativeModeProcessData.php";
@@ -1185,10 +1293,11 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           $scope.conditions.splice(indexToRemove, 1);
           // $scope.conditions.remove((condition) => condition.order === panel.panelNumber)
           $(".col-md-5").find(panel).remove();
+          // $scope.set = $scope.setInit
           if ($scope.conditions.length < 1) {
             $scope.deleteConditionChecker();
-            $scope.checkModel = $scope.checkModelInit;
-            $scope.cutoffs = $scope.cutoffsInit;
+            $scope.checkModel = angular.copy($scope.checkModelInit);
+            $scope.cutoffs = angular.copy($scope.cutoffsInit);
           }
           console.log("$scope.conditions after deletion", $scope.conditions);
         });
@@ -1204,8 +1313,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       $scope.conditions.length = 0;
       $scope.ctrl.disableRemoveConditionsButton = true;
       $(".col-md-5 .panel.panel-body").remove();
-      $scope.checkModel = $scope.checkModelInit;
-      $scope.cutoffs = $scope.cutoffsInit;
+      $scope.checkModel = angular.copy($scope.checkModelInit);
+      $scope.cutoffs = angular.copy($scope.cutoffsInit);
     };
 
     $scope.deleteConditionChecker = function () {
@@ -1388,6 +1497,9 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           $scope.busy.isProcessing = false;
         }
       } else {
+        $scope.peakTop = [];
+        $scope.peakBottom = [];
+
         angular.forEach($scope.conditions, function (condition) {
           // Added condition exists
           if ($scope.invalidColors(condition.fragmentTypes)) {
@@ -1403,6 +1515,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
 
             $scope.submittedDataTop = $scope.prepareDataToProcess(true, condition);
             $scope.submittedDataBottom = $scope.prepareDataToProcess(false, condition);
+
+            // let timerId = setInterval(() => console.log("conds", $scope.conditions), 5000);
 
             urlObj = {};
             urlObj["usi"] = $scope.peptide.usi;
@@ -1456,6 +1570,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
                   },
                 ];
               } else {
+                console.log("spectrum: ", spectrum)
                 return spectrum;
               }
             };
@@ -1466,12 +1581,37 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         });
 
         angular.forEach($scope.conditions, function (el) {
-          if (el.fragmentTypes.a.selected) $scope.checkModel.a = el.fragmentTypes.a;
-          if (el.fragmentTypes.b.selected) $scope.checkModel.b = el.fragmentTypes.b;
-          if (el.fragmentTypes.c.selected) $scope.checkModel.c = el.fragmentTypes.c;
-          if (el.fragmentTypes.x.selected) $scope.checkModel.x = el.fragmentTypes.x;
-          if (el.fragmentTypes.y.selected) $scope.checkModel.y = el.fragmentTypes.y;
-          if (el.fragmentTypes.z.selected) $scope.checkModel.z = el.fragmentTypes.z;
+          // if (el.fragmentTypes.a.selected) $scope.checkModel.a = el.fragmentTypes.a;
+          // if (el.fragmentTypes.b.selected) $scope.checkModel.b = el.fragmentTypes.b;
+          // if (el.fragmentTypes.c.selected) $scope.checkModel.c = el.fragmentTypes.c;
+          // if (el.fragmentTypes.x.selected) $scope.checkModel.x = el.fragmentTypes.x;
+          // if (el.fragmentTypes.y.selected) $scope.checkModel.y = el.fragmentTypes.y;
+          // if (el.fragmentTypes.z.selected) $scope.checkModel.z = el.fragmentTypes.z;
+          if (el.fragmentTypes.a.selected) $scope.checkModel.a = angular.copy(el.fragmentTypes.a);
+          // if($scope.conditions[0].fragmentTypes.b === $scope.checkModel.b){
+          //   console.log("ye1")
+          // }else if($scope.conditions[0].fragmentTypes.b.color == $scope.checkModel.b.color){
+          //   console.log("ref dif, val equal1")
+          // }else{
+          //   console.log("na1", $scope.conditions[0].fragmentTypes.b, $scope.checkModel.b)
+          // }
+          if (el.fragmentTypes.b.selected) {
+            $scope.checkModel.b = angular.copy(el.fragmentTypes.b);
+            // let bCopy = angular.copy(el.fragmentTypes.b);
+            // $scope.checkModel.b = bCopy;
+            // $scope.checkModel.b = angular.copy(el.fragmentTypes.b);
+          }
+          // if($scope.conditions[0].fragmentTypes.b === $scope.checkModel.b){
+          //   console.log("ye2")
+          // }else if($scope.conditions[0].fragmentTypes.b.color == $scope.checkModel.b.color){
+          //   console.log("ref dif, val equal2")
+          // }else{
+          //   console.log("na2")
+          // }
+          if (el.fragmentTypes.c.selected) $scope.checkModel.c = angular.copy(el.fragmentTypes.c);
+          if (el.fragmentTypes.x.selected) $scope.checkModel.x = angular.copy(el.fragmentTypes.x);
+          if (el.fragmentTypes.y.selected) $scope.checkModel.y = angular.copy(el.fragmentTypes.y);
+          if (el.fragmentTypes.z.selected) $scope.checkModel.z = angular.copy(el.fragmentTypes.z);
         });
         $scope.invalidColors();
 
@@ -1597,7 +1737,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           } else {
             if (value.selected) {
               $scope.colorArray.push(value.color);
-              console.log("value: ", value)
             } else {
               $scope.colorArray.push("");
             }
