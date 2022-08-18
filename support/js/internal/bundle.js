@@ -135,7 +135,7 @@ Annotation = class Annotation {
 			fragments : this.response["fragments"],
 			fragTypes : this.fragmentTypes,
 			cutoff: this.cutoff,
-      cutoffMax: this.cutoffMax,
+      		cutoffMax: this.cutoffMax,
 			checkVar: null,
 			charge: this.precursorCharge,
 			basePeak: {
@@ -156,6 +156,7 @@ Annotation = class Annotation {
 			el["matchedFeatures"] = [];
 			el["percentBasePeak"] = el["intensity"] ;
 			el["sn"] = null;
+			el["peakFragType"] = this.fragmentTypes;
 			return(el);
     })
 		// var spectrum_1 = answer; // we search in the calculated values

@@ -215,24 +215,45 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         } else {
           var peakData = data.matchedFeatures[0];
           var fragment = peakData.feature;
-          if (fragment.type == "a") {
-            $scope.set.plotDataBottom.color.push($scope.colorArray[0]);
+          // if (fragment.type == "a") {
+          //   $scope.set.plotDataBottom.color.push($scope.colorArray[0]);
+          // } else if (fragment.type == "b") {
+          //   $scope.set.plotDataBottom.color.push($scope.colorArray[1]);
+          // } else if (fragment.type == "c") {
+          //   $scope.set.plotDataBottom.color.push($scope.colorArray[2]);
+          // } else if (fragment.type == "C") {
+          //   $scope.set.plotDataBottom.color.push($scope.colorArray[3]);
+          // } else if (fragment.type == "x") {
+          //   $scope.set.plotDataBottom.color.push($scope.colorArray[4]);
+          // } else if (fragment.type == "y") {
+          //   $scope.set.plotDataBottom.color.push($scope.colorArray[5]);
+          // } else if (fragment.type == "z") {
+          //   $scope.set.plotDataBottom.color.push($scope.colorArray[6]);
+          // } else if (fragment.type == "Z") {
+          //   $scope.set.plotDataBottom.color.push($scope.colorArray[7]);
+          // } else if (fragment.type == "M") {
+          //   $scope.set.plotDataBottom.color.push($scope.colorArray[8]);
+          // }
+          if (fragment.neutralLoss !== null){
+            $scope.set.plotDataBottom.color.push($scope.checkModel.CustomLossAndGain.color);
+          } else if (fragment.type == "a") {
+            $scope.set.plotDataBottom.color.push(data.peakFragType.a.color);
           } else if (fragment.type == "b") {
-            $scope.set.plotDataBottom.color.push($scope.colorArray[1]);
+            $scope.set.plotDataBottom.color.push(data.peakFragType.b.color);
           } else if (fragment.type == "c") {
-            $scope.set.plotDataBottom.color.push($scope.colorArray[2]);
+            $scope.set.plotDataBottom.color.push(data.peakFragType.c.color);
           } else if (fragment.type == "C") {
-            $scope.set.plotDataBottom.color.push($scope.colorArray[3]);
+            $scope.set.plotDataBottom.color.push(data.peakFragType.C.color);
           } else if (fragment.type == "x") {
-            $scope.set.plotDataBottom.color.push($scope.colorArray[4]);
+            $scope.set.plotDataBottom.color.push(data.peakFragType.x.color);
           } else if (fragment.type == "y") {
-            $scope.set.plotDataBottom.color.push($scope.colorArray[5]);
+            $scope.set.plotDataBottom.color.push(data.peakFragType.y.color);
           } else if (fragment.type == "z") {
-            $scope.set.plotDataBottom.color.push($scope.colorArray[6]);
+            $scope.set.plotDataBottom.color.push(data.peakFragType.z.color);
           } else if (fragment.type == "Z") {
-            $scope.set.plotDataBottom.color.push($scope.colorArray[7]);
+            $scope.set.plotDataBottom.color.push(data.peakFragType.Z.color);
           } else if (fragment.type == "M") {
-            $scope.set.plotDataBottom.color.push($scope.colorArray[8]);
+            // $scope.set.plotDataBottom.color.push(data.peakFragType.M.color);
           }
 
           if (fragment.neutralLoss == null) {
@@ -314,26 +335,47 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         } else {
           var peakData = data.matchedFeatures[0];
           var fragment = peakData.feature;
+          // if (fragment.neutralLoss !== null){
+          //   $scope.set.plotData.color.push($scope.checkModel.CustomLossAndGain.color);
+          // } else if (fragment.type == "a") {
+          //   $scope.set.plotData.color.push($scope.colorArray[0]);
+          // } else if (fragment.type == "b") {
+          //   $scope.set.plotData.color.push($scope.colorArray[1]);
+          // } else if (fragment.type == "c") {
+          //   $scope.set.plotData.color.push($scope.colorArray[2]);
+          // } else if (fragment.type == "C") {
+          //   $scope.set.plotData.color.push($scope.colorArray[3]);
+          // } else if (fragment.type == "x") {
+          //   $scope.set.plotData.color.push($scope.colorArray[4]);
+          // } else if (fragment.type == "y") {
+          //   $scope.set.plotData.color.push($scope.colorArray[5]);
+          // } else if (fragment.type == "z") {
+          //   $scope.set.plotData.color.push($scope.colorArray[6]);
+          // } else if (fragment.type == "Z") {
+          //   $scope.set.plotData.color.push($scope.colorArray[7]);
+          // } else if (fragment.type == "M") {
+          //   $scope.set.plotData.color.push($scope.colorArray[8]);
+          // }
           if (fragment.neutralLoss !== null){
             $scope.set.plotData.color.push($scope.checkModel.CustomLossAndGain.color);
           } else if (fragment.type == "a") {
-            $scope.set.plotData.color.push($scope.colorArray[0]);
+            $scope.set.plotData.color.push(data.peakFragType.a.color);
           } else if (fragment.type == "b") {
-            $scope.set.plotData.color.push($scope.colorArray[1]);
+            $scope.set.plotData.color.push(data.peakFragType.b.color);
           } else if (fragment.type == "c") {
-            $scope.set.plotData.color.push($scope.colorArray[2]);
+            $scope.set.plotData.color.push(data.peakFragType.c.color);
           } else if (fragment.type == "C") {
-            $scope.set.plotData.color.push($scope.colorArray[3]);
+            $scope.set.plotData.color.push(data.peakFragType.C.color);
           } else if (fragment.type == "x") {
-            $scope.set.plotData.color.push($scope.colorArray[4]);
+            $scope.set.plotData.color.push(data.peakFragType.x.color);
           } else if (fragment.type == "y") {
-            $scope.set.plotData.color.push($scope.colorArray[5]);
+            $scope.set.plotData.color.push(data.peakFragType.y.color);
           } else if (fragment.type == "z") {
-            $scope.set.plotData.color.push($scope.colorArray[6]);
+            $scope.set.plotData.color.push(data.peakFragType.z.color);
           } else if (fragment.type == "Z") {
-            $scope.set.plotData.color.push($scope.colorArray[7]);
+            $scope.set.plotData.color.push(data.peakFragType.Z.color);
           } else if (fragment.type == "M") {
-            $scope.set.plotData.color.push($scope.colorArray[8]);
+            // $scope.set.plotData.color.push(data.peakFragType.M.color);
           }
 
           if (fragment.neutralLoss == null) {
@@ -1280,6 +1322,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
                   percentBasePeak: 0,
                   sn: null,
                   matchedFeatures: [],
+                  peakFragType: null,
                 },
               ];
             } else {
@@ -1445,6 +1488,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
                     percentBasePeak: 0,
                     sn: null,
                     matchedFeatures: [],
+                    peakFragType: null,
                   },
                 ];
               } else {
