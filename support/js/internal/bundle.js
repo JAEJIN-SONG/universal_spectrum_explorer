@@ -156,7 +156,6 @@ Annotation = class Annotation {
 			el["matchedFeatures"] = [];
 			el["percentBasePeak"] = el["intensity"] ;
 			el["sn"] = null;
-			el["peakFragType"] = this.fragmentTypes;
 			return(el);
     })
 		// var spectrum_1 = answer; // we search in the calculated values
@@ -174,6 +173,8 @@ Annotation = class Annotation {
 					"feature": el,
 					"massError": (a["mz"] -el["mz"]) / el["mz"] * Math.pow(10, 6) // https://github.com/coongroup/IPSA/blob/0b5125a8923d1a1897b61c53390164e7e7c5d356/support/php/NegativeModeAnnotateEntireFile.php#L898
         });
+				//set peakColor
+				a["peakColor"] = this.selectPeakColor(a.matchedFeatures)
 				return(a)
 			}
 
@@ -189,6 +190,32 @@ Annotation = class Annotation {
 		});
 		return(spectrum_1);
 
+	}
+	selectPeakColor(matchedFeatures){
+		if(matchedFeatures.length == 0){
+			return '#000000'
+		}else if(matchedFeatures[0].feature.type == "a") {
+			return this.fragmentTypes.a.color
+		}else if(matchedFeatures[0].feature.type == "b"){
+			return this.fragmentTypes.b.color
+		}else if(matchedFeatures[0].feature.type == "c"){
+			return this.fragmentTypes.c.color
+		}else if(matchedFeatures[0].feature.type == "C"){
+			return this.fragmentTypes.C.color
+		}else if(matchedFeatures[0].feature.type == "x"){
+			return this.fragmentTypes.x.color
+		}else if(matchedFeatures[0].feature.type == "y"){
+			return this.fragmentTypes.y.color
+		}else if(matchedFeatures[0].feature.type == "z"){
+			return this.fragmentTypes.z.color
+		}else if(matchedFeatures[0].feature.type == "Z"){
+			return this.fragmentTypes.Z.color
+		}else if(matchedFeatures[0].feature.type == "M"){
+			// $scope.set.plotDataBottom.color.push(data.peakFragType.M.color);
+			return '#000000'
+		}else{
+			return '#000000'
+		}
 	}
 	generateAminoAcids(sequence, mods){
 		var r = sequence.split(""); //
