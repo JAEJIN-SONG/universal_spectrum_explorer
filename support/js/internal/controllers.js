@@ -1317,7 +1317,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         ).appendTo(panel);
         let data_c = $("<label>", {
           text:
-            $scope.cutoffs.matchingCutoff + " " + $scope.cutoffs.matchingType,
+              $scope.cutoffs.matchingCutoff + " ~ " +$scope.cutoffs.matchingCutoffMax+ " " + $scope.cutoffs.matchingType,
         }).appendTo(cutoff);
         data_c.css("margin-left", "10px");
 
