@@ -128,7 +128,18 @@
                                             </button>
                                             <ul class="dropdown-menu list-group" uib-dropdown-menu role="menu" aria-labelledby="single-button">
                                               <div class="list-group">
-                                                <a href="#" ng-repeat="filedata in fileData" ng-click="filedata.isValid ? setSpectralData(true, filedata) : ''" class="list-group-item list-group-item-action" ng-class="{'disabled' : !filedata.isValid}">{{ $index+1 }}. {{ filedata.SEQ == 'TESTPEPTIDE' ? 'Invalid Data' : filedata.SEQ }}  ({{ filedata.PEPMASS }})</a>
+                                                <a href="#" class="pair list-group-item" ng-click="setSpectralData(true, fileData[selectedFileDataIndexBottom], selectedFileDataIndexBottom)" ng-class="{'disabled' : selectedFileDataIndexBottom == -1}">
+                                                  <span ng-hide="selectedFileDataIndexBottom == -1">Select Pair Data : {{selectedFileDataIndexBottom + 1}}. {{fileData[selectedFileDataIndexBottom].SEQ}}  ({{ fileData[selectedFileDataIndexBottom].PEPMASS }})</span>
+                                                  <span ng-show="selectedFileDataIndexBottom == -1">There is no Pair Data</span>
+                                                </a>
+                                                <a 
+                                                  href="#" 
+                                                  ng-repeat="filedata in fileData" 
+                                                  ng-click="filedata.isValid ? setSpectralData(true, filedata, $index) : ''" 
+                                                  class="list-group-item list-group-item-action" 
+                                                  ng-class="{'disabled' : !filedata.isValid}">
+                                                  {{ $index+1 }}. {{ filedata.SEQ == 'TESTPEPTIDE' ? 'Invalid Data' : filedata.SEQ }}  ({{ filedata.PEPMASS }})
+                                                </a>
                                               </div>
                                             </ul>
                                           </div>
@@ -295,7 +306,18 @@
                                             </button>
                                             <ul class="dropdown-menu list-group" uib-dropdown-menu role="menu" aria-labelledby="single-button">
                                               <div class="list-group">
-                                                <a href="#" ng-repeat="filedata in fileDataBottom" ng-click="filedata.isValid ? setSpectralData(false, filedata) : ''" class="list-group-item list-group-item-action" ng-class="{'disabled' : !filedata.isValid}">{{ $index+1 }}. {{ filedata.SEQ == 'TESTPEPTIDE' ? 'Invalid Data' : filedata.SEQ }}  ({{ filedata.PEPMASS }})</a>
+                                                <a href="#" class="pair list-group-item" ng-click="setSpectralData(false, fileDataBottom[selectedFileDataIndex], selectedFileDataIndex)" ng-class="{'disabled' : selectedFileDataIndex == -1}">
+                                                  <span ng-hide="selectedFileDataIndex == -1">Select Pair Data : {{selectedFileDataIndex + 1}}. {{fileDataBottom[selectedFileDataIndex].SEQ}}  ({{ fileDataBottom[selectedFileDataIndex].PEPMASS }})</span>
+                                                  <span ng-show="selectedFileDataIndex == -1">There is no Pair Data</span>
+                                                </a>
+                                                <a 
+                                                  href="#" 
+                                                  ng-repeat="filedata in fileDataBottom" 
+                                                  ng-click="filedata.isValid ? setSpectralData(false, filedata, $index) : ''" 
+                                                  class="list-group-item list-group-item-action" 
+                                                  ng-class="{'disabled' : !filedata.isValid}">
+                                                  {{ $index+1 }}. {{ filedata.SEQ == 'TESTPEPTIDE' ? 'Invalid Data' : filedata.SEQ }}  ({{ filedata.PEPMASS }})
+                                                </a>
                                               </div>
                                             </ul>
                                           </div>
