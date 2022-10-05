@@ -169,6 +169,7 @@ Annotation = class Annotation {
 
       var is_inside = compare_F(a, el); // TODO correct here?
 			if(is_inside){
+				console.log('match: ', el.sequence)
 				a["matchedFeatures"].push({
 					"feature": el,
 					"massError": (a["mz"] -el["mz"]) / el["mz"] * Math.pow(10, 6) // https://github.com/coongroup/IPSA/blob/0b5125a8923d1a1897b61c53390164e7e7c5d356/support/php/NegativeModeAnnotateEntireFile.php#L898
@@ -401,68 +402,74 @@ Annotation = class Annotation {
 
 		var fragments = [];
 		for (var c = 1; c <= precursorCharge-1; c++){
-			for (var i = 0; i < lengthPeptide - 1; i++) {
-				for (var frag of fragTypes){ // gives an int
-					var subPeptideSub = frag.reverse? sequence.slice(lengthPeptide -i-1, lengthPeptide): sequence.slice(0, i+ 1);
-					var subPeptideMass = this.calculateAminoSequenceMass(subPeptideSub);
-					var element = {};
-					element["sequence"] = subPeptideSub;
-					element["number"] = i + 1;
-					element["charge"] = c;
-					var allowedMods = frag.reverse? mods.filter((m) => { return m.index >= lengthPeptide -i -1; }) : mods.filter((m) => {return m.index < i+1;});
-					const modMass = this.calculateAllMassOffset(allowedMods);
-					element["mz"] = (subPeptideMass + 
-						modMass + 
-						frag.offset + 
-						(c) *this.ChemistryConstants.Proton ) /
-						c ;
-					var e = this.generateAminoAcids(subPeptideSub, allowedMods);
-					if (frag.reverse){
-						e = e.map((el) =>{
-							el.modification.site += lengthPeptide - i - 1;
-							return el;
-						});
-					}
-					element["subPeptide"] = e;
-					element["type"] = frag.type;
-					element["neutralLoss"] = null;
-					fragments.push(element);
+			for(var sl = 0; sl < lengthPeptide; sl++){
+				const slicedSequence = sequence.slice(sl, lengthPeptide)
+				const lengthSlicedSequence = slicedSequence.length
 
-					for (var loss of losses){ // gives an int
-						if(loss.name == "-NH3" && this.countNH3(subPeptideSub) > 0){
-						let more = {...element};
-						more["mz"] -= loss.mass / c;
-						more["neutralLoss"] = loss.name;
-						fragments.push(more);
-						}else if(loss.name == "-H2O" && this.countH20(subPeptideSub) > 0 ){
-						let more = {...element};
-						more["mz"] -= loss.mass / c;
-						more["neutralLoss"] = loss.name;
-						fragments.push(more);
+				for (var i = 0; i < lengthSlicedSequence - 1; i++) {
+					for (var frag of fragTypes){ // gives an int
+						var subPeptideSub = frag.reverse? slicedSequence.slice(lengthSlicedSequence -i-1, lengthSlicedSequence): slicedSequence.slice(0, i+ 1);
+						var subPeptideMass = this.calculateAminoSequenceMass(subPeptideSub);
+						var element = {};
+						element["sequence"] = subPeptideSub;
+						element["number"] = i + 1;
+						element["charge"] = c;
+						var allowedMods = frag.reverse? mods.filter((m) => { return m.index >= lengthSlicedSequence -i -1; }) : mods.filter((m) => {return m.index < i+1;});
+						const modMass = this.calculateAllMassOffset(allowedMods);
+						element["mz"] = (subPeptideMass +
+								modMass +
+								frag.offset +
+								(c) *this.ChemistryConstants.Proton ) /
+							c ;
+						var e = this.generateAminoAcids(subPeptideSub, allowedMods);
+						if (frag.reverse){
+							e = e.map((el) =>{
+								el.modification.site += lengthSlicedSequence - i - 1;
+								return el;
+							});
 						}
-						else if(loss.name =="-CO2"){ // co2 always
-						let more = {...element};
-						more["mz"] -= loss.mass / c;
-						more["neutralLoss"] = loss.name;
-						fragments.push(more);
-						}
-						// else if(loss.name =="-Custom"){ // custom
-						else if(loss.name.includes('-CL') || loss.name === "-Custom"){
-							let more = {...element};
-							more["mz"] -= loss.mass / c;
-							more["neutralLoss"] = loss.name;
-							fragments.push(more);
-						}
-						else if(loss.name.includes('-') || loss.name.includes('+')){
-							let more = {...element};
-							more["mz"] -= loss.mass / c;
-							more["neutralLoss"] = loss.name;
-							fragments.push(more);
-						}
-					}
+						element["subPeptide"] = e;
+						element["type"] = frag.type;
+						element["neutralLoss"] = null;
+						fragments.push(element);
 
+						for (var loss of losses){ // gives an int
+							if(loss.name == "-NH3" && this.countNH3(subPeptideSub) > 0){
+								let more = {...element};
+								more["mz"] -= loss.mass / c;
+								more["neutralLoss"] = loss.name;
+								fragments.push(more);
+							}else if(loss.name == "-H2O" && this.countH20(subPeptideSub) > 0 ){
+								let more = {...element};
+								more["mz"] -= loss.mass / c;
+								more["neutralLoss"] = loss.name;
+								fragments.push(more);
+							}
+							else if(loss.name =="-CO2"){ // co2 always
+								let more = {...element};
+								more["mz"] -= loss.mass / c;
+								more["neutralLoss"] = loss.name;
+								fragments.push(more);
+							}
+							// else if(loss.name =="-Custom"){ // custom
+							else if(loss.name.includes('-CL') || loss.name === "-Custom"){
+								let more = {...element};
+								more["mz"] -= loss.mass / c;
+								more["neutralLoss"] = loss.name;
+								fragments.push(more);
+							}
+							else if(loss.name.includes('-') || loss.name.includes('+')){
+								let more = {...element};
+								more["mz"] -= loss.mass / c;
+								more["neutralLoss"] = loss.name;
+								fragments.push(more);
+							}
+						}
+
+					}
 				}
 			}
+
 
 		}
 		for (var c = 1; c <= precursorCharge; c++){
