@@ -945,6 +945,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           matchingType: $scope.cutoffs.matchingType,
           cutoff: $scope.cutoffs.matchingCutoff,
           cutoffMax: $scope.cutoffs.matchingCutoffMax,
+          calculateSubstrings: $scope.calculateSubstrings.checked,
           // cutoffMax
           /*
         urlObj["usi"] = $scope.peptide.usi;
@@ -959,6 +960,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         };
       } else {
         // conditon exists
+
+        console.log('$scopecalsub', $scope.calculateSubstrings)
         var data = {
           sequence: topSpectrum
             ? $scope.peptide.sequence
@@ -977,6 +980,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           matchingType: condition.cutoffs.matchingType,
           cutoff: condition.cutoffs.matchingCutoff,
           cutoffMax: condition.cutoffs.matchingCutoffMax,
+          calculateSubstrings: $scope.calculateSubstrings.checked,
           /*
         urlObj["usi"] = $scope.peptide.usi;
         urlObj["usi_origin"] = $scope.peptide.usi_origin;
@@ -1621,6 +1625,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             }
             const annotation1 = new Annotation($scope.submittedDataTop.data);
             $scope.annotatedResults = annotation1.fakeAPI();
+            // console.log('topannotated: ', $scope.annotatedResults)
 
             if ($scope.submittedDataBottom.data.peakData.length == 0) {
               $scope.busy.isProcessing = false;

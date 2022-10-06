@@ -224,6 +224,11 @@ myApp.controller(
     $scope.selectedFileDataIndex = -1;
     $scope.selectedFileDataIndexBottom = -1;
 
+    //substring
+    $scope.calculateSubstrings = {
+      checked: false
+    };
+
     $scope.fileInit = {
       SEQ: "TESTPEPTIDE",
       PEPMASS: 0,
