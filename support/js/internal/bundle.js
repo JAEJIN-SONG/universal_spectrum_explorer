@@ -404,6 +404,14 @@ Annotation = class Annotation {
 
 		var fragments = [];
 
+		const lengthLimitCalculator = (isZero, length) => {
+			if(isZero === 0){
+				return length - 2;
+			}else{
+				return length - 1;
+			}
+		}
+
 		console.log('calsub', calculateSubstrings)
 
 		if(!calculateSubstrings){
@@ -473,13 +481,15 @@ Annotation = class Annotation {
 			}
 		}else{
 			for (var c = 1; c <= precursorCharge-1; c++){
-				for(var sl = 0; sl < lengthPeptide; sl++){
-					const slicedSequence = sequence.slice(sl, lengthPeptide)
+				for(var sl = 0; sl <= (lengthPeptide / 2); sl++){
+					const slicedSequence = sequence.slice(sl, lengthPeptide - sl)
 					const lengthSlicedSequence = slicedSequence.length
+					console.log('slq: ', slicedSequence)
 
-					for (var i = 0; i < lengthSlicedSequence - 1; i++) {
+					for (var i = 0; i <= lengthLimitCalculator(sl, lengthSlicedSequence); i++) {
 						for (var frag of fragTypes){ // gives an int
 							var subPeptideSub = frag.reverse? slicedSequence.slice(lengthSlicedSequence -i-1, lengthSlicedSequence): slicedSequence.slice(0, i+ 1);
+							console.log('isl', i, subPeptideSub)
 							var subPeptideMass = this.calculateAminoSequenceMass(subPeptideSub);
 							var element = {};
 							element["sequence"] = subPeptideSub;
@@ -626,6 +636,7 @@ Annotation = class Annotation {
 			element["neutralLoss"] = "";
 			fragments.push(element);
 		}
+		console.log('fragments: ', fragments)
 		return fragments;
 	}
 }
