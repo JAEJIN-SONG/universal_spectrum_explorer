@@ -177,7 +177,11 @@ Annotation = class Annotation {
 					"massError": (a["mz"] -el["mz"]) / el["mz"] * Math.pow(10, 6) // https://github.com/coongroup/IPSA/blob/0b5125a8923d1a1897b61c53390164e7e7c5d356/support/php/NegativeModeAnnotateEntireFile.php#L898
         });
 				//set peakColor
-				a["peakColor"] = this.selectPeakColor(a.matchedFeatures)
+				if(el["internalIon"] === true){
+					a["peakColor"] = "#029388";
+				}else{
+					a["peakColor"] = this.selectPeakColor(a.matchedFeatures)
+				}
 				return(a)
 			}
 
@@ -424,6 +428,7 @@ Annotation = class Annotation {
 							element["sequence"] = subPeptideSub;
 							element["number"] = i + 1;
 							element["charge"] = c;
+							element["internalIon"] = false;
 							var allowedMods = frag.reverse? mods.filter((m) => { return m.index >= lengthPeptide -i -1; }) : mods.filter((m) => {return m.index < i+1;});
 							const modMass = this.calculateAllMassOffset(allowedMods);
 							element["mz"] = (subPeptideMass +
@@ -431,6 +436,9 @@ Annotation = class Annotation {
 									frag.offset +
 									(c) *this.ChemistryConstants.Proton ) /
 								c ;
+							// if(subPeptideSub === 'NPEV' || subPeptideSub === 'HESEEGDSH' || subPeptideSub === "RHESEEGD"){
+							// 	console.log(subPeptideSub, ': ', subPeptideMass, modMass, frag, element["mz"], i);
+							// }
 							var e = this.generateAminoAcids(subPeptideSub, allowedMods);
 							if (frag.reverse){
 								e = e.map((el) =>{
@@ -495,17 +503,29 @@ Annotation = class Annotation {
 							element["sequence"] = subPeptideSub;
 							element["number"] = i + 1;
 							element["charge"] = c;
-							var allowedMods = frag.reverse? mods.filter((m) => { return m.index >= lengthSlicedSequence -i -1; }) : mods.filter((m) => {return m.index < i+1;});
+							var allowedMods = frag.reverse?
+								mods.filter((m) => { return m.index >= lengthPeptide -i -1 -sl && m.index < lengthPeptide - sl; })
+								: mods.filter((m) => {return m.index < sl+i+1 && m.index >= sl - 1;});
+
+							if(sl > 0){
+								element["internalIon"] = true;
+							}else{
+								element["internalIon"] = false;
+							}
+
 							const modMass = this.calculateAllMassOffset(allowedMods);
 							element["mz"] = (subPeptideMass +
 									modMass +
 									frag.offset +
 									(c) *this.ChemistryConstants.Proton ) /
 								c ;
+							// if(subPeptideSub === 'NPEV' || subPeptideSub === 'HESEEGDSH' || subPeptideSub === "RHESEEGD"){
+							// 	console.log(subPeptideSub, ': ', subPeptideMass, modMass, frag, element["mz"], sl, i);
+							// }
 							var e = this.generateAminoAcids(subPeptideSub, allowedMods);
 							if (frag.reverse){
 								e = e.map((el) =>{
-									el.modification.site += lengthSlicedSequence - i - 1;
+									el.modification.site += lengthPeptide - i - 1 - sl;
 									return el;
 								});
 							}

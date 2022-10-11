@@ -366,6 +366,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             $scope.set.plotData.label.push(
               "[" + fragment.type + fragment.number + "]"
             );
+          } else if(fragment.internalIon === true){
+            $scope.set.plotData.label.push('IN');
           } else {
             $scope.set.plotData.label.push(fragment.type + fragment.number);
           }

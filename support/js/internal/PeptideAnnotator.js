@@ -186,6 +186,10 @@ myApp.controller(
         lossesAndGains: "",
         color: "#8cff42",
       },
+      InternalIon:{
+        selected: false,
+        color: "#029388",
+      },
       precursor: { selected: true, color: "#666666" },
       unassigned: { selected: true, color: "#A6A6A6" },
     };
