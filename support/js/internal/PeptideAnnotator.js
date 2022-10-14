@@ -163,6 +163,11 @@ myApp.controller(
         lossesAndGains: "",
         color: "#8cff42",
       },
+      InternalIon:{
+        selected: false,
+        color: "#0cbbaf",
+        label: "IN",
+      },
       precursor: { selected: true, color: "#666666" },
       unassigned: { selected: true, color: "#A6A6A6" },
     };
@@ -188,7 +193,8 @@ myApp.controller(
       },
       InternalIon:{
         selected: false,
-        color: "#029388",
+        color: "#0cbbaf",
+        label: "IN",
       },
       precursor: { selected: true, color: "#666666" },
       unassigned: { selected: true, color: "#A6A6A6" },

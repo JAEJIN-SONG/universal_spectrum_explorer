@@ -2280,6 +2280,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
           // sum up all intensities to calculate the total ion current
           TIC += yValues[i];
 
+          // console.log('xval: ', xValues[i]);
           // format our processed data in a format which makes it easier to process using D3.
           plotData.push({
             mz: xValues[i],

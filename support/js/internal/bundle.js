@@ -55,6 +55,7 @@ Annotation = class Annotation {
 		Y: 163.06333,
 	};
 
+		// console.log('request peakdata', request["peakData"])
 		this.peakData = request["peakData"].sort(function(a,b){
 			return a.mZ < b.mZ
 		}).reduce((p,n) => {
@@ -91,7 +92,6 @@ Annotation = class Annotation {
 		this.isPPM =  request.toleranceType === 'ppm';
 		this.cutoff = request.cutoff;
 		this.cutoffMax = request.cutoffMax;
-		this.calculateSubstrings = request.calculateSubstrings;
 		this.mods = request.mods===undefined? []: request.mods;
 		this.aminoAcids = this.generateAminoAcids(
 			request["sequence"], this.mods);
@@ -105,8 +105,7 @@ Annotation = class Annotation {
 		this.response["fragments"] = this.calculateFragments(request["sequence"], 
 			request["precursorCharge"], 
 			this.mods,
-			request["fragmentTypes"],
-			this.calculateSubstrings) ;
+			request["fragmentTypes"]) ;
 		this.allMassOffset = this.calculateAllMassOffset(
 			this.mods);
 		this.response["modifications"] =this.mods;
@@ -153,6 +152,7 @@ Annotation = class Annotation {
 		return json.toleranceType === 'ppm';
 	}
 	annotatePeaks(){
+		console.log('annotate peaks, peakData', this.peakData)
 		var spectrum_1 = this.peakData; // we search through experimental data
 		spectrum_1.map((el) =>{
 			el["matchedFeatures"] = [];
@@ -171,16 +171,18 @@ Annotation = class Annotation {
 
       var is_inside = compare_F(a, el); // TODO correct here?
 			if(is_inside){
-				console.log('match: ', el.sequence)
+				console.log('match: ', el.sequence, el.mz)
 				a["matchedFeatures"].push({
 					"feature": el,
 					"massError": (a["mz"] -el["mz"]) / el["mz"] * Math.pow(10, 6) // https://github.com/coongroup/IPSA/blob/0b5125a8923d1a1897b61c53390164e7e7c5d356/support/php/NegativeModeAnnotateEntireFile.php#L898
         });
 				//set peakColor
-				if(el["internalIon"] === true){
-					a["peakColor"] = "#029388";
-				}else{
+				if(el["internalIon"] !== true){
 					a["peakColor"] = this.selectPeakColor(a.matchedFeatures)
+				}else{
+					a["peakColor"] = this.fragmentTypes.InternalIon.color;
+					a["sequenceStartPosition"] = el["sequenceStartPosition"]
+					a["sequenceEndPosition"] = el["sequenceEndPosition"]
 				}
 				return(a)
 			}
@@ -391,10 +393,17 @@ Annotation = class Annotation {
 				"type": "c",
 				"offset": this.N_TERMINUS + this.ChemistryConstants.N + 2*this.ChemistryConstants.H // [N]+[M]+NH2
 			});
+		if(this.fragmentTypes.InternalIon.selected) {
+			returnV.push({
+				"reverse": false,
+				"type": "IN",
+				"offset": this.N_TERMINUS - this.ChemistryConstants.H
+			});
+		};
     };
 		return returnV;
 	}
-	calculateFragments(sequence, precursorCharge, mods, fragmentTypes, calculateSubstrings) {
+	calculateFragments(sequence, precursorCharge, mods, fragmentTypes) {
 		/*
 		 * position starts at 1
 		 */
@@ -416,9 +425,7 @@ Annotation = class Annotation {
 			}
 		}
 
-		console.log('calsub', calculateSubstrings)
-
-		if(!calculateSubstrings){
+		if(!this.fragmentTypes.InternalIon.selected){
 			for (var c = 1; c <= precursorCharge-1; c++){
 					for (var i = 0; i < lengthPeptide - 1; i++) {
 						for (var frag of fragTypes){ // gives an int
@@ -489,13 +496,14 @@ Annotation = class Annotation {
 			}
 		}else{
 			for (var c = 1; c <= precursorCharge-1; c++){
-				for(var sl = 0; sl <= (lengthPeptide / 2); sl++){
-					const slicedSequence = sequence.slice(sl, lengthPeptide - sl)
+				for(var sl = 0; sl < lengthPeptide; sl++){
+					const slicedSequence = sl === 0 ? sequence.slice(sl, lengthPeptide) : sequence.slice(sl, lengthPeptide - 1)
 					const lengthSlicedSequence = slicedSequence.length
 					console.log('slq: ', slicedSequence)
 
 					for (var i = 0; i <= lengthLimitCalculator(sl, lengthSlicedSequence); i++) {
 						for (var frag of fragTypes){ // gives an int
+							if(sl !== 0 && frag.reverse) continue
 							var subPeptideSub = frag.reverse? slicedSequence.slice(lengthSlicedSequence -i-1, lengthSlicedSequence): slicedSequence.slice(0, i+ 1);
 							console.log('isl', i, subPeptideSub)
 							var subPeptideMass = this.calculateAminoSequenceMass(subPeptideSub);
@@ -509,6 +517,8 @@ Annotation = class Annotation {
 
 							if(sl > 0){
 								element["internalIon"] = true;
+								element["sequenceStartPosition"] = sl + 1;
+								element["sequenceEndPosition"] = sl + i + 1;
 							}else{
 								element["internalIon"] = false;
 							}
@@ -519,9 +529,9 @@ Annotation = class Annotation {
 									frag.offset +
 									(c) *this.ChemistryConstants.Proton ) /
 								c ;
-							// if(subPeptideSub === 'NPEV' || subPeptideSub === 'HESEEGDSH' || subPeptideSub === "RHESEEGD"){
-							// 	console.log(subPeptideSub, ': ', subPeptideMass, modMass, frag, element["mz"], sl, i);
-							// }
+							if(subPeptideSub === 'NPEV' || subPeptideSub === 'HESEEGDSH' || subPeptideSub === "RHESEEGD" || subPeptideSub === "PEVP"){
+								console.log(subPeptideSub, ': ', subPeptideMass, modMass, frag, element["mz"], sl, i);
+							}
 							var e = this.generateAminoAcids(subPeptideSub, allowedMods);
 							if (frag.reverse){
 								e = e.map((el) =>{

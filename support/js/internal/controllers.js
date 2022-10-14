@@ -366,10 +366,12 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             $scope.set.plotData.label.push(
               "[" + fragment.type + fragment.number + "]"
             );
-          } else if(fragment.internalIon === true){
-            $scope.set.plotData.label.push("I");
-          } else {
+          } else if(fragment.internalIon === false){
             $scope.set.plotData.label.push(fragment.type + fragment.number);
+          } else {
+            fragment.sequenceStartPosition !== fragment.sequenceEndPosition ?
+                $scope.set.plotData.label.push("[I"+fragment.sequenceStartPosition+"-"+fragment.sequenceEndPosition+"]")
+                : $scope.set.plotData.label.push("[I"+fragment.sequenceStartPosition+"]")
           }
 
           $scope.set.plotData.barwidth.push(3);
@@ -947,7 +949,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           matchingType: $scope.cutoffs.matchingType,
           cutoff: $scope.cutoffs.matchingCutoff,
           cutoffMax: $scope.cutoffs.matchingCutoffMax,
-          calculateSubstrings: $scope.calculateSubstrings.checked,
           // cutoffMax
           /*
         urlObj["usi"] = $scope.peptide.usi;
@@ -982,7 +983,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           matchingType: condition.cutoffs.matchingType,
           cutoff: condition.cutoffs.matchingCutoff,
           cutoffMax: condition.cutoffs.matchingCutoffMax,
-          calculateSubstrings: $scope.calculateSubstrings.checked,
           /*
         urlObj["usi"] = $scope.peptide.usi;
         urlObj["usi_origin"] = $scope.peptide.usi_origin;
@@ -1242,6 +1242,10 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         if ($scope.checkModel.z.selected) {
           addColor($scope.checkModel.z).appendTo(panel);
           $scope.checkModel.z.selected = false;
+        }
+        if ($scope.checkModel.InternalIon.selected) {
+          addColor($scope.checkModel.InternalIon).appendTo(panel);
+          $scope.checkModel.InternalIon.selected = false;
         }
 
         //H2O, NH3, CO2
@@ -1679,6 +1683,8 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             $scope.checkModel.y = angular.copy(el.fragmentTypes.y);
           if (el.fragmentTypes.z.selected)
             $scope.checkModel.z = angular.copy(el.fragmentTypes.z);
+          if (el.fragmentTypes.InternalIon.selected)
+            $scope.checkModel.InternalIon = angular.copy(el.fragmentTypes.InternalIon);
         });
         $scope.invalidColors();
 
@@ -1793,6 +1799,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         );
         $scope.plotDataBottom($scope.annotatedResultsBottom);
 
+        console.log('peaks', $scope.annotatedResults.peaks)
         $scope.getScores(
           $scope.annotatedResults.peaks,
           $scope.annotatedResultsBottom.peaks

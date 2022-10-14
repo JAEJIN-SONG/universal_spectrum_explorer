@@ -514,21 +514,30 @@
                               <div class="row">
                                 <div class="col-md-12">
                                   <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-8">
                                       <label>Custom Neutral Loss(-) / Gain(+)</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                      <label>Show Internal Ion(s)</label>
                                     </div>
                                   </div>
                                   <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-8">
                                       <div class="custom_loss_and_gain_container">
-                                        <label class="btn btn-fragment" ng-model="checkModel.CustomLossAndGain.selected" uib-btn-checkbox>Custom Neutral Loss / Gain</label>
+                                        <label class="btn btn-fragment" ng-model="checkModel.CustomLossAndGain.selected" uib-btn-checkbox>Loss / Gain</label>
                                         <input type="text" class="form-control" placeholder="Enter loss and gain here...." ng-model="checkModel.CustomLossAndGain.lossesAndGains"/>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                      <div class="btn-group internalIon">
+                                        <label class="btn btn-fragment" ng-model="checkModel.InternalIon.selected" uib-btn-checkbox>Internal Ion</label>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
 
+                              <br/>
                               <br/>
                               <div class="row">
                                 <div class="col-md-6">
@@ -559,13 +568,14 @@
                                 </div>
                               </div>
                               <br/>
-                              <div class="row">
-                                <div class="col-md-6">
-                                  <input type="checkbox" ng-model="calculateSubstrings.checked"/>
-                                  <label>Substrings</label>
-                                </div>
-                              </div>
                               <br/>
+<!--                              <div class="row">-->
+<!--                                <div class="col-md-6">-->
+<!--                                  <input type="checkbox" ng-model="calculateSubstrings.checked"/>-->
+<!--                                  <label>Substrings</label>-->
+<!--                                </div>-->
+<!--                              </div>-->
+<!--                              <br/>-->
                               <div ng-controller="ColorCtrl">
                                 <div class="row">
                                   <div class="col-md-3" ng-hide="!checkModel.a.selected">
@@ -615,6 +625,10 @@
                                   <div class="col-md-3">
                                     <label for="wheel-demo9">Loss / Gain</label>
                                     <input minicolors="wheelsettings" id="wheel-demo9" class="form-control" type="text" ng-model="checkModel.CustomLossAndGain.color">
+                                  </div>
+                                  <div class="col-md-3" ng-hide="!checkModel.InternalIon.selected">
+                                    <label for="wheel-demo9">Internal Ion</label>
+                                    <input minicolors="wheelsettings" id="wheel-demo10" class="form-control" type="text" ng-model="checkModel.InternalIon.color">
                                   </div>
                                 </div>
                               </div>
