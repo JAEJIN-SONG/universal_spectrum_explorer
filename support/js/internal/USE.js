@@ -2294,6 +2294,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
             width: widths[i] * options.annotation.width * 0.001,
             massError: massError[i],
             points: [],
+            sequence: sequence[i],
           });
         }
 
@@ -2330,6 +2331,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
             width: widths2[i] * options.annotation.width * 0.001,
             massError: [], //massError[i],
             points: [],
+            sequence: sequence[i],
           });
         }
 
@@ -2788,11 +2790,15 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
         labelDataset
           .on("mouseenter", function (d, i) {
             // define the tooltip inner html.
+            // console.log(d, i)
             tip.html(function () {
               return (
                 "<strong>Fragment:</strong> <span style='color:red'>" +
                 d.label +
                 " </span><br><br>" +
+                // "<strong>sequence:</strong> <span style='color:red'>" +
+                // d.sequence +
+                // " </span><br><br>" +
                 "<strong style='font-style:italic;'>m/z:</strong> <span style='color:red'>" +
                 d3.format(",.4f")(d.mz) +
                 " </span><br><br>" +
@@ -2815,6 +2821,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
             var fragmentType = label.charAt(0);
             var fragmentNumber = label.slice(1);
             var color = colors[i];
+            // console.log(label, fragmentType, fragmentNumber, colors, i)
 
             // get all text from the peptide sequence
             var interactiveTitleObjects = scope.titleContainer.selectAll("text").data(sequence);

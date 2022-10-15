@@ -33,6 +33,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         theoMz: [],
         percentBasePeak: [],
         TIC: 0,
+        sequence: [],
       },
       score: {
         sa: 0.0,
@@ -59,6 +60,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         theoMz: [],
         percentBasePeak: [],
         TIC: 0,
+        sequence: [],
       },
       peptideBottom: {
         sequence: "TESTPEPTIDE",
@@ -157,6 +159,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         $scope.set.plotData.percentBasePeak.push(
           (100 * y) / d3.max($scope.set.plotData.y)
         );
+        $scope.set.plotData.sequence.push("s")
       });
       $scope.set.plotData.x.sort(function (a, b) {
         return a - b;
@@ -255,10 +258,14 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             $scope.set.plotDataBottom.label.push(
               "[" + fragment.type + fragment.number + "]"
             );
-          } else {
+          } else if(fragment.internalIon === false){
             $scope.set.plotDataBottom.label.push(
-              fragment.type + fragment.number
+                fragment.type + fragment.number
             );
+          } else {
+            fragment.sequenceStartPosition !== fragment.sequenceEndPosition ?
+                $scope.set.plotDataBottom.label.push("[I"+fragment.sequenceStartPosition+"-"+fragment.sequenceEndPosition+"]")
+                : $scope.set.plotDataBottom.label.push("[I"+fragment.sequenceStartPosition+"]")
           }
 
           $scope.set.plotDataBottom.barwidth.push(3);

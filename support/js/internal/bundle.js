@@ -152,7 +152,7 @@ Annotation = class Annotation {
 		return json.toleranceType === 'ppm';
 	}
 	annotatePeaks(){
-		console.log('annotate peaks, peakData', this.peakData)
+		// console.log('annotate peaks, peakData', this.peakData)
 		var spectrum_1 = this.peakData; // we search through experimental data
 		spectrum_1.map((el) =>{
 			el["matchedFeatures"] = [];
@@ -509,7 +509,7 @@ Annotation = class Annotation {
 						for (var frag of fragTypes){ // gives an int
 							if(sl !== 0 && frag.reverse) continue
 							var subPeptideSub = frag.reverse? slicedSequence.slice(lengthSlicedSequence -i-1, lengthSlicedSequence): slicedSequence.slice(0, i+ 1);
-							console.log('isl', i, subPeptideSub)
+							// console.log('isl', i, subPeptideSub)
 							var subPeptideMass = this.calculateAminoSequenceMass(subPeptideSub);
 							var element = {};
 							element["sequence"] = subPeptideSub;
