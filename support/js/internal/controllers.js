@@ -1018,7 +1018,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       } else {
         // conditon exists
 
-        console.log('$scopecalsub', $scope.calculateSubstrings)
         var data = {
           sequence: topSpectrum
             ? $scope.peptide.sequence

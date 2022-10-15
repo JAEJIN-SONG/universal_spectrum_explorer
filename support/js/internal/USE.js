@@ -347,7 +347,6 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
    * @description Links the IPSA directive to the annotatedSpectrum HTML tag.
    */
   directive.link = function (scope, elements, attr) {
-    console.log('what the hell is scope', scope)
     /**
      * @description Retrieves calculated precursor charge from the scope.peptide object. Additionally, updates the ionization mode from the default "+" if necessary.
      * @returns {number} The peptide precursor mass to charge

@@ -181,8 +181,6 @@ Annotation = class Annotation {
 					a["peakColor"] = this.selectPeakColor(a.matchedFeatures)
 				}else{
 					a["peakColor"] = this.fragmentTypes.InternalIon.color;
-					// a["sequenceStartPosition"] = el["sequenceStartPosition"]
-					// a["sequenceEndPosition"] = el["sequenceEndPosition"]
 				}
 				return(a)
 			}
@@ -404,7 +402,6 @@ Annotation = class Annotation {
 			});
 		};
     };
-		console.log('returnV: ', this.fragmentTypes, returnV)
 		return returnV;
 	}
 	calculateFragments(sequence, precursorCharge, mods, fragmentTypes) {
@@ -447,9 +444,6 @@ Annotation = class Annotation {
 									frag.offset +
 									(c) *this.ChemistryConstants.Proton ) /
 								c ;
-
-							element["sequenceStartPosition"] = frag.reverse? sl + 1 : 1;
-							element["sequenceEndPosition"] = frag.reverse? sl + i + 1 : 1;
 
 							// if(subPeptideSub === 'NPEV' || subPeptideSub === 'HESEEGDSH' || subPeptideSub === "RHESEEGD"){
 							// 	console.log(subPeptideSub, ': ', subPeptideMass, modMass, frag, element["mz"], i);
@@ -538,9 +532,7 @@ Annotation = class Annotation {
 									frag.offset +
 									(c) *this.ChemistryConstants.Proton ) /
 								c ;
-							if(subPeptideSub === 'NPEV' || subPeptideSub === 'HESEEGDSH' || subPeptideSub === "RHESEEGD" || subPeptideSub === "PEVP"){
-								console.log(subPeptideSub, ': ', subPeptideMass, modMass, frag, element["mz"], sl, i);
-							}
+
 							var e = this.generateAminoAcids(subPeptideSub, allowedMods);
 							if (frag.reverse){
 								e = e.map((el) =>{
