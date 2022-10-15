@@ -33,7 +33,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         theoMz: [],
         percentBasePeak: [],
         TIC: 0,
-        sequence: [],
+        sequences: [],
       },
       score: {
         sa: 0.0,
@@ -60,7 +60,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         theoMz: [],
         percentBasePeak: [],
         TIC: 0,
-        sequence: [],
+        sequences: [],
       },
       peptideBottom: {
         sequence: "TESTPEPTIDE",
@@ -159,7 +159,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         $scope.set.plotData.percentBasePeak.push(
           (100 * y) / d3.max($scope.set.plotData.y)
         );
-        $scope.set.plotData.sequence.push("s")
       });
       $scope.set.plotData.x.sort(function (a, b) {
         return a - b;
@@ -202,6 +201,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       $scope.set.plotDataBottom.theoMz = [];
       $scope.set.plotDataBottom.percentBasePeak = [];
       $scope.set.plotDataBottom.TIC = 0;
+      $scope.set.plotDataBottom.sequences = [];
 
       returnedData.peaks.forEach(function (data, i) {
         $scope.set.plotDataBottom.x.push(data.mz);
@@ -217,6 +217,9 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           $scope.set.plotDataBottom.barwidth.push(1);
           $scope.set.plotDataBottom.massError.push("");
           $scope.set.plotDataBottom.theoMz.push(0);
+          $scope.set.plotDataBottom.sequences.push({
+            isInternalIon: false
+          });
         } else {
           var peakData = data.matchedFeatures[0];
           var fragment = peakData.feature;
@@ -258,14 +261,34 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             $scope.set.plotDataBottom.label.push(
               "[" + fragment.type + fragment.number + "]"
             );
+            $scope.set.plotDataBottom.sequences.push({
+              isInternalIon: false
+            })
           } else if(fragment.internalIon === false){
             $scope.set.plotDataBottom.label.push(
                 fragment.type + fragment.number
             );
+            $scope.set.plotDataBottom.sequences.push({
+              isInternalIon: false
+            })
           } else {
-            fragment.sequenceStartPosition !== fragment.sequenceEndPosition ?
-                $scope.set.plotDataBottom.label.push("[I"+fragment.sequenceStartPosition+"-"+fragment.sequenceEndPosition+"]")
-                : $scope.set.plotDataBottom.label.push("[I"+fragment.sequenceStartPosition+"]")
+            if(fragment.sequenceStartPosition !== fragment.sequenceEndPosition){
+              $scope.set.plotDataBottom.label.push("[I"+fragment.sequenceStartPosition+"-"+fragment.sequenceEndPosition+"]")
+              $scope.set.plotDataBottom.sequences.push({
+                isInternalIon: true,
+                seq: fragment.sequence,
+                start: fragment.sequenceStartPosition,
+                end: fragment.sequenceEndPosition,
+              })
+            }else{
+              $scope.set.plotDataBottom.label.push("[I"+fragment.sequenceStartPosition+"]")
+              $scope.set.plotDataBottom.sequences.push({
+                isInternalIon: true,
+                seq: fragment.sequence,
+                start: fragment.sequenceStartPosition,
+                end: fragment.sequenceEndPosition,
+              })
+            }
           }
 
           $scope.set.plotDataBottom.barwidth.push(3);
@@ -315,6 +338,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       $scope.set.plotData.theoMz = [];
       $scope.set.plotData.percentBasePeak = [];
       $scope.set.plotData.TIC = 0;
+      $scope.set.plotData.sequences = [];
 
       returnedData.peaks.forEach(function (data, i) {
         $scope.set.plotData.x.push(data.mz);
@@ -330,6 +354,9 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           $scope.set.plotData.barwidth.push(1);
           $scope.set.plotData.massError.push("");
           $scope.set.plotData.theoMz.push(0);
+          $scope.set.plotData.sequences.push({
+            isInternalIon: false
+          });
         } else {
           var peakData = data.matchedFeatures[0];
           var fragment = peakData.feature;
@@ -373,12 +400,32 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             $scope.set.plotData.label.push(
               "[" + fragment.type + fragment.number + "]"
             );
+            $scope.set.plotData.sequences.push({
+              isInternalIon: false
+            });
           } else if(fragment.internalIon === false){
             $scope.set.plotData.label.push(fragment.type + fragment.number);
+            $scope.set.plotData.sequences.push({
+              isInternalIon: false
+            });
           } else {
-            fragment.sequenceStartPosition !== fragment.sequenceEndPosition ?
-                $scope.set.plotData.label.push("[I"+fragment.sequenceStartPosition+"-"+fragment.sequenceEndPosition+"]")
-                : $scope.set.plotData.label.push("[I"+fragment.sequenceStartPosition+"]")
+            if(fragment.sequenceStartPosition !== fragment.sequenceEndPosition){
+              $scope.set.plotData.label.push("[I"+fragment.sequenceStartPosition+"-"+fragment.sequenceEndPosition+"]")
+              $scope.set.plotData.sequences.push({
+                isInternalIon: true,
+                seq: fragment.sequence,
+                start: fragment.sequenceStartPosition,
+                end: fragment.sequenceEndPosition,
+              })
+            }else{
+              $scope.set.plotData.label.push("[I"+fragment.sequenceStartPosition+"]")
+              $scope.set.plotData.sequences.push({
+                isInternalIon: true,
+                seq: fragment.sequence,
+                start: fragment.sequenceStartPosition,
+                end: fragment.sequenceEndPosition,
+              })
+            }
           }
 
           $scope.set.plotData.barwidth.push(3);

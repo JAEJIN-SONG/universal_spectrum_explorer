@@ -347,6 +347,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
    * @description Links the IPSA directive to the annotatedSpectrum HTML tag.
    */
   directive.link = function (scope, elements, attr) {
+    console.log('what the hell is scope', scope)
     /**
      * @description Retrieves calculated precursor charge from the scope.peptide object. Additionally, updates the ionization mode from the default "+" if necessary.
      * @returns {number} The peptide precursor mass to charge
@@ -378,6 +379,14 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
     scope.getSequenceBottom = function () {
       return scope.peptidebottom.sequence;
     };
+
+    scope.getSequences = function () {
+      return scope.plotdata.sequences;
+    }
+
+    scope.getSequencesBottom = function () {
+      return scope.mirrorplotdata.sequences;
+    }
 
     /**
      * @description Retrieves the peptide precursor charge.
@@ -2204,6 +2213,8 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
         widths = scope.getWidths(),
         widths2 = scope.getMirrorWidths(),
         sequence = scope.getSequence(),
+          sequences = scope.getSequences(),
+          sequences2 = scope.getSequencesBottom(),
         neutralLosses2 = scope.getMirrorNeutralLosses();
 
       // since y axis is scaled to % relative abundance, yMax will always be 100%.
@@ -2294,7 +2305,8 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
             width: widths[i] * options.annotation.width * 0.001,
             massError: massError[i],
             points: [],
-            sequence: sequence[i],
+            sequence: sequence,
+            sequences: sequences[i],
           });
         }
 
@@ -2331,7 +2343,8 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
             width: widths2[i] * options.annotation.width * 0.001,
             massError: [], //massError[i],
             points: [],
-            sequence: sequence[i],
+            sequence: sequence,
+            sequences: sequences2[i],
           });
         }
 
@@ -2797,7 +2810,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
                 d.label +
                 " </span><br><br>" +
                 // "<strong>sequence:</strong> <span style='color:red'>" +
-                // d.sequence +
+                // d.sequences +
                 // " </span><br><br>" +
                 "<strong style='font-style:italic;'>m/z:</strong> <span style='color:red'>" +
                 d3.format(",.4f")(d.mz) +
@@ -2821,29 +2834,47 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
             var fragmentType = label.charAt(0);
             var fragmentNumber = label.slice(1);
             var color = colors[i];
-            // console.log(label, fragmentType, fragmentNumber, colors, i)
+            var sequenceInfo = sequences[i];
+            // console.log(label, fragmentType, fragmentNumber, i, label.startsWith("[I"), d)
 
             // get all text from the peptide sequence
             var interactiveTitleObjects = scope.titleContainer.selectAll("text").data(sequence);
 
-            // if the fragment type is n-Terminal, process the peptide sequence data starting from index 0. update text color if within index, else remain black
-            if (fragmentType === "a" || fragmentType === "b" || fragmentType === "c" || fragmentType === "C") {
+            if(sequenceInfo.isInternalIon){
               interactiveTitleObjects
-                .style("fill", function (d, i) {
-                  if (i < fragmentNumber) {
-                    return color;
-                  } else {
-                    return "black";
-                  }
-                  // give it a stoke as well to make the highlighted section 'pop'
-                })
-                .style("stroke", function (d, i) {
-                  if (i < fragmentNumber) {
-                    return color;
-                  } else {
-                    return "none";
-                  }
-                });
+                  .style("fill", function (d, i) {
+                    if (i <= sequenceInfo.end - 1 && i >= sequenceInfo.start - 1) {
+                      return color;
+                    } else {
+                      return "black";
+                    }
+                    // give it a stoke as well to make the highlighted section 'pop'
+                  })
+                  .style("stroke", function (d, i) {
+                    if (i <= sequenceInfo.end - 1 && i >= sequenceInfo.start - 1) {
+                      return color;
+                    } else {
+                      return "none";
+                    }
+                  });
+            } else if (fragmentType === "a" || fragmentType === "b" || fragmentType === "c" || fragmentType === "C") {
+              // if the fragment type is n-Terminal, process the peptide sequence data starting from index 0. update text color if within index, else remain black
+                interactiveTitleObjects
+                    .style("fill", function (d, i) {
+                      if (i < fragmentNumber) {
+                        return color;
+                      } else {
+                        return "black";
+                      }
+                      // give it a stoke as well to make the highlighted section 'pop'
+                    })
+                    .style("stroke", function (d, i) {
+                      if (i < fragmentNumber) {
+                        return color;
+                      } else {
+                        return "none";
+                      }
+                    });
               // if the fragment type is c-Terminal, process the peptide sequence data starting from index 0. update text color if within index, else remain black
             } else {
               interactiveTitleObjects
@@ -3045,7 +3076,9 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
         colors = scope.getColors(),
         settings = scope.getSettings(),
         labels = scope.getLabels(),
+        sequences = scope.getSequences(),
         labelCharges = scope.getLabelCharges();
+
       (sequence = scope.getSequence()),
         (theoMz = scope.getTheoreticalMz()),
         (neutralLosses = scope.getNeutralLosses()),
@@ -3290,44 +3323,65 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
           var fragmentType = label.charAt(0);
           var fragmentNumber = label.slice(1);
           var color = colors[i];
+          var sequenceInfo = sequences[i];
 
           // select all text elements from the marked peptide sequence
           var interactiveTitleObjects = scope.titleContainer.selectAll("text").data(sequence);
 
           // if the fragment type is N-terminal, work from index 0
-          if (fragmentType === "a" || fragmentType === "b" || fragmentType === "c" || fragmentType === "C") {
+          if(sequenceInfo.isInternalIon){
             interactiveTitleObjects
-              .style("fill", function (d, i) {
-                if (i < fragmentNumber) {
-                  return color;
-                } else {
-                  return "black";
-                }
-              })
-              .style("stroke", function (d, i) {
-                if (i < fragmentNumber) {
-                  return color;
-                } else {
-                  return "none";
-                }
-              });
-            // if the fragment type is C-terminal, work from index -1
+                .style("fill", function (d, i) {
+                  if (i <= sequenceInfo.end - 1 && i >= sequenceInfo.start - 1) {
+                    return color;
+                  } else {
+                    return "black";
+                  }
+                  // give it a stoke as well to make the highlighted section 'pop'
+                })
+                .style("stroke", function (d, i) {
+                  if (i <= sequenceInfo.end - 1 && i >= sequenceInfo.start - 1) {
+                    return color;
+                  } else {
+                    return "none";
+                  }
+                });
+          } else if (fragmentType === "a" || fragmentType === "b" || fragmentType === "c" || fragmentType === "C") {
+            // if the fragment type is n-Terminal, process the peptide sequence data starting from index 0. update text color if within index, else remain black
+            interactiveTitleObjects
+                .style("fill", function (d, i) {
+                  if (i < fragmentNumber) {
+                    return color;
+                  } else {
+                    return "black";
+                  }
+                  // give it a stoke as well to make the highlighted section 'pop'
+                })
+                .style("stroke", function (d, i) {
+                  if (i < fragmentNumber) {
+                    return color;
+                  } else {
+                    return "none";
+                  }
+                });
+            // if the fragment type is c-Terminal, process the peptide sequence data starting from index 0. update text color if within index, else remain black
           } else {
             interactiveTitleObjects
-              .style("fill", function (d, i) {
-                if (i < sequence.length - fragmentNumber) {
-                  return "black";
-                } else {
-                  return color;
-                }
-              })
-              .style("stroke", function (d, i) {
-                if (i < sequence.length - fragmentNumber) {
-                  return "none";
-                } else {
-                  return color;
-                }
-              });
+                .style("fill", function (d, i) {
+                  if (i < sequence.length - fragmentNumber) {
+                    return "black";
+                  } else {
+                    return color;
+                  }
+                  // give it a stoke as well to make the highlighted section 'pop'
+                })
+                .style("stroke", function (d, i) {
+                  if (i < sequence.length - fragmentNumber) {
+                    return "none";
+                  } else {
+                    return color;
+                  }
+                });
           }
 
           // highlight the selected circle by making it bigger and giving it a stroke

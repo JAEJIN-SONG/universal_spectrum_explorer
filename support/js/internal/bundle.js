@@ -447,6 +447,10 @@ Annotation = class Annotation {
 									frag.offset +
 									(c) *this.ChemistryConstants.Proton ) /
 								c ;
+
+							element["sequenceStartPosition"] = frag.reverse? sl + 1 : 1;
+							element["sequenceEndPosition"] = frag.reverse? sl + i + 1 : 1;
+
 							// if(subPeptideSub === 'NPEV' || subPeptideSub === 'HESEEGDSH' || subPeptideSub === "RHESEEGD"){
 							// 	console.log(subPeptideSub, ': ', subPeptideMass, modMass, frag, element["mz"], i);
 							// }
@@ -521,11 +525,12 @@ Annotation = class Annotation {
 
 							if(sl > 0){
 								element["internalIon"] = true;
-								element["sequenceStartPosition"] = sl + 1;
-								element["sequenceEndPosition"] = sl + i + 1;
 							}else{
 								element["internalIon"] = false;
 							}
+
+							element["sequenceStartPosition"] = sl + 1;
+							element["sequenceEndPosition"] = sl + i + 1;
 
 							const modMass = this.calculateAllMassOffset(allowedMods);
 							element["mz"] = (subPeptideMass +
