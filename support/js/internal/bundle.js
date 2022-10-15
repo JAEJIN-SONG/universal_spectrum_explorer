@@ -170,19 +170,19 @@ Annotation = class Annotation {
       var a = binary.getClosestValues_spec2(spectrum_1, el.mz); //peak in exp // is a reference
 
       var is_inside = compare_F(a, el); // TODO correct here?
-			if(is_inside){
+			if(is_inside && a["matchedFeatures"].length < 1){
 				console.log('match: ', el.sequence, el.mz)
 				a["matchedFeatures"].push({
 					"feature": el,
 					"massError": (a["mz"] -el["mz"]) / el["mz"] * Math.pow(10, 6) // https://github.com/coongroup/IPSA/blob/0b5125a8923d1a1897b61c53390164e7e7c5d356/support/php/NegativeModeAnnotateEntireFile.php#L898
-        });
+        		});
 				//set peakColor
-				if(el["internalIon"] !== true){
+				if(el["internalIon"] === false){
 					a["peakColor"] = this.selectPeakColor(a.matchedFeatures)
 				}else{
 					a["peakColor"] = this.fragmentTypes.InternalIon.color;
-					a["sequenceStartPosition"] = el["sequenceStartPosition"]
-					a["sequenceEndPosition"] = el["sequenceEndPosition"]
+					// a["sequenceStartPosition"] = el["sequenceStartPosition"]
+					// a["sequenceEndPosition"] = el["sequenceEndPosition"]
 				}
 				return(a)
 			}
@@ -219,6 +219,9 @@ Annotation = class Annotation {
 			return this.fragmentTypes.z.color
 		}else if(matchedFeatures[0].feature.type == "Z"){
 			return this.fragmentTypes.Z.color
+		}else if(matchedFeatures[0].feature.type == "IN"){
+			console.log('findout2', matchedFeatures)
+			return this.fragmentTypes.InternalIon.color
 		}else if(matchedFeatures[0].feature.type == "M"){
 			// $scope.set.plotDataBottom.color.push(data.peakFragType.M.color);
 			return '#000000'
@@ -401,6 +404,7 @@ Annotation = class Annotation {
 			});
 		};
     };
+		console.log('returnV: ', this.fragmentTypes, returnV)
 		return returnV;
 	}
 	calculateFragments(sequence, precursorCharge, mods, fragmentTypes) {
