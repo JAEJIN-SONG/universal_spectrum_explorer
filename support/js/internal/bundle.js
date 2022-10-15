@@ -394,14 +394,14 @@ Annotation = class Annotation {
 				"type": "c",
 				"offset": this.N_TERMINUS + this.ChemistryConstants.N + 2*this.ChemistryConstants.H // [N]+[M]+NH2
 			});
+    	};
 		if(this.fragmentTypes.InternalIon.selected) {
 			returnV.push({
 				"reverse": false,
-				"type": "IN",
+				"type": "Internal",
 				"offset": this.N_TERMINUS - this.ChemistryConstants.H
 			});
 		};
-    };
 		return returnV;
 	}
 	calculateFragments(sequence, precursorCharge, mods, fragmentTypes) {
@@ -506,6 +506,8 @@ Annotation = class Annotation {
 					for (var i = 0; i <= lengthLimitCalculator(sl, lengthSlicedSequence); i++) {
 						for (var frag of fragTypes){ // gives an int
 							if(sl !== 0 && frag.reverse) continue
+							if(sl === 0 && frag.type === "Internal") continue
+							if(sl !== 0 && frag.type !== "Internal") continue
 							var subPeptideSub = frag.reverse? slicedSequence.slice(lengthSlicedSequence -i-1, lengthSlicedSequence): slicedSequence.slice(0, i+ 1);
 							// console.log('isl', i, subPeptideSub)
 							var subPeptideMass = this.calculateAminoSequenceMass(subPeptideSub);

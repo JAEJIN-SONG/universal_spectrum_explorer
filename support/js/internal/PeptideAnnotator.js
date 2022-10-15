@@ -166,7 +166,7 @@ myApp.controller(
       InternalIon:{
         selected: false,
         color: "#0cbbaf",
-        label: "IN",
+        label: "I",
       },
       precursor: { selected: true, color: "#666666" },
       unassigned: { selected: true, color: "#A6A6A6" },
@@ -194,7 +194,7 @@ myApp.controller(
       InternalIon:{
         selected: false,
         color: "#0cbbaf",
-        label: "IN",
+        label: "I",
       },
       precursor: { selected: true, color: "#666666" },
       unassigned: { selected: true, color: "#A6A6A6" },
