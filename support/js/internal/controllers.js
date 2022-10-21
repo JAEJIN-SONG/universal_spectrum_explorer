@@ -985,6 +985,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       // bind all data in froms to data
       if ($(".col-md-5 .panel.panel-body").length == 0) {
         // conditon doesn't exist
+        const customLossAndGainArray = $scope.getCustomLossAndGainFromString($scope.checkModel.CustomLossAndGain.lossesAndGains)
         var data = {
           sequence: topSpectrum
             ? $scope.peptide.sequence
@@ -993,7 +994,13 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             ? parseInt($scope.peptide.precursorCharge)
             : parseInt($scope.peptideBottom.precursorCharge),
           charge: charge,
-          fragmentTypes: $scope.checkModel,
+          fragmentTypes: {...$scope.checkModel,
+            CustomLossAndGain: {
+              selected: $scope.checkModel.CustomLossAndGain.selected,
+              color: $scope.checkModel.CustomLossAndGain.color,
+              lossesAndGains: customLossAndGainArray,
+            }
+          },
           peakData: submitData,
           mods: topSpectrum
             ? $scope.modObject.selectedMods
@@ -1118,6 +1125,19 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       });
       return customLossAndGainArray;
     };
+
+    $scope.getChargeFromString = function (chargeString) {
+      let chargeArray = [];
+      const chargeFromString = chargeString.split(",");
+      if (chargeFromString.length === 0){
+        chargeArray = Array($scope.peptide.precursorCharge + 1).fill().map((v, i) => i)
+      }else if(chargeFromString.length > 0){
+        chargeFromString.forEach((item) => {
+          chargeArray.push(Number(item))
+        })
+      }
+      return chargeArray
+    }
 
     $scope.mergeSpectra = function (sp1, sp2) {
       var binarySpectrum_1 = binary_search_spectrum(
