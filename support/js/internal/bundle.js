@@ -92,6 +92,7 @@ Annotation = class Annotation {
 		this.isPPM =  request.toleranceType === 'ppm';
 		this.cutoff = request.cutoff;
 		this.cutoffMax = request.cutoffMax;
+		this.chargeOption = request.chargeOption;
 		this.mods = request.mods===undefined? []: request.mods;
 		this.aminoAcids = this.generateAminoAcids(
 			request["sequence"], this.mods);
@@ -189,10 +190,17 @@ Annotation = class Annotation {
     }).filter((el) =>{return el !== undefined});
     
 		spectrum_1 = spectrum_1.map((el) => {
+			const mat = el["matchedFeatures"]
+
 			// if (el["percentBasePeak"] <= this.cutoff){
-			if (el["percentBasePeak"] <= this.cutoff || el["percentBasePeak"] >= this.cutoffMax){
-					el["matchedFeatures"] = [];
+			if (el["percentBasePeak"] <= this.cutoff || el["percentBasePeak"] >= this.cutoffMax) {
+				el["matchedFeatures"] = [];
+			// }
+			} else if (mat.length > 0 && !this.chargeOption.includes(mat[0].feature.charge)){
+				console.log('el', el, mat)
+				el["matchedFeatures"] = [];
 			}
+
 			return el;
 		});
 		return(spectrum_1);

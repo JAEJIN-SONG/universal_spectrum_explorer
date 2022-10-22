@@ -1010,6 +1010,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           matchingType: $scope.cutoffs.matchingType,
           cutoff: $scope.cutoffs.matchingCutoff,
           cutoffMax: $scope.cutoffs.matchingCutoffMax,
+          chargeOption: $scope.getChargeOptionFromString($scope.cutoffs.chargeOption.charges)
           // cutoffMax
           /*
         urlObj["usi"] = $scope.peptide.usi;
@@ -1043,6 +1044,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           matchingType: condition.cutoffs.matchingType,
           cutoff: condition.cutoffs.matchingCutoff,
           cutoffMax: condition.cutoffs.matchingCutoffMax,
+          chargeOption: $scope.getChargeOptionFromString(condition.cutoffs.chargeOption.charges)
           /*
         urlObj["usi"] = $scope.peptide.usi;
         urlObj["usi_origin"] = $scope.peptide.usi_origin;
@@ -1121,22 +1123,26 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       const customLossAndGainArray = [];
       const customLossAndGainFromString = customString.split(",");
       customLossAndGainFromString.forEach((item) => {
-        customLossAndGainArray.push(Number(item));
+        if(!isNaN(item)) {
+          customLossAndGainArray.push(Number(item));
+        }
       });
       return customLossAndGainArray;
     };
 
-    $scope.getChargeFromString = function (chargeString) {
-      let chargeArray = [];
+    $scope.getChargeOptionFromString = function (chargeString) {
+      const largerCharge = $scope.peptide.precursorCharge > $scope.peptideBottom.precursorCharge ? $scope.peptide.precursorCharge : $scope.peptideBottom.precursorCharge
+      let chargeOptionArray = [];
       const chargeFromString = chargeString.split(",");
-      if (chargeFromString.length === 0){
-        chargeArray = Array($scope.peptide.precursorCharge + 1).fill().map((v, i) => i)
+      if (chargeString === ''){
+        chargeOptionArray = Array(largerCharge).fill().map((v, i) => i + 1)
       }else if(chargeFromString.length > 0){
         chargeFromString.forEach((item) => {
-          chargeArray.push(Number(item))
+          if(!isNaN(item) && Number(item) >= 1 && Number(item) <= largerCharge)
+          chargeOptionArray.push(Number(item))
         })
       }
-      return chargeArray
+      return chargeOptionArray
     }
 
     $scope.mergeSpectra = function (sp1, sp2) {
@@ -1422,6 +1428,17 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             " " +
             $scope.cutoffs.compToleranceType,
         }).appendTo(mathcing);
+        data_c.css("margin-left", "10px");
+
+
+        const largerCharge = $scope.peptide.precursorCharge > $scope.peptideBottom.precursorCharge ? $scope.peptide.precursorCharge : $scope.peptideBottom.precursorCharge
+        let chargeOption = $(
+            '<div class="col-sm-12"><label>Charge</label></div>'
+        ).appendTo(panel);
+        let data_charge = $("<label>", {
+          text:
+              " (Max is "+largerCharge+ ") : " + $scope.getChargeOptionFromString($scope.cutoffs.chargeOption.charges)
+        }).appendTo(chargeOption);
         data_c.css("margin-left", "10px");
 
         let button = panel.append(

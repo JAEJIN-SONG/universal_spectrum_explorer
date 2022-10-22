@@ -505,6 +505,12 @@ div.inputFile {
   flex-direction: row;
 }
 
+.charge_condition_container {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+}
+
 .cutoff_min_max_container {
   display: flex;
   width: 100%;

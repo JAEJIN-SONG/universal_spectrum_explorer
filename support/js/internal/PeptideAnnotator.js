@@ -767,6 +767,7 @@ myApp.controller(
         ? $scope.getUrlVars().matching_tol_unit
         : "ppm",
       compTolerance: parseInt($scope.getUrlVars().matching_tol) || 10,
+      chargeOption: {charges: ""},
     };
 
     $scope.cutoffsInit = {
@@ -786,6 +787,7 @@ myApp.controller(
         ? $scope.getUrlVars().matching_tol_unit
         : "ppm",
       compTolerance: parseInt($scope.getUrlVars().matching_tol) || 10,
+      chargeOption: {charges: ""},
     };
 
     $scope.searchUSI = function (topSpectrum = true) {

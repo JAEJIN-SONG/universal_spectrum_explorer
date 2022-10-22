@@ -580,6 +580,13 @@
                                     <input type="number" class="form-control" ng-model="cutoffs.compTolerance" min="0" /> <span class="input-group-btn"> <button class="btn btn-primary" type="button" ng-click="swapCompToleranceType()">{{cutoffs.compToleranceType}}</button> </span> 
                                   </div>
                                 </div>
+                                <div class="col-md-6">
+                                  <label>Charge</label>
+                                  <div class="charge_condition_container">
+<!--                                    <label class="btn btn-fragment" ng-model="checkModel.CustomLossAndGain.selected" uib-btn-checkbox>Charge</label>-->
+                                    <input type="text" class="form-control" placeholder="Applied to all charges if empty." ng-model="cutoffs.chargeOption.charges"/>
+                                  </div>
+                                </div>
                               </div>
                               <br/>
                               <br/>
