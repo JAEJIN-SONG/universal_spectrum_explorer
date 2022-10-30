@@ -163,7 +163,11 @@ myApp.controller(
         lossesAndGains: "",
         color: "#8cff42",
       },
-      InternalIon:{
+      CustomCharge: {
+        selected: false,
+        charge: 0,
+      },
+      InternalIon: {
         selected: false,
         color: "#0cbbaf",
         label: "I",
@@ -191,7 +195,7 @@ myApp.controller(
         lossesAndGains: "",
         color: "#8cff42",
       },
-      InternalIon:{
+      InternalIon: {
         selected: false,
         color: "#0cbbaf",
         label: "I",
@@ -236,7 +240,7 @@ myApp.controller(
 
     //substring
     $scope.calculateSubstrings = {
-      checked: false
+      checked: false,
     };
 
     $scope.fileInit = {
