@@ -35,7 +35,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
    * @description Two arrays containing the unicode superscript and subscripts characters for numbers 0-10
    */
   var superscript = ["\u2070", "\u00B9", "\u00B2", "\u00B3", "\u2074", "\u2075", "\u2076", "\u2077", "\u2078", "\u2079"];
-  var subscript = ["\u2080", "\u2081", "\u2082", "\u2083", "\u2084", "\u2085", "\u2086", "\u2087", "\u2088", "\u2089"];
+  var subscript = ["\u2080", "\u2081", "\u2082", "\u2083", "\u2084", "\u2085", "\u2086", "\u2087", "\u2088", "\u2089", ",", "\u208D", "\u208E"];
 
   /**
    * @function Formats fragment ion labels for the annotated spectrum
@@ -270,6 +270,15 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
    */
   var powerUnicode = function (number, isSubscript) {
     if (isSubscript) {
+      if (number === "-") {
+        return subscript[10];
+      }
+      if (number === "(") {
+        return subscript[11];
+      }
+      if (number === ")") {
+        return subscript[12];
+      }
       return subscript[number];
     } else {
       return superscript[number];

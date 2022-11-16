@@ -273,7 +273,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             })
           } else {
             if(fragment.sequenceStartPosition !== fragment.sequenceEndPosition){
-              $scope.set.plotDataBottom.label.push("[I"+fragment.sequenceStartPosition+"-"+fragment.sequenceEndPosition+"]")
+              $scope.set.plotDataBottom.label.push("I"+fragment.sequenceStartPosition+"-"+fragment.sequenceEndPosition)
               $scope.set.plotDataBottom.sequences.push({
                 isInternalIon: true,
                 seq: fragment.sequence,
@@ -281,7 +281,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
                 end: fragment.sequenceEndPosition,
               })
             }else{
-              $scope.set.plotDataBottom.label.push("[I"+fragment.sequenceStartPosition+"]")
+              $scope.set.plotDataBottom.label.push("I"+fragment.sequenceStartPosition)
               $scope.set.plotDataBottom.sequences.push({
                 isInternalIon: true,
                 seq: fragment.sequence,
@@ -410,7 +410,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             });
           } else {
             if(fragment.sequenceStartPosition !== fragment.sequenceEndPosition){
-              $scope.set.plotData.label.push("[I"+fragment.sequenceStartPosition+"-"+fragment.sequenceEndPosition+"]")
+              $scope.set.plotData.label.push("I"+fragment.sequenceStartPosition+"-"+fragment.sequenceEndPosition)
               $scope.set.plotData.sequences.push({
                 isInternalIon: true,
                 seq: fragment.sequence,
@@ -418,7 +418,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
                 end: fragment.sequenceEndPosition,
               })
             }else{
-              $scope.set.plotData.label.push("[I"+fragment.sequenceStartPosition+"]")
+              $scope.set.plotData.label.push("I"+fragment.sequenceStartPosition)
               $scope.set.plotData.sequences.push({
                 isInternalIon: true,
                 seq: fragment.sequence,
