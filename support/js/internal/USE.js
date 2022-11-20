@@ -807,6 +807,9 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
         if (tempLabel.charAt(0) == "[") {
           continue;
         }
+        if (tempLabel.charAt(0) == "I") {
+          continue;
+        }
         if (tempLabel) {
           labelObj = {
             text: tempLabel.charAt(0),
