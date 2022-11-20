@@ -172,7 +172,6 @@ Annotation = class Annotation {
 
       var is_inside = compare_F(a, el); // TODO correct here?
 			if(is_inside && a["matchedFeatures"].length < 1){
-				console.log('match: ', el.sequence, el.mz)
 				a["matchedFeatures"].push({
 					"feature": el,
 					"massError": (a["mz"] -el["mz"]) / el["mz"] * Math.pow(10, 6) // https://github.com/coongroup/IPSA/blob/0b5125a8923d1a1897b61c53390164e7e7c5d356/support/php/NegativeModeAnnotateEntireFile.php#L898
@@ -197,7 +196,6 @@ Annotation = class Annotation {
 				el["matchedFeatures"] = [];
 			// }
 			} else if (mat.length > 0 && !this.chargeOption.includes(mat[0].feature.charge)){
-				console.log('el', el, mat)
 				el["matchedFeatures"] = [];
 			}
 
@@ -226,7 +224,6 @@ Annotation = class Annotation {
 		}else if(matchedFeatures[0].feature.type == "Z"){
 			return this.fragmentTypes.Z.color
 		}else if(matchedFeatures[0].feature.type == "IN"){
-			console.log('findout2', matchedFeatures)
 			return this.fragmentTypes.InternalIon.color
 		}else if(matchedFeatures[0].feature.type == "M"){
 			// $scope.set.plotDataBottom.color.push(data.peakFragType.M.color);
@@ -509,7 +506,6 @@ Annotation = class Annotation {
 				for(var sl = 0; sl < lengthPeptide; sl++){
 					const slicedSequence = sl === 0 ? sequence.slice(sl, lengthPeptide) : sequence.slice(sl, lengthPeptide - 1)
 					const lengthSlicedSequence = slicedSequence.length
-					console.log('slq: ', slicedSequence)
 
 					for (var i = 0; i <= lengthLimitCalculator(sl, lengthSlicedSequence); i++) {
 						for (var frag of fragTypes){ // gives an int
@@ -677,7 +673,6 @@ Annotation = class Annotation {
 			element["neutralLoss"] = "";
 			fragments.push(element);
 		}
-		console.log('fragments: ', fragments)
 		return fragments;
 	}
 }
@@ -895,7 +890,6 @@ ProForma = class ProForma {
       modString = modString.slice(0, positionBracketOpen)
           + modString.slice(positionBracketClose + skip);
     }
-	console.log('parseModification: ', modifications)
     return modifications;
   }
 

@@ -471,7 +471,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             }
             modString += mod.name + "@" + mod.site + (mod.index + 1);
           });
-          console.log("pp: ", $scope.modObject.selectedMods);
         }
       } else {
         if ($scope.modObjectBottom.selectedMods != undefined) {
@@ -486,7 +485,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           });
         }
       }
-      console.log("modString: ", modString);
 
       let ionColors = {
         a: $scope.checkModel.a.color,
@@ -765,7 +763,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       modifications,
       fillBothSequences = false
     ) {
-      console.log("preselectMods called!");
       let aModsRest = [];
       //
       // take care of mass modifications
@@ -781,7 +778,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
               unimod: mod.name,
             };
             $scope.mods.push(addMod);
-            console.log("addMod: ", addMod);
           }
         });
       } else {
@@ -796,13 +792,11 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
               unimod: mod.name,
             };
             $scope.modsBottom.push(addMod);
-            console.log("bottomAddMod: ", addMod);
           }
         });
       }
       if (topSpectrum) {
         $scope.modObject.selectedMods = [];
-        console.log("modifications: ", modifications);
         modifications.forEach((mod) => {
           let o = $scope.mods.filter((m) => {
             return (
@@ -1068,12 +1062,10 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       const modsFromSequence = [];
       for (let i = 0; i < sequence.length; i++) {
         if (sequence[i] === "+") {
-          console.log("+ found!", sequence[i - 1]);
           let tempNumString = "";
           for (let j = i + 1; j < sequence.length; j++) {
             if (!isNaN(sequence[j]) || sequence[j] === ".") {
               tempNumString = tempNumString.concat(sequence[j]);
-              console.log(j, tempNumString);
 
               //temp
               if (j === sequence.length - 1) {
@@ -1458,7 +1450,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             $scope.checkModel = angular.copy($scope.checkModelInit);
             $scope.cutoffs = angular.copy($scope.cutoffsInit);
           }
-          console.log("$scope.conditions after deletion", $scope.conditions);
         });
 
         $(".col-md-5").append(panel);
@@ -1889,7 +1880,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         );
         $scope.plotDataBottom($scope.annotatedResultsBottom);
 
-        console.log('peaks', $scope.annotatedResults.peaks)
         $scope.getScores(
           $scope.annotatedResults.peaks,
           $scope.annotatedResultsBottom.peaks
