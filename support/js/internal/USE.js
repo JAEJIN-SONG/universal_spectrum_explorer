@@ -808,7 +808,12 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
           continue;
         }
         if (tempLabel.charAt(0) == "I") {
-          continue;
+          var loc = tempLabel.includes("-") ? tempLabel.indexOf("-") : tempLabel.length;
+          labelObj = {
+            text: tempLabel.charAt(0),
+            location: parseInt(tempLabel.slice(1, loc)),
+            color: colors[i],
+          }
         }
         if (tempLabel) {
           labelObj = {
@@ -824,13 +829,13 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
         returnArray.sort(function (a, b) {
           var aLoc;
           var bLoc;
-          if (a.text == "a" || a.text == "b" || a.text == "c" || a.text == "C") {
+          if (a.text == "a" || a.text == "b" || a.text == "c" || a.text == "C" || a.text == "I") {
             aLoc = a.location;
           } else {
             aLoc = length - a.location;
           }
 
-          if (b.text == "a" || b.text == "b" || b.text == "c" || b.text == "C") {
+          if (b.text == "a" || b.text == "b" || b.text == "c" || b.text == "C" || b.text == "I") {
             bLoc = b.location;
           } else {
             bLoc = length - b.location;
@@ -868,7 +873,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
 
       // mark the bond array with the locations of fragmentation events. The value 1 means a fragmentation event has happened at the specific bond.
       fragments.forEach(function (fragment) {
-        if (fragment.text == "a" || fragment.text == "b" || fragment.text == "c" || fragment.text == "C") {
+        if (fragment.text == "a" || fragment.text == "b" || fragment.text == "c" || fragment.text == "C" || fragment.text == "I") {
           bondArray[fragment.location - 1] = 1;
         } else if (fragment.text == "x" || fragment.text == "y" || fragment.text == "z" || fragment.text == "Z") {
           bondArray[-(fragment.location - numBonds)] = 1;
@@ -1341,7 +1346,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
       if (sequence.length < 22) {
         aminoAcidTicks.forEach(function (labelTick) {
           // these annotations point upwards.
-          if (labelTick.text == "a" || labelTick.text == "b" || labelTick.text == "c" || labelTick.text == "C") {
+          if (labelTick.text == "a" || labelTick.text == "b" || labelTick.text == "c" || labelTick.text == "C" || labelTick.text == "I") {
             var indexDistance = labelTick.location - middleAminoAcid;
             if (sequence.length % 2 == 1) {
               indexDistance -= 0.5;
@@ -1350,17 +1355,19 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
             // X location
             xValue = interactiveChartWidth / 2 + indexDistance * spacingFactor;
             // xHook and yHook is used to add a 'hook' at the end the marking to indicate what side the fragment is on.
-            yHook = 0.15;
+            yHook = 0.13;
             xHook = -0.01;
 
             // add different height markings to prevent visualization overlap. Values determined by trial and error. Gives nice spacing between
             if (labelTick.text == "a") {
-              yTick = 0.15;
+              yTick = 0.13;
             } else if (labelTick.text == "b") {
-              yTick = 0.23;
+              yTick = 0.21;
             } else if (labelTick.text == "c") {
-              yTick = 0.31;
+              yTick = 0.27;
             } else if (labelTick.text == "C") {
+              yTick = 0.33;
+            } else if (labelTick.text == "I") {
               yTick = 0.39;
             }
             // slightly different values for x,y,z fragments. They point downwards instead.
@@ -1391,7 +1398,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
       } else {
         // same logic as before, except this section has logic to handle peptides with length > 22.
         aminoAcidTicks.forEach(function (labelTick) {
-          if (labelTick.text == "a" || labelTick.text == "b" || labelTick.text == "c" || labelTick.text == "C") {
+          if (labelTick.text == "a" || labelTick.text == "b" || labelTick.text == "c" || labelTick.text == "C" || labelTick.text == "I") {
             xValue = fullTitleStart + fullTitleSpacing * (labelTick.location - 0.5);
             yHook = 0.15;
             xHook = -0.01;
@@ -1403,6 +1410,8 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
               yTick = 0.31;
             } else if (labelTick.text == "C") {
               yTick = 0.39;
+            } else if (labelTick.text == "I") {
+              yTick = 0.47;
             }
           } else if (labelTick.text == "x" || labelTick.text == "y" || labelTick.text == "z" || labelTick.text == "Z") {
             xValue = fullTitleEnd - fullTitleSpacing * (labelTick.location + 0.5);
@@ -1592,7 +1601,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
       if (sequence.length < 22) {
         aminoAcidTicks.forEach(function (labelTick) {
           // these annotations point upwards.
-          if (labelTick.text == "a" || labelTick.text == "b" || labelTick.text == "c" || labelTick.text == "C") {
+          if (labelTick.text == "a" || labelTick.text == "b" || labelTick.text == "c" || labelTick.text == "C" || labelTick.text == "I") {
             var indexDistance = labelTick.location - middleAminoAcid;
             if (sequence.length % 2 == 1) {
               indexDistance -= 0.5;
@@ -1601,17 +1610,19 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
             // X location
             xValue = interactiveChartWidth / 2 + indexDistance * spacingFactor;
             // xHook and yHook is used to add a 'hook' at the end the marking to indicate what side the fragment is on.
-            yHook = 0.15;
+            yHook = 0.13;
             xHook = -0.01;
 
             // add different height markings to prevent visualization overlap. Values determined by trial and error. Gives nice spacing between
             if (labelTick.text == "a") {
-              yTick = 0.15;
+              yTick = 0.13;
             } else if (labelTick.text == "b") {
-              yTick = 0.23;
+              yTick = 0.21;
             } else if (labelTick.text == "c") {
-              yTick = 0.31;
+              yTick = 0.27;
             } else if (labelTick.text == "C") {
+              yTick = 0.33;
+            } else if (labelTick.text == "I") {
               yTick = 0.39;
             }
             // slightly different values for x,y,z fragments. They point downwards instead.
@@ -1642,7 +1653,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
       } else {
         // same logic as before, except this section has logic to handle peptides with length > 22.
         aminoAcidTicks.forEach(function (labelTick) {
-          if (labelTick.text == "a" || labelTick.text == "b" || labelTick.text == "c" || labelTick.text == "C") {
+          if (labelTick.text == "a" || labelTick.text == "b" || labelTick.text == "c" || labelTick.text == "C" || labelTick.text == "I") {
             xValue = fullTitleStart + fullTitleSpacing * (labelTick.location - 0.5);
             yHook = 0.15;
             xHook = -0.01;
@@ -1654,6 +1665,8 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
               yTick = 0.31;
             } else if (labelTick.text == "C") {
               yTick = 0.39;
+            } else if (labelTick.text == "I") {
+              yTick = 0.47;
             }
           } else if (labelTick.text == "x" || labelTick.text == "y" || labelTick.text == "z" || labelTick.text == "Z") {
             xValue = fullTitleEnd - fullTitleSpacing * (labelTick.location + 0.5);
