@@ -28,6 +28,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
       height: "=?",
       fileData: "=filedata",
       fileDataBottom: "=filedatabottom",
+      checkModel: "=?",
     },
   };
 
@@ -143,6 +144,7 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
               // logic for a,b,c,x,y,z fragment ions with neutral losses
             } else {
               if (neutralLoss) {
+                console.log(label, neutralLoss)
                 returnString += "[" + label[0];
                 if (label[0] == "z") {
                   returnString += "\u2022";
@@ -484,6 +486,10 @@ angular.module("IPSA.directive", []).directive("annotatedSpectrum", function ($l
     scope.getColors = function () {
       return scope.plotdata.color;
     };
+
+    scope.getCustomLossAndGainColor = function () {
+      return scope.checkModel;
+    }
 
     /**
      * @description Retrieves the previously specified colors to draw the spectral data with. Each spectral peak will have a color associated with it depending on what fragment types were
