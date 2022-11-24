@@ -218,7 +218,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           $scope.set.plotDataBottom.massError.push("");
           $scope.set.plotDataBottom.theoMz.push(0);
           $scope.set.plotDataBottom.sequences.push({
-            isInternalIon: false
+            isInternalIon: false,
           });
         } else {
           var peakData = data.matchedFeatures[0];
@@ -243,10 +243,12 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           //   $scope.set.plotDataBottom.color.push($scope.colorArray[8]);
           // }
 
-          if (fragment.neutralLoss !== null){
-            $scope.set.plotDataBottom.color.push($scope.checkModel.CustomLossAndGain.color);
+          if (fragment.neutralLoss !== null) {
+            $scope.set.plotDataBottom.color.push(
+              $scope.checkModel.CustomLossAndGain.color
+            );
           } else {
-            $scope.set.plotDataBottom.color.push(data.peakColor)
+            $scope.set.plotDataBottom.color.push(data.peakColor);
           }
 
           if (fragment.neutralLoss == null) {
@@ -262,32 +264,41 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
               "[" + fragment.type + fragment.number + "]"
             );
             $scope.set.plotDataBottom.sequences.push({
-              isInternalIon: false
-            })
-          } else if(fragment.internalIon === false){
+              isInternalIon: false,
+            });
+          } else if (fragment.internalIon === false) {
             $scope.set.plotDataBottom.label.push(
-                fragment.type + fragment.number
+              fragment.type + fragment.number
             );
             $scope.set.plotDataBottom.sequences.push({
-              isInternalIon: false
-            })
+              isInternalIon: false,
+            });
           } else {
-            if(fragment.sequenceStartPosition !== fragment.sequenceEndPosition){
-              $scope.set.plotDataBottom.label.push("I"+fragment.sequenceStartPosition+"-"+fragment.sequenceEndPosition)
+            if (
+              fragment.sequenceStartPosition !== fragment.sequenceEndPosition
+            ) {
+              $scope.set.plotDataBottom.label.push(
+                "I" +
+                  fragment.sequenceStartPosition +
+                  "-" +
+                  fragment.sequenceEndPosition
+              );
               $scope.set.plotDataBottom.sequences.push({
                 isInternalIon: true,
                 seq: fragment.sequence,
                 start: fragment.sequenceStartPosition,
                 end: fragment.sequenceEndPosition,
-              })
-            }else{
-              $scope.set.plotDataBottom.label.push("I"+fragment.sequenceStartPosition)
+              });
+            } else {
+              $scope.set.plotDataBottom.label.push(
+                "I" + fragment.sequenceStartPosition
+              );
               $scope.set.plotDataBottom.sequences.push({
                 isInternalIon: true,
                 seq: fragment.sequence,
                 start: fragment.sequenceStartPosition,
                 end: fragment.sequenceEndPosition,
-              })
+              });
             }
           }
 
@@ -355,7 +366,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           $scope.set.plotData.massError.push("");
           $scope.set.plotData.theoMz.push(0);
           $scope.set.plotData.sequences.push({
-            isInternalIon: false
+            isInternalIon: false,
           });
         } else {
           var peakData = data.matchedFeatures[0];
@@ -382,10 +393,12 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           //   $scope.set.plotData.color.push($scope.colorArray[8]);
           // }
 
-          if (fragment.neutralLoss !== null){
-            $scope.set.plotData.color.push($scope.checkModel.CustomLossAndGain.color);
+          if (fragment.neutralLoss !== null) {
+            $scope.set.plotData.color.push(
+              $scope.checkModel.CustomLossAndGain.color
+            );
           } else {
-            $scope.set.plotData.color.push(data.peakColor)
+            $scope.set.plotData.color.push(data.peakColor);
           }
 
           if (fragment.neutralLoss == null) {
@@ -401,30 +414,39 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
               "[" + fragment.type + fragment.number + "]"
             );
             $scope.set.plotData.sequences.push({
-              isInternalIon: false
+              isInternalIon: false,
             });
-          } else if(fragment.internalIon === false){
+          } else if (fragment.internalIon === false) {
             $scope.set.plotData.label.push(fragment.type + fragment.number);
             $scope.set.plotData.sequences.push({
-              isInternalIon: false
+              isInternalIon: false,
             });
           } else {
-            if(fragment.sequenceStartPosition !== fragment.sequenceEndPosition){
-              $scope.set.plotData.label.push("I"+fragment.sequenceStartPosition+"-"+fragment.sequenceEndPosition)
+            if (
+              fragment.sequenceStartPosition !== fragment.sequenceEndPosition
+            ) {
+              $scope.set.plotData.label.push(
+                "I" +
+                  fragment.sequenceStartPosition +
+                  "-" +
+                  fragment.sequenceEndPosition
+              );
               $scope.set.plotData.sequences.push({
                 isInternalIon: true,
                 seq: fragment.sequence,
                 start: fragment.sequenceStartPosition,
                 end: fragment.sequenceEndPosition,
-              })
-            }else{
-              $scope.set.plotData.label.push("I"+fragment.sequenceStartPosition)
+              });
+            } else {
+              $scope.set.plotData.label.push(
+                "I" + fragment.sequenceStartPosition
+              );
               $scope.set.plotData.sequences.push({
                 isInternalIon: true,
                 seq: fragment.sequence,
                 start: fragment.sequenceStartPosition,
                 end: fragment.sequenceEndPosition,
-              })
+              });
             }
           }
 
@@ -657,7 +679,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             return p + n;
           }, 0) === $scope.dbBottom.items.length;
 
-      if (!bTopInput && !bBottomInput) {
+      if (!bTopInput || !bBottomInput) {
         $scope.ctrl.disableButton = false;
       } else {
         $scope.ctrl.disableButton = true;
@@ -884,6 +906,14 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             intensity,
           }));
 
+      if (!topSpectrum && $scope.peptideBottom.sequence == "TESTPEPTIDE") {
+        submitData = $scope.db.items.map(({ mZ, intensity }) => ({
+          mZ,
+          intensity,
+        }));
+        $scope.peptideBottom = $scope.peptide;
+      }
+
       // filter out invalid entries from handsontable
       var newArray = [];
 
@@ -979,7 +1009,9 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       // bind all data in froms to data
       if ($(".col-md-5 .panel.panel-body").length == 0) {
         // conditon doesn't exist
-        const customLossAndGainArray = $scope.getCustomLossAndGainFromString($scope.checkModel.CustomLossAndGain.lossesAndGains)
+        const customLossAndGainArray = $scope.getCustomLossAndGainFromString(
+          $scope.checkModel.CustomLossAndGain.lossesAndGains
+        );
         var data = {
           sequence: topSpectrum
             ? $scope.peptide.sequence
@@ -988,12 +1020,13 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             ? parseInt($scope.peptide.precursorCharge)
             : parseInt($scope.peptideBottom.precursorCharge),
           charge: charge,
-          fragmentTypes: {...$scope.checkModel,
+          fragmentTypes: {
+            ...$scope.checkModel,
             CustomLossAndGain: {
               selected: $scope.checkModel.CustomLossAndGain.selected,
               color: $scope.checkModel.CustomLossAndGain.color,
               lossesAndGains: customLossAndGainArray,
-            }
+            },
           },
           peakData: submitData,
           mods: topSpectrum
@@ -1004,7 +1037,9 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           matchingType: $scope.cutoffs.matchingType,
           cutoff: $scope.cutoffs.matchingCutoff,
           cutoffMax: $scope.cutoffs.matchingCutoffMax,
-          chargeOption: $scope.getChargeOptionFromString($scope.cutoffs.chargeOption.charges)
+          chargeOption: $scope.getChargeOptionFromString(
+            $scope.cutoffs.chargeOption.charges
+          ),
           // cutoffMax
           /*
         urlObj["usi"] = $scope.peptide.usi;
@@ -1038,7 +1073,9 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           matchingType: condition.cutoffs.matchingType,
           cutoff: condition.cutoffs.matchingCutoff,
           cutoffMax: condition.cutoffs.matchingCutoffMax,
-          chargeOption: $scope.getChargeOptionFromString(condition.cutoffs.chargeOption.charges)
+          chargeOption: $scope.getChargeOptionFromString(
+            condition.cutoffs.chargeOption.charges
+          ),
           /*
         urlObj["usi"] = $scope.peptide.usi;
         urlObj["usi_origin"] = $scope.peptide.usi_origin;
@@ -1115,7 +1152,7 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       const customLossAndGainArray = [];
       const customLossAndGainFromString = customString.split(",");
       customLossAndGainFromString.forEach((item) => {
-        if(!isNaN(item)) {
+        if (!isNaN(item)) {
           customLossAndGainArray.push(Number(item));
         }
       });
@@ -1123,19 +1160,24 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
     };
 
     $scope.getChargeOptionFromString = function (chargeString) {
-      const largerCharge = $scope.peptide.precursorCharge > $scope.peptideBottom.precursorCharge ? $scope.peptide.precursorCharge : $scope.peptideBottom.precursorCharge
+      const largerCharge =
+        $scope.peptide.precursorCharge > $scope.peptideBottom.precursorCharge
+          ? $scope.peptide.precursorCharge
+          : $scope.peptideBottom.precursorCharge;
       let chargeOptionArray = [];
       const chargeFromString = chargeString.split(",");
-      if (chargeString === ''){
-        chargeOptionArray = Array(largerCharge).fill().map((v, i) => i + 1)
-      }else if(chargeFromString.length > 0){
+      if (chargeString === "") {
+        chargeOptionArray = Array(largerCharge)
+          .fill()
+          .map((v, i) => i + 1);
+      } else if (chargeFromString.length > 0) {
         chargeFromString.forEach((item) => {
-          if(!isNaN(item) && Number(item) >= 1 && Number(item) <= largerCharge)
-          chargeOptionArray.push(Number(item))
-        })
+          if (!isNaN(item) && Number(item) >= 1 && Number(item) <= largerCharge)
+            chargeOptionArray.push(Number(item));
+        });
       }
-      return chargeOptionArray
-    }
+      return chargeOptionArray;
+    };
 
     $scope.mergeSpectra = function (sp1, sp2) {
       var binarySpectrum_1 = binary_search_spectrum(
@@ -1398,7 +1440,11 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         ).appendTo(panel);
         let data_c = $("<label>", {
           text:
-              $scope.cutoffs.matchingCutoff + " ~ " +$scope.cutoffs.matchingCutoffMax+ " " + $scope.cutoffs.matchingType,
+            $scope.cutoffs.matchingCutoff +
+            " ~ " +
+            $scope.cutoffs.matchingCutoffMax +
+            " " +
+            $scope.cutoffs.matchingType,
         }).appendTo(cutoff);
         data_c.css("margin-left", "10px");
 
@@ -1422,14 +1468,21 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         }).appendTo(mathcing);
         data_c.css("margin-left", "10px");
 
-
-        const largerCharge = $scope.peptide.precursorCharge > $scope.peptideBottom.precursorCharge ? $scope.peptide.precursorCharge : $scope.peptideBottom.precursorCharge
+        const largerCharge =
+          $scope.peptide.precursorCharge > $scope.peptideBottom.precursorCharge
+            ? $scope.peptide.precursorCharge
+            : $scope.peptideBottom.precursorCharge;
         let chargeOption = $(
-            '<div class="col-sm-12"><label>Charge</label></div>'
+          '<div class="col-sm-12"><label>Charge</label></div>'
         ).appendTo(panel);
         let data_charge = $("<label>", {
           text:
-              " (Max is "+largerCharge+ ") : " + $scope.getChargeOptionFromString($scope.cutoffs.chargeOption.charges)
+            " (Max is " +
+            largerCharge +
+            ") : " +
+            $scope.getChargeOptionFromString(
+              $scope.cutoffs.chargeOption.charges
+            ),
         }).appendTo(chargeOption);
         data_c.css("margin-left", "10px");
 
@@ -1765,7 +1818,9 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           if (el.fragmentTypes.z.selected)
             $scope.checkModel.z = angular.copy(el.fragmentTypes.z);
           if (el.fragmentTypes.InternalIon.selected)
-            $scope.checkModel.InternalIon = angular.copy(el.fragmentTypes.InternalIon);
+            $scope.checkModel.InternalIon = angular.copy(
+              el.fragmentTypes.InternalIon
+            );
         });
         $scope.invalidColors();
 
