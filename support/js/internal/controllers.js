@@ -371,27 +371,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         } else {
           var peakData = data.matchedFeatures[0];
           var fragment = peakData.feature;
-          // if (fragment.neutralLoss !== null){
-          //   $scope.set.plotData.color.push($scope.checkModel.CustomLossAndGain.color);
-          // } else if (fragment.type == "a") {
-          //   $scope.set.plotData.color.push($scope.colorArray[0]);
-          // } else if (fragment.type == "b") {
-          //   $scope.set.plotData.color.push($scope.colorArray[1]);
-          // } else if (fragment.type == "c") {
-          //   $scope.set.plotData.color.push($scope.colorArray[2]);
-          // } else if (fragment.type == "C") {
-          //   $scope.set.plotData.color.push($scope.colorArray[3]);
-          // } else if (fragment.type == "x") {
-          //   $scope.set.plotData.color.push($scope.colorArray[4]);
-          // } else if (fragment.type == "y") {
-          //   $scope.set.plotData.color.push($scope.colorArray[5]);
-          // } else if (fragment.type == "z") {
-          //   $scope.set.plotData.color.push($scope.colorArray[6]);
-          // } else if (fragment.type == "Z") {
-          //   $scope.set.plotData.color.push($scope.colorArray[7]);
-          // } else if (fragment.type == "M") {
-          //   $scope.set.plotData.color.push($scope.colorArray[8]);
-          // }
 
           if (fragment.neutralLoss !== null) {
             $scope.set.plotData.color.push(
@@ -947,36 +926,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         }
       }
 
-      /* if($scope.peptide.sequence.includes('+')){
-        var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi;
-        let newSequence = JSON.parse(JSON.stringify($scope.peptide.sequence))
-        if(regExp.test(newSequence)){
-          newSequence = newSequence.replace(regExp, "");
-        }
-        // newSequence.replace(/\+/g,'');
-        // console.log('+ detected newSequence', newSequence)
-        // $scope.peptide.sequence = JSON.parse(JSON.stringify(newSequence))
-        $scope.peptide.sequence = newSequence
-        console.log('+ detected', $scope.peptide.sequence, $scope.modObject)
-
-        $scope.userMods.push({
-          name: 'pushTest1',
-          site: 'Q',
-          deltaMass: 30.001
-        });
-
-        // $localStorage.userMods = $scope.userMods;
-
-        $scope.modObject.selectedMods.push({
-          name: 'pushTest1',
-          site: 'M',
-          index: 7,
-          deltaMass: 15.99491461957,
-          unimod: undefined,
-        })
-
-      } */
-
       if (topSpectrum) {
         if ($scope.peptide.sequence.includes("+")) {
           $scope.modObject.selectedMods = $scope.modObject.selectedMods.concat(
@@ -1041,16 +990,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
             $scope.cutoffs.chargeOption.charges
           ),
           // cutoffMax
-          /*
-        urlObj["usi"] = $scope.peptide.usi;
-        urlObj["usi_origin"] = $scope.peptide.usi_origin;
-        urlObj["usibottom"] = $scope.peptideBottom.usi;
-        urlObj["usibottom_origin"] = $scope.peptideBottom.usibottom_origin;
-        urlObj["fragment_tol"] = $scope.cutoffs.tolerance;
-        urlObj["fragment_tol_unit"] = $scope.cutoffs.toleranceType;
-        urlObj["matching_tol"] = $scope.cutoffs.compTolerance;
-        urlObj["matching_tol_unit"] = $scope.cutoffs.compToleranceType;
-        */
         };
       } else {
         // conditon exists
@@ -1076,16 +1015,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
           chargeOption: $scope.getChargeOptionFromString(
             condition.cutoffs.chargeOption.charges
           ),
-          /*
-        urlObj["usi"] = $scope.peptide.usi;
-        urlObj["usi_origin"] = $scope.peptide.usi_origin;
-        urlObj["usibottom"] = $scope.peptideBottom.usi;
-        urlObj["usibottom_origin"] = $scope.peptideBottom.usibottom_origin;
-        urlObj["fragment_tol"] = $scope.cutoffs.tolerance;
-        urlObj["fragment_tol_unit"] = $scope.cutoffs.toleranceType;
-        urlObj["matching_tol"] = $scope.cutoffs.compTolerance;
-        urlObj["matching_tol_unit"] = $scope.cutoffs.compToleranceType;
-        */
         };
       }
 
@@ -1448,15 +1377,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         }).appendTo(cutoff);
         data_c.css("margin-left", "10px");
 
-        // let cutoffMax = $(
-        //   '<div class="col-sm-12"><label>Annotation Intensity Threshold Max : </label></div>'
-        // ).appendTo(panel);
-        // let data_cm = $("<label>", {
-        //   text:
-        //     $scope.cutoffs.matchingCutoffMax + " " + $scope.cutoffs.matchingType,
-        // }).appendTo(cutoffMax);
-        // data_cm.css("margin-left", "10px");
-
         let mathcing = $(
           '<div class="col-sm-12"><label>Peak Matching Tolerance (+/-) : </label></div>'
         ).appendTo(panel);
@@ -1799,12 +1719,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
         });
 
         angular.forEach($scope.conditions, function (el) {
-          // if (el.fragmentTypes.a.selected) $scope.checkModel.a = el.fragmentTypes.a;
-          // if (el.fragmentTypes.b.selected) $scope.checkModel.b = el.fragmentTypes.b;
-          // if (el.fragmentTypes.c.selected) $scope.checkModel.c = el.fragmentTypes.c;
-          // if (el.fragmentTypes.x.selected) $scope.checkModel.x = el.fragmentTypes.x;
-          // if (el.fragmentTypes.y.selected) $scope.checkModel.y = el.fragmentTypes.y;
-          // if (el.fragmentTypes.z.selected) $scope.checkModel.z = el.fragmentTypes.z;
           if (el.fragmentTypes.a.selected)
             $scope.checkModel.a = angular.copy(el.fragmentTypes.a);
           if (el.fragmentTypes.b.selected)
@@ -2522,8 +2436,6 @@ angular.module("IPSA.spectrum.controller").controller("GraphCtrl", [
       $scope.validateReferenceButton(false),
       true
     );
-    // $scope.$watch("fileData", $scope.setSpectralData(true, fileData[0]));
-    // $scope.$watch("fileDataBottom", $scope.setSpectralData(false, fileDataBottom[0]))
 
     var USIsInitialCount = "none";
 
